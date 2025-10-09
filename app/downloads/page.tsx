@@ -9,7 +9,7 @@ export default function DownloadsPage() {
   const [sourceCodeOpen, setSourceCodeOpen] = useState(false);
 
   return (
-    <div className="bg-background text-foreground antialiased px-16">
+    <div className="bg-background text-foreground antialiased px-6">
       <main className="py-12 pb-28 md:pb-32">
         <div className="max-w-7xl mx-auto w-full px-6">
           <div className="mx-auto max-w-7xl space-y-6">
@@ -23,18 +23,18 @@ export default function DownloadsPage() {
               </p>
             </header>
 
-            <section className="grid grid-cols-2 gap-10">
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-10">
               <div>
                 <p className="mb-1 uppercase font-bold text-white/95">Download for</p>
                 <div className="flex flex-col gap-3">
                 <button
-                  className="h-23.5 max-w-125 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
+                  className="h-23.5 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
                 >
-                  <div className="flex items-center justify-between w-full px-6">
+                  <div className="flex items-center justify-between w-full px-6 text-left">
                     <div>
-                      <h3 className="text-lg font-semibold text-left">Nix</h3>
-                      <p className="text-sm text-muted-foreground italic mt-1">
-                        A Nix flake outputting packages.default & overlays.default
+                      <h3 className="text-lg font-semibold">Nix</h3>
+                      <p className="text-sm text-muted-foreground italic mt-1 mr-4">
+                        A Nix flake output and overlay
                       </p>
                     </div>
 
@@ -42,12 +42,12 @@ export default function DownloadsPage() {
                   </div>
                 </button>
                 <button
-                  className="h-23.5 max-w-125 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
+                  className="h-23.5 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
                 >
-                  <div className="flex items-center justify-between w-full px-6">
+                  <div className="flex items-center justify-between w-full px-6 text-left">
                     <div>
-                      <h3 className="text-lg font-semibold text-left">Linux</h3>
-                      <p className="text-sm text-muted-foreground italic mt-1">
+                      <h3 className="text-lg font-semibold">Linux</h3>
+                      <p className="text-sm text-muted-foreground italic mt-1 mr-4">
                         FUSE2 (AppImage)
                       </p>
                     </div>
@@ -56,12 +56,12 @@ export default function DownloadsPage() {
                   </div>
                 </button>
                 <button
-                  className="h-23.5 max-w-125 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
+                  className="h-23.5 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
                 >
-                  <div className="flex items-center justify-between w-full px-6">
+                  <div className="flex items-center justify-between w-full px-6 text-left">
                     <div>
-                      <h3 className="text-lg font-semibold text-left">macOS</h3>
-                      <p className="text-sm text-muted-foreground italic mt-1">
+                      <h3 className="text-lg font-semibold">macOS</h3>
+                      <p className="text-sm text-muted-foreground italic mt-1 mr-4">
                         Universal DMG.
                       </p>
                     </div>
@@ -70,12 +70,12 @@ export default function DownloadsPage() {
                   </div>
                 </button>
                 <button
-                  className="h-23.5 max-w-125 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
+                  className="h-23.5 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
                 >
-                  <div className="flex items-center justify-between w-full px-6">
+                  <div className="flex items-center justify-between w-full px-6 text-left">
                     <div>
-                      <h3 className="text-lg font-semibold text-left">Windows</h3>
-                      <p className="text-sm text-muted-foreground italic mt-1">
+                      <h3 className="text-lg font-semibold">Windows</h3>
+                      <p className="text-sm text-muted-foreground italic mt-1 mr-4">
                         Windows executable (exe)
                       </p>
                     </div>
