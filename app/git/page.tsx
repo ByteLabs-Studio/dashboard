@@ -87,15 +87,6 @@ export default function GitPage() {
                 Tip: these links open in a new tab. Replace the placeholder URLs
                 with your actual org / repo paths.
               </p>
-
-              <div className="mt-4">
-                <Link
-                  href="/"
-                  className="inline-flex items-center text-sm text-muted-foreground hover:underline"
-                >
-                  ← Back to home
-                </Link>
-              </div>
             </section>
           </div>
         </div>

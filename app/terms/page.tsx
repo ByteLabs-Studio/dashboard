@@ -14,12 +14,6 @@ export default function TermsPage() {
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10">
           <article className="prose prose-invert max-w-none">
             <div className="mb-6">
-              <div className="mt-6 flex gap-3">
-                <Link href="/" className="font-bold hover:underline">
-                  Back to home
-                </Link>
-              </div>
-
               <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight">
                 Terms of Service
               </h1>

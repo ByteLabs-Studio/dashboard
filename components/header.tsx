@@ -71,6 +71,12 @@ export default function Header() {
 
           <nav className="hidden md:flex items-center gap-6">
             <Link
+              href="/"
+              className="text-sm font-medium text-foreground/90 hover:text-foreground"
+            >
+              Home
+            </Link>
+            <Link
               href="/downloads"
               className="text-sm font-medium text-foreground/90 hover:text-foreground"
             >
@@ -167,6 +173,12 @@ export default function Header() {
         {open && (
           <div className="md:hidden py-3">
             <div className="flex flex-col gap-2">
+              <Link
+                href="/"
+                className="px-3 py-2 rounded-md hover:bg-muted/50"
+              >
+                Home
+              </Link>
               <Link
                 href="/downloads"
                 className="px-3 py-2 rounded-md hover:bg-muted/50"
