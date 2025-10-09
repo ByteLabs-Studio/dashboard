@@ -1,0 +1,231 @@
+import React from "react";
+import Link from "next/link";
+
+export default function PrivacyPage() {
+  const now = new Date();
+  const updated = now.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  return (
+    <div className="min-h-screen bg-background text-foreground antialiased">
+      <main className="py-16">
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10">
+          <article className="prose prose-invert max-w-none">
+            <div className="mb-6">
+              <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight">
+                Privacy Policy
+              </h1>
+              <div className="mt-3 text-sm text-muted-foreground">
+                Last updated:{" "}
+                <time dateTime={now.toISOString()}>{updated}</time>
+              </div>
+
+              <p className="mt-6 text-muted-foreground max-w-3xl">
+                At Bytelabs we value your privacy. This Privacy Policy
+                explains what information we collect, how we use it, and the
+                choices you have regarding your information when using the
+                Bytelabs Website.
+              </p>
+
+              <div className="mt-6 flex gap-3">
+                <Link href="/" className="text-sm underline">
+                  Back to home
+                </Link>
+                <Link href="/terms" className="text-sm underline">
+                  View terms
+                </Link>
+              </div>
+            </div>
+
+            <section id="what-we-collect" className="mt-6">
+              <h2>1. Information We Collect</h2>
+              <p>
+                We collect information you provide directly (for example, when
+                you sign up, fill out forms, or contact support), and
+                information collected automatically (such as usage data, device
+                and browser information, and analytics). We also use cookies and
+                similar technologies to improve your experience.
+              </p>
+            </section>
+
+            <section id="how-we-use" className="mt-6">
+              <h2>2. How We Use Information</h2>
+              <p>
+                We use collected data to operate and improve the Service,
+                provide support, communicate updates, secure the platform, and
+                comply with legal obligations. We do not sell your personal
+                information.
+              </p>
+            </section>
+
+            <section id="sharing" className="mt-6">
+              <h2>3. Sharing & Third Parties</h2>
+              <p>
+                We may share information with third-party service providers who
+                perform services on our behalf (hosting, analytics, payments).
+                These providers are contractually required to protect your data.
+                We may also disclose information to comply with legal
+                obligations.
+              </p>
+            </section>
+
+            <section id="data-retention" className="mt-6">
+              <h2>4. Data Retention</h2>
+              <p>
+                We retain personal data as long as needed to provide the
+                Service, comply with legal obligations, resolve disputes, and
+                enforce our agreements. Retention periods vary depending on the
+                type of data and purpose.
+              </p>
+            </section>
+
+            <section id="security" className="mt-6">
+              <h2>5. Security</h2>
+              <p>
+                We implement reasonable administrative, technical, and physical
+                safeguards to protect your information. However, no method of
+                transmission or storage is 100% secure. If a breach occurs, we
+                will follow applicable notification laws.
+              </p>
+            </section>
+
+            <section id="your-rights" className="mt-6">
+              <h2>6. Your Choices</h2>
+              <p>
+                Where required by law, you may have rights to access, correct,
+                or delete your personal data, or to restrict or object to
+                certain processing. To exercise rights, contact us at the
+                address below. You can also manage cookies via your browser
+                settings.
+              </p>
+            </section>
+
+            <section id="children" className="mt-6">
+              <h2>7. Children</h2>
+              <p>
+                Our Service is not directed to children under 13. We do not
+                knowingly collect personal information from children under 13.
+                If you believe a child has provided us personal information,
+                contact us to request deletion.
+              </p>
+            </section>
+
+            <section id="changes" className="mt-6">
+              <h2>8. Changes to this Policy</h2>
+              <p>
+                We may update this Privacy Policy. When changes are material, we
+                will provide notice via the Service or other reasonable means.
+                Continued use after changes constitutes acceptance of the
+                updated policy.
+              </p>
+            </section>
+
+            <section id="contact" className="mt-6">
+              <h2>9. Contact</h2>
+              <p>
+                If you have questions or requests about this Privacy Policy,
+                contact us at{" "}
+                <a
+                  href="mailto:support@bytelab.example"
+                  className="text-primary underline"
+                >
+                  support@bytelab.example
+                </a>
+                .
+              </p>
+            </section>
+
+            <section className="mt-12 text-sm text-muted-foreground">
+              <strong>Legal notice:</strong> This template is provided as a
+              starting point and does not constitute legal advice. If you
+              operate a service that collects user data or serve users in
+              regulated jurisdictions, consult a lawyer to ensure compliance.
+            </section>
+          </article>
+
+          {/* Right column: table of contents */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-24 rounded-md border border-border bg-card p-5 shadow-sm">
+              <h3 className="text-lg font-semibold mb-3">On this page</h3>
+              <nav className="flex flex-col gap-2 text-sm">
+                <a
+                  href="#what-we-collect"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Information We Collect
+                </a>
+                <a
+                  href="#how-we-use"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  How We Use Information
+                </a>
+                <a
+                  href="#sharing"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Sharing & Third Parties
+                </a>
+                <a
+                  href="#data-retention"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Data Retention
+                </a>
+                <a
+                  href="#security"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Security
+                </a>
+                <a
+                  href="#your-rights"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Your Choices
+                </a>
+                <a
+                  href="#children"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Children
+                </a>
+                <a
+                  href="#changes"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Changes
+                </a>
+                <a
+                  href="#contact"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Contact
+                </a>
+              </nav>
+            </div>
+          </aside>
+        </div>
+      </main>
+      
+      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/60 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex items-center justify-between py-4 text-sm text-muted-foreground">
+            <div>© {new Date().getFullYear()} Bytelabs</div>
+            <div className="flex gap-4">
+              <Link href="/terms" className="hover:underline">
+                Terms
+              </Link>
+              <Link href="/privacy" className="hover:underline">
+                Privacy
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}

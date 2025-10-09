@@ -1,7 +1,13 @@
+import React from "react";
 import "./globals.css";
 import { ThemeProvider } from "@components/theme-provider";
+import Navbar from "@components/navbar";
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <>
       <html lang="en" suppressHydrationWarning>
@@ -13,8 +19,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <Navbar />
           </ThemeProvider>
+
+          {children}
         </body>
       </html>
     </>
