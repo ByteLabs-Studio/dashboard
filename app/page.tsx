@@ -12,8 +12,16 @@ function Container({ children }: { children: React.ReactNode }) {
 
 export default function HomePage() {
   return (
-    <div className="bg-background text-foreground antialiased">
-      <main className="py-12 pb-28 md:pb-32">
+    <div className="bg-background text-foreground antialiased relative min-h-screen">
+      <div className="absolute inset-0 opacity-10">
+        <Plasma
+          color="#3b82f6"
+          speed={0.3}
+          opacity={0.8}
+          mouseInteractive={true}
+        />
+      </div>
+      <main className="py-12 pb-28 md:pb-32 relative z-10">
         <Container>
           <section className="grid gap-8 md:grid-cols-2 items-center">
             <div>
@@ -30,24 +38,14 @@ export default function HomePage() {
             </div>
 
             <div>
-              <div className="rounded-lg border border-border p-6 bg-card shadow-sm relative overflow-hidden">
-                <div className="absolute inset-0 opacity-20">
-                  <Plasma
-                    color="#3b82f6"
-                    speed={0.5}
-                    opacity={0.6}
-                    mouseInteractive={true}
-                  />
-                </div>
-                <div className="relative z-10">
-                  <h3 className="font-semibold">Quick overview</h3>
-                  <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-                    <li>• Version: v1.1.0 Public Release</li>
-                    <li>• Contributors: 3</li>
-                    <li>• Status: Active Development</li>
-                  </ul>
-                  <div className="mt-6" />
-                </div>
+              <div className="rounded-lg border border-border p-6 bg-card/80 backdrop-blur-sm shadow-sm">
+                <h3 className="font-semibold">Quick overview</h3>
+                <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
+                  <li>• Version: v1.1.0 Public Release</li>
+                  <li>• Contributors: 3</li>
+                  <li>• Status: Active Development</li>
+                </ul>
+                <div className="mt-6" />
               </div>
             </div>
           </section>
