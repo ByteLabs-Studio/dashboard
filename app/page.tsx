@@ -38,27 +38,6 @@ export default function HomePage() {
               </div>
             </div>
           </section>
-
-          <section className="mt-12">
-            <h2 className="text-lg font-semibold">Recent activity</h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {[
-                "Deployed new release",
-                // "New user signup",
-                // "Backup complete",
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-md border border-border p-4 bg-muted/30 shadow-sm"
-                >
-                  <div className="text-sm font-medium">{item}</div>
-                  <div className="mt-2 text-xs text-muted-foreground">
-                    {new Date().toLocaleString()}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
         </Container>
       </main>
     </div>
