@@ -3,11 +3,13 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const DISCORD_INVITE =
   typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE
     ? (process.env.NEXT_PUBLIC_DISCORD_INVITE as string)
-    : "https://discord.gg/your-invite";
+    : "https://discord.gg/wd7N28Uq64";
 
 /**
  * Small chevron icon used inside the DownloadDropdown button.
@@ -80,14 +82,6 @@ export default function Navbar() {
             >
               Git
             </Link>
-            <a
-              href={DISCORD_INVITE}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-medium text-foreground/90 hover:text-foreground"
-            >
-              Support
-            </a>
             <Link
               href="/docs"
               className="text-sm font-medium text-foreground/90 hover:text-foreground"
@@ -99,17 +93,49 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className="hidden md:inline-flex items-center gap-2 rounded-md bg-card px-3 py-1 text-sm text-foreground border border-border hover:shadow-sm"
+              className="hidden md:inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm text-foreground hover:bg-foreground/10 transition"
             >
-              {isDark ? "Light" : "Dark"}
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={isDark ? "sun" : "moon"}
+                  initial={{
+                    rotate: isDark ? -90 : 90,
+                    opacity: 0,
+                    scale: 0.8,
+                    y: -6,
+                  }}
+                  animate={{
+                    rotate: 0,
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
+                  }}
+                  exit={{
+                    rotate: isDark ? 90 : -90,
+                    opacity: 0,
+                    scale: 0.8,
+                    y: 6,
+                  }}
+                  transition={{
+                    duration: 0.28,
+                    ease: [0.22, 0.61, 0.36, 1], // smooth cubic-bezier ease
+                  }}
+                  className="flex items-center justify-center"
+                >
+                  {isDark ? (
+                    <Sun className="w-5 h-5 text-yellow-400 drop-shadow-[0_0_4px_rgba(255,255,100,0.4)]" />
+                  ) : (
+                    <Moon className="w-5 h-5 text-blue-400 drop-shadow-[0_0_4px_rgba(100,150,255,0.3)]" />
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </button>
-
-            <button
-              onClick={() => alert("Sign in clicked")}
-              className="hidden sm:inline-flex items-center rounded-md bg-foreground px-3 py-1 text-sm font-medium text-background shadow hover:brightness-95"
+            <a
+              href={DISCORD_INVITE}
+              className="hidden sm:inline-flex items-center rounded-md bg-foreground p-6 py-2 text-sm font-medium text-background shadow hover:brightness-95"
             >
-              Sign in
-            </button>
+              Support
+            </a>
 
             <button
               className="inline-flex items-center gap-2 rounded-md p-2 md:hidden hover:bg-muted"
@@ -151,14 +177,6 @@ export default function Navbar() {
               >
                 Git
               </Link>
-              <a
-                href={DISCORD_INVITE}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-2 rounded-md hover:bg-muted/50"
-              >
-                Support
-              </a>
 
               <div className="pt-2 flex gap-2 items-center">
                 <button
