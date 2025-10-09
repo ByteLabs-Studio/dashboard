@@ -117,12 +117,105 @@
         @apply border-border outline-ring/50;
     }
 
-    /* Enable smooth scrolling for in-page anchor navigation */
+    /* Prevent theme flash and ensure smooth initialization */
     html {
         scroll-behavior: smooth;
+        color-scheme: light;
+        transition: color-scheme 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Initial state - hide content until theme is ready */
+        visibility: hidden;
+    }
+
+    html.dark {
+        color-scheme: dark;
+    }
+
+    /* Show content once theme is initialized */
+    html[data-theme-ready] {
+        visibility: visible;
+    }
+
+    /* Smooth fade-in for body content */
+    html:not([data-theme-ready]) body {
+        opacity: 0;
+        transform: translateY(2px);
+    }
+
+    html[data-theme-ready] body {
+        opacity: 1;
+        transform: translateY(0);
+        transition:
+            opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     body {
         @apply bg-background text-foreground;
+        transition:
+            background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        min-height: 100vh;
+    }
+
+    /* Smooth transitions for theme changes - exclude motion elements */
+    *:not([data-framer-motion]):not([data-framer-motion] *):not(
+            .no-css-transitions
+        ):not(.no-css-transitions *) {
+        transition:
+            background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            fill 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            stroke 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Exclude all Framer Motion elements from CSS transitions */
+    [data-framer-motion],
+    [data-framer-motion] *,
+    .no-css-transitions,
+    .no-css-transitions * {
+        transition: none !important;
+    }
+
+    /* Ensure motion elements can animate freely */
+    [data-framer-motion] * {
+        will-change: transform, opacity;
+    }
+
+    /* Enhanced transitions for theme changes */
+    .dark,
+    [data-theme="dark"] {
+        transition: color-scheme 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Optimize transitions for Tailwind utility classes */
+    [class*="bg-"],
+    [class*="text-"],
+    [class*="border-"] {
+        transition:
+            background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Ensure theme flash doesn't occur on initial load */
+    html:not([data-theme-ready]) *:not([data-framer-motion]) {
+        transition: none !important;
+        animation: none !important;
+    }
+
+    /* Allow Framer Motion to work during theme initialization */
+    html:not([data-theme-ready]) [data-framer-motion] {
+        transition: none !important;
+    }
+
+    /* Preserve motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        html {
+            transition: none !important;
+            animation: none !important;
+        }
     }
 }
