@@ -14,17 +14,20 @@ function Container({ children }: { children: React.ReactNode }) {
 }
 
 export default function HomePage() {
-  const [backgroundEnabled, setBackgroundEnabled] = useState(true);
+  const [backgroundEnabled, setBackgroundEnabled] = useState(() => {
+    // Get initial state from data attribute to prevent flash
+    if (typeof document !== "undefined") {
+      const dataAttr = document.documentElement.getAttribute(
+        "data-background-enabled",
+      );
+      return dataAttr === "true";
+    }
+    return true;
+  });
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-
-    // Get initial state from localStorage
-    const stored = localStorage.getItem("background-animation");
-    if (stored !== null) {
-      setBackgroundEnabled(stored === "true");
-    }
 
     // Listen for background toggle events
     const handleBackgroundChange = (event: CustomEvent) => {
@@ -47,11 +50,10 @@ export default function HomePage() {
   return (
     <div className="bg-background text-foreground antialiased relative min-h-screen">
       <div
-        className="absolute inset-0 transition-opacity duration-500 ease-in-out"
+        className={`absolute inset-0 background-animation ${
+          mounted && backgroundEnabled ? "enabled" : "disabled"
+        }`}
         data-plasma-background
-        style={{
-          opacity: mounted ? (backgroundEnabled ? 0.2 : 0) : 0.2,
-        }}
       >
         <Plasma
           color="#D375DF"

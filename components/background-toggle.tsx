@@ -1,20 +1,23 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Sparkles, SparklesIcon } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 export default function BackgroundToggle() {
   const [mounted, setMounted] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(true);
+  const [isEnabled, setIsEnabled] = useState(() => {
+    // Get initial state from data attribute to prevent flash
+    if (typeof document !== "undefined") {
+      const dataAttr = document.documentElement.getAttribute(
+        "data-background-enabled",
+      );
+      return dataAttr === "true";
+    }
+    return true;
+  });
 
   useEffect(() => {
     setMounted(true);
-
-    // Get initial state from localStorage
-    const stored = localStorage.getItem("background-animation");
-    if (stored !== null) {
-      setIsEnabled(stored === "true");
-    }
   }, []);
 
   useEffect(() => {
@@ -22,6 +25,12 @@ export default function BackgroundToggle() {
 
     // Save to localStorage
     localStorage.setItem("background-animation", isEnabled.toString());
+
+    // Update the data attribute
+    document.documentElement.setAttribute(
+      "data-background-enabled",
+      isEnabled.toString(),
+    );
 
     // Dispatch custom event for other components to listen to
     window.dispatchEvent(
@@ -52,7 +61,7 @@ export default function BackgroundToggle() {
         {isEnabled ? (
           <Sparkles className="w-4 h-4" />
         ) : (
-          <SparklesIcon className="w-4 h-4 opacity-50" />
+          <Sparkles className="w-4 h-4 opacity-50 stroke-1" />
         )}
       </div>
     </button>

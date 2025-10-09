@@ -228,11 +228,42 @@
             border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    .background-animation {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    .background-animation.enabled {
+        animation: backgroundFadeIn 1s ease-out forwards;
+    }
+
+    .background-animation.disabled {
+        opacity: 0;
+    }
+
+    @keyframes backgroundFadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 0.2;
+        }
+    }
+
     @media (prefers-reduced-motion: reduce) {
         *,
         html {
             transition: none !important;
             animation: none !important;
+        }
+
+        .background-animation.enabled {
+            animation: none !important;
+            opacity: 0.2;
+        }
+
+        .background-animation.disabled {
+            opacity: 0;
         }
     }
 }

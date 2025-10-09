@@ -44,6 +44,16 @@ export default function RootLayout({
 
                     root.setAttribute('data-theme', theme);
                     root.style.colorScheme = (theme === 'light') ? 'light' : 'dark';
+
+                    // Handle background animation preference
+                    function getBackgroundPreference() {
+                      if (typeof localStorage !== 'undefined' && localStorage.getItem('background-animation') !== null) {
+                        return localStorage.getItem('background-animation') === 'true';
+                      }
+                      return true; // Default to enabled
+                    }
+                    const backgroundEnabled = getBackgroundPreference();
+                    root.setAttribute('data-background-enabled', backgroundEnabled.toString());
                   } catch (e) {
                     // Fallback - do nothing
                   }
