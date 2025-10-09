@@ -160,8 +160,8 @@
         color: #191724 !important; /* base for contrast */
     }
 
-    /* Secondary buttons with bg-card (like "Go to Git", "Support") */
-    .rose-pine button.bg-card {
+    /* Secondary buttons with bg-card (small action buttons only, not OS download buttons) */
+    .rose-pine button.bg-card.px-4.py-2 {
         background-color: #907aa9 !important; /* darker purple for secondary buttons */
         color: #e0def4 !important; /* text for contrast */
     }
