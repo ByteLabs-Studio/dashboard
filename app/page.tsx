@@ -61,22 +61,6 @@ export default function HomePage() {
           </section>
         </Container>
       </main>
-
-      <footer className="fixed bottom-0 left-0 right-0 border-t border-border bg-background/60">
-        <Container>
-          <div className="flex items-center justify-between py-4 text-sm text-muted-foreground">
-            <div>© {new Date().getFullYear()} Bytelab Studio</div>
-            <div className="flex gap-4">
-              <Link href="/terms" className="hover:underline">
-                Terms of Service
-              </Link>
-              <Link href="/privacy" className="hover:underline">
-                Privacy Policy
-              </Link>
-            </div>
-          </div>
-        </Container>
-      </footer>
     </div>
   );
 }

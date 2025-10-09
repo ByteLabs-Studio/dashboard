@@ -209,23 +209,6 @@ export default function TermsPage() {
           </aside>
         </div>
       </main>
-
-      {/* Sticky footer (keeps the existing footer consistent) */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/60 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex items-center justify-between py-4 text-sm text-muted-foreground">
-            <div>© {new Date().getFullYear()} Bytelab Studio</div>
-            <div className="flex gap-4">
-              <Link href="/terms" className="hover:underline">
-                Terms
-              </Link>
-              <Link href="/privacy" className="hover:underline">
-                Privacy
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
