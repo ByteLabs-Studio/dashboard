@@ -87,7 +87,7 @@ export default function Header() {
   const closeMenu = () => setOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-background/70 backdrop-blur-sm border-b border-border">
+    <header className="absolute w-full top-0 z-50 bg-background/70 backdrop-blur-sm border-b border-border">
       <div className="max-w-6xl mx-auto w-full px-6">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-4">
@@ -185,7 +185,7 @@ export default function Header() {
         </div>
 
         {open && (
-          <div className="md:hidden py-3">
+          <div className="md:hidden py-3 aboslute top-0">
             <div className="flex flex-col gap-2">
               <MobileNavLink href="/" onClick={closeMenu}>
                 Home

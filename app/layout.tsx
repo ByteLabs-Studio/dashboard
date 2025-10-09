@@ -67,7 +67,9 @@ export default function RootLayout({
         <body>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Header />
-            {children}
+            <div className="pt-12">
+              {children}
+            </div>
             <Footer />
           </ThemeProvider>
         </body>
