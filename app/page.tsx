@@ -15,9 +15,9 @@ export default function HomePage() {
     <div className="bg-background text-foreground antialiased relative min-h-screen">
       <div className="absolute inset-0 opacity-20">
         <Plasma
-          color="#60a5fa"
+          color="#D375DF"
           speed={0.3}
-          opacity={1.0}
+          opacity={50}
           mouseInteractive={false}
         />
       </div>
