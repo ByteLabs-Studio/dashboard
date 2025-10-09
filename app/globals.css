@@ -113,37 +113,38 @@
 }
 
 .rose-pine {
-    --background: oklch(0.165 0.024 13.838);
-    --foreground: oklch(0.909 0.018 13.838);
-    --card: oklch(0.196 0.024 13.838);
-    --card-foreground: oklch(0.909 0.018 13.838);
-    --popover: oklch(0.196 0.024 13.838);
-    --popover-foreground: oklch(0.909 0.018 13.838);
-    --primary: oklch(0.796 0.095 323.526);
-    --primary-foreground: oklch(0.165 0.024 13.838);
-    --secondary: oklch(0.254 0.024 13.838);
-    --secondary-foreground: oklch(0.909 0.018 13.838);
-    --muted: oklch(0.254 0.024 13.838);
-    --muted-foreground: oklch(0.647 0.044 13.838);
-    --accent: oklch(0.693 0.106 44.634);
-    --accent-foreground: oklch(0.165 0.024 13.838);
-    --destructive: oklch(0.686 0.191 22.216);
-    --border: oklch(0.254 0.024 13.838);
-    --input: oklch(0.254 0.024 13.838);
-    --ring: oklch(0.796 0.095 323.526);
-    --chart-1: oklch(0.796 0.095 323.526);
-    --chart-2: oklch(0.693 0.106 44.634);
-    --chart-3: oklch(0.763 0.103 184.704);
-    --chart-4: oklch(0.647 0.044 13.838);
-    --chart-5: oklch(0.909 0.018 13.838);
-    --sidebar: oklch(0.196 0.024 13.838);
-    --sidebar-foreground: oklch(0.909 0.018 13.838);
-    --sidebar-primary: oklch(0.796 0.095 323.526);
-    --sidebar-primary-foreground: oklch(0.165 0.024 13.838);
-    --sidebar-accent: oklch(0.254 0.024 13.838);
-    --sidebar-accent-foreground: oklch(0.909 0.018 13.838);
-    --sidebar-border: oklch(0.254 0.024 13.838);
-    --sidebar-ring: oklch(0.796 0.095 323.526);
+    /* Base colors from official Rosé Pine palette */
+    --background: #191724; /* base */
+    --foreground: #e0def4; /* text */
+    --card: #1f1d2e; /* surface */
+    --card-foreground: #e0def4; /* text */
+    --popover: #26233a; /* overlay */
+    --popover-foreground: #e0def4; /* text */
+    --primary: #ebbcba; /* rose - light pink for primary buttons */
+    --primary-foreground: #191724; /* base for contrast */
+    --secondary: #26233a; /* overlay */
+    --secondary-foreground: #e0def4; /* text */
+    --muted: #26233a; /* overlay */
+    --muted-foreground: #6e6a86; /* muted */
+    --accent: #c4a7e7; /* iris - light purple for accents */
+    --accent-foreground: #191724; /* base for contrast */
+    --destructive: #eb6f92; /* love - pink for destructive actions */
+    --border: #26233a; /* overlay */
+    --input: #1f1d2e; /* surface */
+    --ring: #c4a7e7; /* iris */
+    --chart-1: #ebbcba; /* rose */
+    --chart-2: #c4a7e7; /* iris */
+    --chart-3: #9ccfd8; /* foam */
+    --chart-4: #f6c177; /* gold */
+    --chart-5: #31748f; /* pine */
+    --sidebar: #1f1d2e; /* surface */
+    --sidebar-foreground: #e0def4; /* text */
+    --sidebar-primary: #ebbcba; /* rose */
+    --sidebar-primary-foreground: #191724; /* base */
+    --sidebar-accent: #26233a; /* overlay */
+    --sidebar-accent-foreground: #e0def4; /* text */
+    --sidebar-border: #26233a; /* overlay */
+    --sidebar-ring: #c4a7e7; /* iris */
 }
 
 @layer base {

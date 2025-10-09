@@ -24,8 +24,9 @@ const themes = [
     value: "rose-pine",
     label: "Rosé Pine",
     icon: Palette,
-    description: "Warm rose theme",
-    color: "#c4a7e7",
+    description:
+      "Natural pine, soho vibes",
+    color: "#ebbcba",
   },
 ];
 
