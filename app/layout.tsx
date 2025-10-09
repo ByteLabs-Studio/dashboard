@@ -1,7 +1,7 @@
 import React from "react";
 import "./globals.css";
 import { ThemeProvider } from "@components/theme-provider";
-import Navbar from "@components/navbar";
+import Header from "@components/header";
 
 export default function RootLayout({
   children,
@@ -59,7 +59,7 @@ export default function RootLayout({
         </head>
         <body>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <Navbar />
+            <Header />
             {children}
           </ThemeProvider>
         </body>

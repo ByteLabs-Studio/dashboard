@@ -36,7 +36,7 @@ function IconChevronDown({ className = "" }: { className?: string }) {
  * - Client component
  * - Uses next-themes `useTheme` to toggle and display theme
  */
-export default function Navbar() {
+export default function Header() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme, resolvedTheme } = useTheme();
