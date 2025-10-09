@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { FaLinux, FaApple, FaWindows } from "react-icons/fa";
 
 const DISCORD_INVITE =
   typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE
@@ -27,87 +26,6 @@ function IconChevronDown({ className = "" }: { className?: string }) {
     >
       <path d="M6 9l6 6 6-6" />
     </svg>
-  );
-}
-
-/**
- * Simple Download dropdown used in the navbar.
- * - Links to the unified /downloads page (can be adjusted to deep-link)
- * - Uses icons for platforms
- */
-function DownloadDropdown() {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    function onDocClick(e: MouseEvent) {
-      if (!ref.current) return;
-      if (ref.current.contains(e.target as Node)) return;
-      setOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("click", onDocClick);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("click", onDocClick);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, []);
-
-  const items = [
-    { id: "linux", label: "Linux", href: "/downloads" },
-    { id: "macos", label: "macOS", href: "/downloads" },
-    { id: "windows", label: "Windows", href: "/downloads" },
-  ];
-
-  return (
-    <div className="relative inline-block text-left" ref={ref}>
-      <button
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-1 text-sm font-medium text-foreground shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring"
-      >
-        Download
-        <IconChevronDown className={open ? "rotate-180" : ""} />
-      </button>
-
-      <div
-        role="menu"
-        aria-hidden={!open}
-        className={`origin-top-right right-0 mt-2 w-44 rounded-md bg-background shadow-lg ring-1 ring-black/5 border border-border transition-opacity ${
-          open
-            ? "opacity-100 scale-100"
-            : "opacity-0 scale-95 pointer-events-none"
-        }`}
-      >
-        <div className="py-1">
-          {items.map((it) => (
-            <Link key={it.id} href={it.href}>
-              <div
-                onClick={() => setOpen(false)}
-                role="menuitem"
-                className="w-full text-left px-4 py-2 text-sm text-foreground/90 hover:bg-muted/50 hover:text-foreground flex items-center gap-2 cursor-pointer"
-              >
-                <span className="inline-block w-6 text-center text-muted-foreground">
-                  {it.id === "linux" ? (
-                    <FaLinux aria-hidden />
-                  ) : it.id === "macos" ? (
-                    <FaApple aria-hidden />
-                  ) : (
-                    <FaWindows aria-hidden />
-                  )}
-                </span>
-                <span>{it.label}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -179,10 +97,6 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <div className="hidden sm:block">
-              <DownloadDropdown />
-            </div>
-
             <button
               onClick={toggleTheme}
               className="hidden md:inline-flex items-center gap-2 rounded-md bg-card px-3 py-1 text-sm text-foreground border border-border hover:shadow-sm"
@@ -247,7 +161,6 @@ export default function Navbar() {
               </a>
 
               <div className="pt-2 flex gap-2 items-center">
-                <DownloadDropdown />
                 <button
                   onClick={toggleTheme}
                   className="rounded-md bg-card px-3 py-1 text-sm"

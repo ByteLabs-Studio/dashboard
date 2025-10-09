@@ -1,9 +1,15 @@
-import Link from "next/link";
-import { FaLinux, FaApple, FaWindows } from "react-icons/fa";
+"use client"
+
+import { FaLinux, FaApple, FaWindows, FaSnowflake } from "react-icons/fa";
+import { LiaSnowflake } from "react-icons/lia";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 export default function DownloadsPage() {
+  const [sourceCodeOpen, setSourceCodeOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-background text-foreground antialiased">
+    <div className="bg-background text-foreground antialiased px-16">
       <main className="py-12 pb-28 md:pb-32">
         <div className="max-w-7xl mx-auto w-full px-6">
           <div className="mx-auto max-w-7xl space-y-6">
@@ -17,136 +23,104 @@ export default function DownloadsPage() {
               </p>
             </header>
 
-            <section className="grid gap-4 sm:grid-cols-3 auto-rows-fr items-stretch">
-              <div
-                className="min-w-0 relative rounded-md border border-border pt-4 pb-6 px-6 bg-card hover:shadow-md transition flex flex-col gap-4 h-full"
-                aria-label="Linux downloads"
-                role="group"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <h3 className="text-lg font-semibold">Linux</h3>
-                      <p className="text-sm text-muted-foreground italic mt-1">
-                        Tarballs and packages for popular distributions.
-                      </p>
-                    </div>
-
-                    <div className="absolute top-4 right-4 w-12 h-12 text-2xl">
-                      <FaLinux className="text-foreground/80" aria-hidden />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex gap-2 items-center">
-                  <a
-                    href="https://example.com/downloads/linux/latest"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center whitespace-nowrap rounded-md border border-border bg-foreground px-3 py-1 text-sm font-medium text-background hover:brightness-95"
-                  >
-                    Download Latest
-                  </a>
-                  <a
-                    href="https://example.com/downloads/linux/releases"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center whitespace-nowrap rounded-md border border-border bg-card px-3 py-1 text-sm hover:shadow-sm"
-                  >
-                    Releases
-                  </a>
-                </div>
-              </div>
-
-              <div
-                className="min-w-0 relative rounded-md border border-border pt-4 pb-6 px-6 bg-card hover:shadow-md transition flex flex-col gap-4 h-full"
-                aria-label="macOS downloads"
-                role="group"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <h3 className="text-lg font-semibold">macOS</h3>
-                      <p className="text-sm text-muted-foreground italic mt-1">
-                        Universal binaries and installers for macOS.
-                      </p>
-                    </div>
-
-                    <div className="absolute top-4 right-4 w-12 h-12 text-2xl">
-                      <FaApple className="text-foreground/80" aria-hidden />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex gap-2 items-center">
-                  <a
-                    href="https://example.com/downloads/macos/latest"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center whitespace-nowrap rounded-md border border-border bg-foreground px-3 py-1 text-sm font-medium text-background hover:brightness-95"
-                  >
-                    Download Latest
-                  </a>
-                  <a
-                    href="https://example.com/downloads/macos/releases"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center whitespace-nowrap rounded-md border border-border bg-card px-3 py-1 text-sm hover:shadow-sm"
-                  >
-                    Releases
-                  </a>
-                </div>
-              </div>
-
-              <div
-                className="min-w-0 relative rounded-md border border-border pt-4 pb-6 px-6 bg-card hover:shadow-md transition flex flex-col gap-4 h-full"
-                aria-label="Windows downloads"
-                role="group"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <h3 className="text-lg font-semibold">Windows</h3>
-                      <p className="text-sm text-muted-foreground italic mt-1">
-                        Installers and portable builds for Windows.
-                      </p>
-                    </div>
-
-                    <div className="absolute top-4 right-4 w-12 h-12 text-2xl">
-                      <FaWindows className="text-foreground/80" aria-hidden />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex gap-2 items-center">
-                  <a
-                    href="https://example.com/downloads/windows/latest"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center whitespace-nowrap rounded-md border border-border bg-foreground px-3 py-1 text-sm font-medium text-background hover:brightness-95"
-                  >
-                    Download Latest
-                  </a>
-                  <a
-                    href="https://example.com/downloads/windows/releases"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center whitespace-nowrap rounded-md border border-border bg-card px-3 py-1 text-sm hover:shadow-sm"
-                  >
-                    Releases
-                  </a>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <div className="mt-6">
-                <Link
-                  href="/"
-                  className="inline-flex items-center text-sm text-muted-foreground hover:underline"
+            <section className="grid grid-cols-2 gap-10">
+              <div>
+                <p className="mb-1 uppercase font-bold text-white/95">Download for</p>
+                <div className="flex flex-col gap-3">
+                <button
+                  className="h-23.5 max-w-125 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
                 >
-                  ← Back to home
-                </Link>
+                  <div className="flex items-center justify-between w-full px-6">
+                    <div>
+                      <h3 className="text-lg font-semibold text-left">Nix</h3>
+                      <p className="text-sm text-muted-foreground italic mt-1">
+                        A Nix flake outputting packages.default & overlays.default
+                      </p>
+                    </div>
+
+                    <FaSnowflake className="text-foreground/70 w-6.5 h-6.5" aria-hidden />
+                  </div>
+                </button>
+                <button
+                  className="h-23.5 max-w-125 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
+                >
+                  <div className="flex items-center justify-between w-full px-6">
+                    <div>
+                      <h3 className="text-lg font-semibold text-left">Linux</h3>
+                      <p className="text-sm text-muted-foreground italic mt-1">
+                        FUSE2 (AppImage)
+                      </p>
+                    </div>
+
+                    <FaLinux className="text-foreground/70 w-6.5 h-6.5" aria-hidden />
+                  </div>
+                </button>
+                <button
+                  className="h-23.5 max-w-125 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
+                >
+                  <div className="flex items-center justify-between w-full px-6">
+                    <div>
+                      <h3 className="text-lg font-semibold text-left">macOS</h3>
+                      <p className="text-sm text-muted-foreground italic mt-1">
+                        Universal DMG.
+                      </p>
+                    </div>
+
+                    <FaApple className="text-foreground/70 w-6.5 h-6.5" aria-hidden />
+                  </div>
+                </button>
+                <button
+                  className="h-23.5 max-w-125 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
+                >
+                  <div className="flex items-center justify-between w-full px-6">
+                    <div>
+                      <h3 className="text-lg font-semibold text-left">Windows</h3>
+                      <p className="text-sm text-muted-foreground italic mt-1">
+                        Windows executable (exe)
+                      </p>
+                    </div>
+
+                    <FaWindows className="text-foreground/70 w-6.5 h-6.5" aria-hidden />
+                  </div>
+                </button>
+                </div>
+              </div>
+
+              <div>
+                <h1 className="mb-1 uppercase font-bold text-white/95">Additional info</h1>
+                <div className="border border-border bg-card flex flex-col rounded-md overflow-hidden pb-1">
+                  <button
+                    className="text-lg font-bold text-center cursor-pointer pt-2 pb-1"
+                    onClick={() => setSourceCodeOpen(!sourceCodeOpen)}
+                  >
+                    Source Code
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {sourceCodeOpen && (
+                      <motion.div
+                        key="source"
+                        initial={{ height: 0, opacity: 0, y: -10 }}
+                        animate={{ height: "auto", opacity: 1, y: 0 }}
+                        exit={{ height: 0, opacity: 0, y: -10 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="flex flex-col p-3 pb-2 pt-0">
+                          <p className="text-sm text-muted-foreground">
+                            The source code can be found simply on its GitLab.
+                          </p>
+                          <a
+                            className="bg-foreground font-semibold hover:brightness-95 py-1.5 px-5 mt-4 rounded text-background text-center"
+                            href="https://gitlab.com/bytelab-studio/ByteLab/-/archive/main/ByteLab-main.tar.gz?ref_type=heads"
+                          >
+                            Download .tar.gz (main)
+                          </a>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             </section>
           </div>

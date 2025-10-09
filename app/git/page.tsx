@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function GitPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground antialiased">
+    <div className="bg-background text-foreground antialiased">
       <main className="py-12 pb-28 md:pb-32">
         <div className="max-w-6xl mx-auto w-full px-6">
           <div className="mx-auto max-w-3xl space-y-6">

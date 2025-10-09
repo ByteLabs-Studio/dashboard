@@ -11,7 +11,7 @@ function Container({ children }: { children: React.ReactNode }) {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background text-foreground antialiased">
+    <div className="bg-background text-foreground antialiased">
       <main className="py-12 pb-28 md:pb-32">
         <Container>
           <section className="grid gap-8 md:grid-cols-2 items-center">
@@ -21,7 +21,6 @@ export default function HomePage() {
               </h1>
               <p className="mt-4 text-muted-foreground max-w-xl">
                 Code. Sound. Visualize — ByteLab is an App made with Electron desgined to create Music or just Audio in general just by using Bytes.
-
               </p>
 
               <DashboardActions />

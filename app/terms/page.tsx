@@ -9,7 +9,7 @@ export default function TermsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-background text-foreground antialiased">
+    <div className="bg-background text-foreground antialiased">
       <main className="py-16">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10">
           <article className="prose prose-invert max-w-none">
