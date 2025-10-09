@@ -4,7 +4,7 @@ import Plasma from "./Plasma";
 
 const DISCORD_INVITE =
   (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE) ||
-  "https://discord.gg/wd7N28Uq64";
+  "https://discord.gg/vortexbot";
 
 function Container({ children }: { children: React.ReactNode }) {
   return <div className="max-w-6xl mx-auto w-full px-6">{children}</div>;

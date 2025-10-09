@@ -18,7 +18,7 @@ export default function GitPage() {
 
             <section className="grid gap-4 sm:grid-cols-2">
               <a
-                href="https://github.com/your-org/your-repo"
+                href="https://github.com/ByteLabs-Studio/ByteLab"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-md border border-border p-6 bg-card hover:shadow-md transition"
@@ -80,13 +80,6 @@ export default function GitPage() {
                   </svg>
                 </div>
               </a>
-            </section>
-
-            <section>
-              <p className="text-sm text-muted-foreground">
-                Tip: these links open in a new tab. Replace the placeholder URLs
-                with your actual org / repo paths.
-              </p>
             </section>
           </div>
         </div>

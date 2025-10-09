@@ -18,7 +18,7 @@ export default function TermsPage() {
                 Terms of Service
               </h1>
               <div className="mt-3 text-sm text-muted-foreground">
-                Last updated:{" "}
+                Last updated & effective since: {" "}
                 <time dateTime={now.toISOString()}>{updated}</time>
               </div>
               <p className="mt-6 text-muted-foreground max-w-3xl">
@@ -104,7 +104,7 @@ export default function TermsPage() {
 
             <section id="liability" className="mt-6">
               <h2>7. Limitation of Liability</h2>
-              <p className="text-muted-foreground">
+              <p>
                 In no event will Bytelabs be liable for any indirect,
                 incidental, special, consequential or punitive damages arising
                 out of or related to your use of the Service.
@@ -125,7 +125,7 @@ export default function TermsPage() {
               <p>
                 Questions about these Terms? Contact us at{" "}
                 <a
-                  href="mailto:support@bytelab.example"
+                  href="mailto:legal@bytelabs.uk"
                   className="text-primary underline"
                 >
                   legal@bytelabs.uk

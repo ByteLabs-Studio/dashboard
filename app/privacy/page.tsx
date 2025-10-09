@@ -19,7 +19,7 @@ export default function PrivacyPage() {
                 Privacy Policy
               </h1>
               <div className="mt-3 text-sm text-muted-foreground">
-                Last updated:{" "}
+                Last updated & effective since: {" "}
                 <time dateTime={now.toISOString()}>{updated}</time>
               </div>
 
@@ -36,20 +36,19 @@ export default function PrivacyPage() {
               <h2>1. Information We Collect</h2>
               <p>
                 We collect information you provide directly (for example, when
-                you sign up, fill out forms, or contact support), and
-                information collected automatically (such as usage data, device
-                and browser information, and analytics). We also use cookies and
-                similar technologies to improve your experience.
+                you fill out forms, or contact support). We do not collect
+                information beyond this however, since the service does not
+                require it. However, we may collect anonymous usage data to
+                improve the service. This data does not include any personal
+                information.
               </p>
             </section>
 
             <section id="how-we-use" className="mt-6">
               <h2>2. How We Use Information</h2>
               <p>
-                We use collected data to operate and improve the Service,
-                provide support, communicate updates, secure the platform, and
-                comply with legal obligations. We do not sell your personal
-                information.
+                We do not share or self your personal information to anyone,
+                including third-party service providers, unless required by law.
               </p>
             </section>
 
@@ -90,8 +89,7 @@ export default function PrivacyPage() {
                 Where required by law, you may have rights to access, correct,
                 or delete your personal data, or to restrict or object to
                 certain processing. To exercise rights, contact us at the
-                address below. You can also manage cookies via your browser
-                settings.
+                address below.
               </p>
             </section>
 
@@ -121,20 +119,13 @@ export default function PrivacyPage() {
                 If you have questions or requests about this Privacy Policy,
                 contact us at{" "}
                 <a
-                  href="mailto:support@bytelab.example"
+                  href="mailto:legal@bytelabs.uk"
                   className="text-primary underline"
                 >
-                  support@bytelab.example
+                  legal@bytelabs.uk
                 </a>
                 .
               </p>
-            </section>
-
-            <section className="my-6 text-sm text-muted-foreground">
-              <strong>Legal notice:</strong> This template is provided as a
-              starting point and does not constitute legal advice. If you
-              operate a service that collects user data or serve users in
-              regulated jurisdictions, consult a lawyer to ensure compliance.
             </section>
           </article>
 
