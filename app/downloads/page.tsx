@@ -1,9 +1,9 @@
 "use client"
 
-import { FaLinux, FaApple, FaWindows, FaSnowflake } from "react-icons/fa";
-import { LiaSnowflake } from "react-icons/lia";
+import { FaLinux, FaApple, FaWindows } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { SiNixos } from "react-icons/si";
 
 export default function DownloadsPage() {
   const [sourceCodeOpen, setSourceCodeOpen] = useState(false);
@@ -38,7 +38,7 @@ export default function DownloadsPage() {
                       </p>
                     </div>
 
-                    <FaSnowflake className="text-foreground/70 w-6.5 h-6.5" aria-hidden />
+                    <SiNixos className="text-foreground/70 w-6.5 h-6.5" aria-hidden />
                   </div>
                 </button>
                 <button
