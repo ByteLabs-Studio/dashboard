@@ -15,6 +15,12 @@ export default function PrivacyPage() {
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10">
           <article className="prose prose-invert max-w-none">
             <div className="mb-6">
+              <div className="mt-6 flex gap-3">
+                <Link href="/" className="font-bold hover:underline">
+                  Back to home
+                </Link>
+              </div>
+
               <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight">
                 Privacy Policy
               </h1>
@@ -30,14 +36,6 @@ export default function PrivacyPage() {
                 Bytelabs Website.
               </p>
 
-              <div className="mt-6 flex gap-3">
-                <Link href="/" className="text-sm underline">
-                  Back to home
-                </Link>
-                <Link href="/terms" className="text-sm underline">
-                  View terms
-                </Link>
-              </div>
             </div>
 
             <section id="what-we-collect" className="mt-6">
@@ -138,7 +136,7 @@ export default function PrivacyPage() {
               </p>
             </section>
 
-            <section className="mt-12 text-sm text-muted-foreground">
+            <section className="my-6 text-sm text-muted-foreground">
               <strong>Legal notice:</strong> This template is provided as a
               starting point and does not constitute legal advice. If you
               operate a service that collects user data or serve users in
