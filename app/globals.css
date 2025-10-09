@@ -120,14 +120,14 @@
     --card-foreground: #e0def4; /* text */
     --popover: #26233a; /* overlay */
     --popover-foreground: #e0def4; /* text */
-    --primary: #ebbcba; /* rose - light pink for primary buttons */
+    --primary: #c4a7e7; /* iris - light purple for primary buttons like "Go to Downloads" */
     --primary-foreground: #191724; /* base for contrast */
-    --secondary: #26233a; /* overlay */
+    --secondary: #907aa9; /* darker purple for secondary buttons */
     --secondary-foreground: #e0def4; /* text */
     --muted: #26233a; /* overlay */
     --muted-foreground: #6e6a86; /* muted */
-    --accent: #c4a7e7; /* iris - light purple for accents */
-    --accent-foreground: #191724; /* base for contrast */
+    --accent: #907aa9; /* darker purple for accent elements */
+    --accent-foreground: #e0def4; /* text for better contrast */
     --destructive: #eb6f92; /* love - pink for destructive actions */
     --border: #26233a; /* overlay */
     --input: #1f1d2e; /* surface */
@@ -139,17 +139,37 @@
     --chart-5: #31748f; /* pine */
     --sidebar: #1f1d2e; /* surface */
     --sidebar-foreground: #e0def4; /* text */
-    --sidebar-primary: #ebbcba; /* rose */
+    --sidebar-primary: #c4a7e7; /* iris */
     --sidebar-primary-foreground: #191724; /* base */
     --sidebar-accent: #26233a; /* overlay */
     --sidebar-accent-foreground: #e0def4; /* text */
     --sidebar-border: #26233a; /* overlay */
-    --sidebar-ring: #c4a7e7; /* iris */
+    --sidebar-ring: #907aa9; /* darker purple */
 }
 
 @layer base {
     * {
         @apply border-border outline-ring/50;
+    }
+
+    /* Rosé Pine theme specific button overrides */
+    /* Primary buttons with bg-foreground and text-background (like "Go to Downloads", "Download .tar.gz") */
+    .rose-pine button.bg-foreground.text-background,
+    .rose-pine a.bg-foreground.text-background {
+        background-color: #c4a7e7 !important; /* iris for primary actions */
+        color: #191724 !important; /* base for contrast */
+    }
+
+    /* Secondary buttons with bg-card (like "Go to Git", "Support") */
+    .rose-pine button.bg-card {
+        background-color: #907aa9 !important; /* darker purple for secondary buttons */
+        color: #e0def4 !important; /* text for contrast */
+    }
+
+    /* Activity button and other muted elements */
+    .rose-pine button.bg-muted,
+    .rose-pine button[class*="bg-muted"] {
+        background-color: #907aa9 !important; /* darker purple for muted button elements */
     }
 
     /* Prevent theme flash and ensure smooth initialization */
