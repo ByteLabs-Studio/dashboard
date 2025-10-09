@@ -13,11 +13,11 @@ function Container({ children }: { children: React.ReactNode }) {
 export default function HomePage() {
   return (
     <div className="bg-background text-foreground antialiased relative min-h-screen">
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 opacity-20">
         <Plasma
-          color="#3b82f6"
+          color="#60a5fa"
           speed={0.3}
-          opacity={0.8}
+          opacity={1.0}
           mouseInteractive={true}
         />
       </div>
