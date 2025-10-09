@@ -1,5 +1,6 @@
 import Link from "next/link";
 import DashboardActions from "@components/dashboard-actions";
+import Plasma from "./Plasma";
 
 const DISCORD_INVITE =
   (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE) ||
@@ -20,21 +21,33 @@ export default function HomePage() {
                 ByteLabs
               </h1>
               <p className="mt-4 text-muted-foreground max-w-xl">
-                Code. Sound. Visualize — ByteLab is an App made with Electron desgined to create Music or just Audio in general just by using Bytes.
+                Code. Sound. Visualize — ByteLab is an App made with Electron
+                desgined to create Music or just Audio in general just by using
+                Bytes.
               </p>
 
               <DashboardActions />
             </div>
 
             <div>
-              <div className="rounded-lg border border-border p-6 bg-card shadow-sm">
-                <h3 className="font-semibold">Quick overview</h3>
-                <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-                  <li>• Version: v1.1.0 Public Release</li>
-                  <li>• Contributors: 3</li>
-                  <li>• Status: Active Development</li>
-                </ul>
-                <div className="mt-6" />
+              <div className="rounded-lg border border-border p-6 bg-card shadow-sm relative overflow-hidden">
+                <div className="absolute inset-0 opacity-20">
+                  <Plasma
+                    color="#3b82f6"
+                    speed={0.5}
+                    opacity={0.6}
+                    mouseInteractive={true}
+                  />
+                </div>
+                <div className="relative z-10">
+                  <h3 className="font-semibold">Quick overview</h3>
+                  <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
+                    <li>• Version: v1.1.0 Public Release</li>
+                    <li>• Contributors: 3</li>
+                    <li>• Status: Active Development</li>
+                  </ul>
+                  <div className="mt-6" />
+                </div>
               </div>
             </div>
           </section>
