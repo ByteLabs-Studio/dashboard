@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { motion } from "framer-motion";
+import { BsDiscord } from "react-icons/bs";
 
 const DISCORD_INVITE =
   typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE
@@ -152,8 +153,9 @@ export default function Header() {
             </button>
             <a
               href={DISCORD_INVITE}
-              className="hidden sm:inline-flex items-center rounded-md bg-foreground p-6 py-2 text-sm font-medium text-background shadow hover:brightness-95"
+              className="hidden sm:inline-flex items-center rounded-md bg-[#6577E6] p-6 py-2 text-sm font-medium text-background shadow hover:brightness-95"
             >
+              <BsDiscord className="w-5 h-5" /><span className="w-2"/>
               Support
             </a>
 
