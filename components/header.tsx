@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { motion } from "framer-motion";
@@ -11,31 +12,62 @@ const DISCORD_INVITE =
     ? (process.env.NEXT_PUBLIC_DISCORD_INVITE as string)
     : "https://discord.gg/wd7N28Uq64";
 
-/**
- * Small chevron icon used inside the DownloadDropdown button.
- */
-function IconChevronDown({ className = "" }: { className?: string }) {
+
+function NavLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  const pathname = usePathname();
+  const isActive =
+    pathname === href || (href !== "/" && pathname.startsWith(href));
+
   return (
-    <svg
-      className={`h-4 w-4 transition-transform ${className}`}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
+    <Link
+      href={href}
+      className="relative text-sm font-medium text-foreground/90 hover:text-foreground transition-colors duration-200 py-2 group"
     >
-      <path d="M6 9l6 6 6-6" />
-    </svg>
+      {children}
+
+      <span
+        className={`absolute bottom-0 left-0 right-0 h-[2.45px] bg-primary transform origin-center transition-transform duration-300 ease-out ${
+          isActive ? "scale-x-92" : "scale-x-0 group-hover:scale-x-65"
+        }`}
+      />
+    </Link>
   );
 }
 
-/**
- * Shared Navbar component exported for inclusion in layouts/pages.
- * - Client component
- * - Uses next-themes `useTheme` to toggle and display theme
- */
+function MobileNavLink({
+  href,
+  children,
+  onClick,
+}: {
+  href: string;
+  children: React.ReactNode;
+  onClick?: () => void;
+}) {
+  const pathname = usePathname();
+  const isActive =
+    pathname === href || (href !== "/" && pathname.startsWith(href));
+
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`px-3 py-2 rounded-md transition-colors duration-200 ${
+        isActive
+          ? "bg-primary/10 text-primary font-medium"
+          : "hover:bg-muted/50"
+      }`}
+    >
+      {children}
+    </Link>
+  );
+}
+
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -50,6 +82,8 @@ export default function Header() {
   const toggleTheme = () => {
     setTheme(isDark ? "light" : "dark");
   };
+
+  const closeMenu = () => setOpen(false);
 
   return (
     <header className="sticky top-0 z-50 bg-background/70 backdrop-blur-sm border-b border-border">
@@ -70,30 +104,10 @@ export default function Header() {
           </div>
 
           <nav className="hidden md:flex items-center gap-6">
-            <Link
-              href="/"
-              className="text-sm font-medium text-foreground/90 hover:text-foreground"
-            >
-              Home
-            </Link>
-            <Link
-              href="/downloads"
-              className="text-sm font-medium text-foreground/90 hover:text-foreground"
-            >
-              Downloads
-            </Link>
-            <Link
-              href="/git"
-              className="text-sm font-medium text-foreground/90 hover:text-foreground"
-            >
-              Git
-            </Link>
-            <Link
-              href="/docs"
-              className="text-sm font-medium text-foreground/90 hover:text-foreground"
-            >
-              Docs
-            </Link>
+            <NavLink href="/">Home</NavLink>
+            <NavLink href="/downloads">Downloads</NavLink>
+            <NavLink href="/git">Git</NavLink>
+            <NavLink href="/docs">Docs</NavLink>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -103,7 +117,6 @@ export default function Header() {
               style={{ transition: "background-color 0.2s ease" }}
             >
               <div className="relative w-5 h-5">
-                {/* Sun Icon */}
                 <motion.div
                   animate={{
                     opacity: isDark ? 1 : 0,
@@ -120,7 +133,6 @@ export default function Header() {
                   <Sun className="w-5 h-5 text-yellow-400 drop-shadow-[0_0_4px_rgba(255,255,100,0.4)]" />
                 </motion.div>
 
-                {/* Moon Icon */}
                 <motion.div
                   animate={{
                     opacity: isDark ? 0 : 1,
@@ -173,24 +185,18 @@ export default function Header() {
         {open && (
           <div className="md:hidden py-3">
             <div className="flex flex-col gap-2">
-              <Link
-                href="/"
-                className="px-3 py-2 rounded-md hover:bg-muted/50"
-              >
+              <MobileNavLink href="/" onClick={closeMenu}>
                 Home
-              </Link>
-              <Link
-                href="/downloads"
-                className="px-3 py-2 rounded-md hover:bg-muted/50"
-              >
+              </MobileNavLink>
+              <MobileNavLink href="/downloads" onClick={closeMenu}>
                 Downloads
-              </Link>
-              <Link
-                href="/git"
-                className="px-3 py-2 rounded-md hover:bg-muted/50"
-              >
+              </MobileNavLink>
+              <MobileNavLink href="/git" onClick={closeMenu}>
                 Git
-              </Link>
+              </MobileNavLink>
+              <MobileNavLink href="/docs" onClick={closeMenu}>
+                Docs
+              </MobileNavLink>
 
               <div className="pt-2 flex gap-2 items-center">
                 <button
