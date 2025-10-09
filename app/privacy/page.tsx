@@ -129,7 +129,6 @@ export default function PrivacyPage() {
             </section>
           </article>
 
-          {/* Right column: table of contents */}
           <aside className="hidden lg:block">
             <div className="sticky top-24 rounded-md border border-border bg-card p-5 shadow-sm">
               <h3 className="text-lg font-semibold mb-3">On this page</h3>

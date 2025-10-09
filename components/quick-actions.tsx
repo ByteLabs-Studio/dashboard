@@ -7,21 +7,8 @@ const DISCORD_INVITE =
   (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE) ||
   "https://discord.gg/vortexbot";
 
-/**
- * QuickActions
- *
- * Small client-side component that exposes quick overview actions for the dashboard.
- * Keep interactive logic inside this component so server components can render it
- * without passing event handlers (avoids runtime errors about passing handlers to
- * client component props).
- *
- * Usage:
- *   import QuickActions from "@components/quick-actions";
- *   <QuickActions />
- */
 export default function QuickActions() {
   function handleViewActivity() {
-    // Example client-only behavior — navigate or open panel
     window.alert("View recent activity (placeholder)");
   }
 
@@ -61,10 +48,6 @@ export default function QuickActions() {
           Support
         </button>
       </a>
-
-      {/* Create project button removed */}
-
-      {/* Export button removed */}
 
       <button
         type="button"

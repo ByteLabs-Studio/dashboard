@@ -113,7 +113,6 @@
 }
 
 .rose-pine {
-    /* Base colors from official Rosé Pine palette */
     --background: #191724; /* base */
     --foreground: #e0def4; /* text */
     --card: #1f1d2e; /* surface */
@@ -152,27 +151,22 @@
         @apply border-border outline-ring/50;
     }
 
-    /* Rosé Pine theme specific button overrides */
-    /* Primary buttons with bg-foreground and text-background (like "Go to Downloads", "Download .tar.gz") */
     .rose-pine button.bg-foreground.text-background,
     .rose-pine a.bg-foreground.text-background {
-        background-color: #c4a7e7 !important; /* iris for primary actions */
-        color: #191724 !important; /* base for contrast */
+        background-color: #c4a7e7 !important;
+        color: #191724 !important;
     }
 
-    /* Secondary buttons with bg-card (small action buttons only, not OS download buttons) */
     .rose-pine button.bg-card.px-4.py-2 {
-        background-color: #907aa9 !important; /* darker purple for secondary buttons */
-        color: #e0def4 !important; /* text for contrast */
+        background-color: #907aa9 !important;
+        color: #e0def4 !important;
     }
 
-    /* Activity button and other muted elements */
     .rose-pine button.bg-muted,
     .rose-pine button[class*="bg-muted"] {
-        background-color: #907aa9 !important; /* darker purple for muted button elements */
+        background-color: #907aa9 !important;
     }
 
-    /* Prevent theme flash and ensure smooth initialization */
     html {
         scroll-behavior: smooth;
         color-scheme: light;
@@ -195,7 +189,6 @@
         min-height: 100vh;
     }
 
-    /* Smooth transitions for theme changes - exclude motion elements */
     *:not([data-framer-motion]):not([data-framer-motion] *):not(
             .no-css-transitions
         ):not(.no-css-transitions *) {
@@ -208,7 +201,6 @@
             stroke 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Exclude all Framer Motion elements from CSS transitions */
     [data-framer-motion],
     [data-framer-motion] *,
     .no-css-transitions,
@@ -216,12 +208,10 @@
         transition: none !important;
     }
 
-    /* Ensure motion elements can animate freely */
     [data-framer-motion] * {
         will-change: transform, opacity;
     }
 
-    /* Enhanced transitions for theme changes */
     .dark,
     [data-theme="dark"],
     .rose-pine,
@@ -229,7 +219,6 @@
         transition: color-scheme 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Optimize transitions for Tailwind utility classes */
     [class*="bg-"],
     [class*="text-"],
     [class*="border-"] {
@@ -239,7 +228,6 @@
             border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Preserve motion preferences */
     @media (prefers-reduced-motion: reduce) {
         *,
         html {

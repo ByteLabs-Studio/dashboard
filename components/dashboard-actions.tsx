@@ -5,17 +5,6 @@ const DISCORD_INVITE =
   (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE) ||
   "https://discord.gg/vortexbot";
 
-/**
- * Client-side component that contains interactive dashboard buttons.
- * - Keeps event handlers inside a client component so server pages can render it
- *   without passing functions (avoids the "Event handlers cannot be passed to
- *   Client Component props" runtime error).
- *
- * Usage:
- *   import DashboardActions from "@components/dashboard-actions";
- *   // Render inside a server component page without passing callbacks
- *   <DashboardActions />
- */
 export default function DashboardActions() {
   return (
     <div className="mt-6 flex flex-wrap gap-3 items-center">
@@ -51,7 +40,6 @@ export default function DashboardActions() {
         </button>
       </a>
 
-      {/* Create project and Export buttons removed */}
     </div>
   );
 }

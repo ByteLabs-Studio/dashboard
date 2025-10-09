@@ -116,7 +116,6 @@ export const Plasma: React.FC<PlasmaProps> = ({
 
     const initialize = async () => {
       try {
-        // Dynamic import to avoid SSR issues
         const { Renderer, Program, Mesh, Triangle } = await import("ogl");
 
         const useCustomColor = color ? 1.0 : 0.0;
