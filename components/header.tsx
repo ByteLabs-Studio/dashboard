@@ -9,7 +9,7 @@ import ThemeDropdown from "./theme-dropdown";
 const DISCORD_INVITE =
   typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE
     ? (process.env.NEXT_PUBLIC_DISCORD_INVITE as string)
-    : "https://discord.gg/wd7N28Uq64";
+    : "https://discord.gg/vortexbot";
 
 function NavLink({
   href,

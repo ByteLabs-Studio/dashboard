@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const DISCORD_INVITE =
   (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE) ||
-  "https://discord.gg/your-invite";
+  "https://discord.gg/vortexbot";
 
 /**
  * QuickActions
