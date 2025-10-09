@@ -1,8 +1,14 @@
 import React from "react";
 import "./globals.css";
 import { ThemeProvider } from "@components/theme-provider";
+import type { Metadata } from 'next'
 import Header from "@components/header";
 import Footer from "@components/footer";
+
+export const metadata: Metadata = {
+  title: 'ByteLab',
+  description: 'Code. Sound. Visualize.',
+}
 
 export default function RootLayout({
   children,
