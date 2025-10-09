@@ -112,6 +112,40 @@
     --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
+.rose-pine {
+    --background: oklch(0.165 0.024 13.838);
+    --foreground: oklch(0.909 0.018 13.838);
+    --card: oklch(0.196 0.024 13.838);
+    --card-foreground: oklch(0.909 0.018 13.838);
+    --popover: oklch(0.196 0.024 13.838);
+    --popover-foreground: oklch(0.909 0.018 13.838);
+    --primary: oklch(0.796 0.095 323.526);
+    --primary-foreground: oklch(0.165 0.024 13.838);
+    --secondary: oklch(0.254 0.024 13.838);
+    --secondary-foreground: oklch(0.909 0.018 13.838);
+    --muted: oklch(0.254 0.024 13.838);
+    --muted-foreground: oklch(0.647 0.044 13.838);
+    --accent: oklch(0.693 0.106 44.634);
+    --accent-foreground: oklch(0.165 0.024 13.838);
+    --destructive: oklch(0.686 0.191 22.216);
+    --border: oklch(0.254 0.024 13.838);
+    --input: oklch(0.254 0.024 13.838);
+    --ring: oklch(0.796 0.095 323.526);
+    --chart-1: oklch(0.796 0.095 323.526);
+    --chart-2: oklch(0.693 0.106 44.634);
+    --chart-3: oklch(0.763 0.103 184.704);
+    --chart-4: oklch(0.647 0.044 13.838);
+    --chart-5: oklch(0.909 0.018 13.838);
+    --sidebar: oklch(0.196 0.024 13.838);
+    --sidebar-foreground: oklch(0.909 0.018 13.838);
+    --sidebar-primary: oklch(0.796 0.095 323.526);
+    --sidebar-primary-foreground: oklch(0.165 0.024 13.838);
+    --sidebar-accent: oklch(0.254 0.024 13.838);
+    --sidebar-accent-foreground: oklch(0.909 0.018 13.838);
+    --sidebar-border: oklch(0.254 0.024 13.838);
+    --sidebar-ring: oklch(0.796 0.095 323.526);
+}
+
 @layer base {
     * {
         @apply border-border outline-ring/50;
@@ -122,31 +156,14 @@
         scroll-behavior: smooth;
         color-scheme: light;
         transition: color-scheme 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        /* Initial state - hide content until theme is ready */
-        visibility: hidden;
     }
 
     html.dark {
         color-scheme: dark;
     }
 
-    /* Show content once theme is initialized */
-    html[data-theme-ready] {
-        visibility: visible;
-    }
-
-    /* Smooth fade-in for body content */
-    html:not([data-theme-ready]) body {
-        opacity: 0;
-        transform: translateY(2px);
-    }
-
-    html[data-theme-ready] body {
-        opacity: 1;
-        transform: translateY(0);
-        transition:
-            opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-            transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    html.rose-pine {
+        color-scheme: dark;
     }
 
     body {
@@ -185,7 +202,9 @@
 
     /* Enhanced transitions for theme changes */
     .dark,
-    [data-theme="dark"] {
+    [data-theme="dark"],
+    .rose-pine,
+    [data-theme="rose-pine"] {
         transition: color-scheme 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -197,17 +216,6 @@
             background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
             color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
             border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Ensure theme flash doesn't occur on initial load */
-    html:not([data-theme-ready]) *:not([data-framer-motion]) {
-        transition: none !important;
-        animation: none !important;
-    }
-
-    /* Allow Framer Motion to work during theme initialization */
-    html:not([data-theme-ready]) [data-framer-motion] {
-        transition: none !important;
     }
 
     /* Preserve motion preferences */

@@ -1,18 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTheme } from "next-themes";
-import { Moon, Sun } from "lucide-react";
-import { motion } from "framer-motion";
 import { BsDiscord } from "react-icons/bs";
+import ThemeDropdown from "./theme-dropdown";
 
 const DISCORD_INVITE =
   typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE
     ? (process.env.NEXT_PUBLIC_DISCORD_INVITE as string)
     : "https://discord.gg/wd7N28Uq64";
-
 
 function NavLink({
   href,
@@ -71,18 +68,6 @@ function MobileNavLink({
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme, resolvedTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const isDark = mounted ? (resolvedTheme || theme) === "dark" : false;
-
-  const toggleTheme = () => {
-    setTheme(isDark ? "light" : "dark");
-  };
 
   const closeMenu = () => setOpen(false);
 
@@ -112,50 +97,15 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <button
-              onClick={toggleTheme}
-              className="hidden md:inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm text-foreground hover:bg-foreground/10"
-              style={{ transition: "background-color 0.2s ease" }}
-            >
-              <div className="relative w-5 h-5">
-                <motion.div
-                  animate={{
-                    opacity: isDark ? 1 : 0,
-                    scale: isDark ? 1 : 0.6,
-                    rotate: isDark ? 0 : -90,
-                  }}
-                  transition={{
-                    duration: 0.25,
-                    ease: [0.4, 0, 0.2, 1],
-                  }}
-                  className="absolute inset-0 flex items-center justify-center"
-                  data-framer-motion
-                >
-                  <Sun className="w-5 h-5 text-yellow-400 drop-shadow-[0_0_4px_rgba(255,255,100,0.4)]" />
-                </motion.div>
-
-                <motion.div
-                  animate={{
-                    opacity: isDark ? 0 : 1,
-                    scale: isDark ? 0.6 : 1,
-                    rotate: isDark ? 90 : 0,
-                  }}
-                  transition={{
-                    duration: 0.25,
-                    ease: [0.4, 0, 0.2, 1],
-                  }}
-                  className="absolute inset-0 flex items-center justify-center"
-                  data-framer-motion
-                >
-                  <Moon className="w-5 h-5 text-blue-400 drop-shadow-[0_0_4px_rgba(100,150,255,0.3)]" />
-                </motion.div>
-              </div>
-            </button>
+            <div className="hidden md:block">
+              <ThemeDropdown />
+            </div>
             <a
               href={DISCORD_INVITE}
               className="hidden sm:inline-flex items-center rounded-md bg-[#6577E6] p-6 py-2 text-sm font-medium text-background shadow hover:brightness-95"
             >
-              <BsDiscord className="w-5 h-5" /><span className="w-2"/>
+              <BsDiscord className="w-5 h-5" />
+              <span className="w-2" />
               Support
             </a>
 
@@ -201,12 +151,7 @@ export default function Header() {
               </MobileNavLink>
 
               <div className="pt-2 flex gap-2 items-center">
-                <button
-                  onClick={toggleTheme}
-                  className="rounded-md bg-card px-3 py-1 text-sm transition-colors"
-                >
-                  Theme
-                </button>
+                <ThemeDropdown />
               </div>
             </div>
           </div>

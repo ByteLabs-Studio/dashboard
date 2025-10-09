@@ -1,14 +1,14 @@
 import React from "react";
 import "./globals.css";
 import { ThemeProvider } from "@components/theme-provider";
-import type { Metadata } from 'next'
+import type { Metadata } from "next";
 import Header from "@components/header";
 import Footer from "@components/footer";
 
 export const metadata: Metadata = {
-  title: 'ByteLab',
-  description: 'Code. Sound. Visualize.',
-}
+  title: "ByteLab",
+  description: "Code. Sound. Visualize.",
+};
 
 export default function RootLayout({
   children,
@@ -33,43 +33,34 @@ export default function RootLayout({
                     const theme = getThemePreference();
                     const root = document.documentElement;
 
+                    // Remove all theme classes first
+                    root.classList.remove('dark', 'rose-pine');
+
                     if (theme === 'dark') {
                       root.classList.add('dark');
-                      root.setAttribute('data-theme', 'dark');
-                    } else {
-                      root.classList.remove('dark');
-                      root.setAttribute('data-theme', 'light');
+                    } else if (theme === 'rose-pine') {
+                      root.classList.add('rose-pine');
                     }
 
-                    root.style.colorScheme = theme;
-                    root.setAttribute('data-theme-ready', 'true');
-
-                    // Force immediate repaint
-                    root.style.visibility = 'visible';
+                    root.setAttribute('data-theme', theme);
+                    root.style.colorScheme = (theme === 'light') ? 'light' : 'dark';
                   } catch (e) {
-                    // Fallback if script fails
-                    document.documentElement.setAttribute('data-theme-ready', 'true');
+                    // Fallback - do nothing
                   }
                 })();
               `,
             }}
           />
-          <noscript>
-            <style>{`
-              html { visibility: visible !important; }
-              html[data-theme-ready] body,
-              html:not([data-theme-ready]) body {
-                opacity: 1 !important;
-              }
-            `}</style>
-          </noscript>
         </head>
         <body>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            themes={["light", "dark", "rose-pine"]}
+          >
             <Header />
-            <div className="pt-12">
-              {children}
-            </div>
+            <div className="pt-12">{children}</div>
             <Footer />
           </ThemeProvider>
         </body>
