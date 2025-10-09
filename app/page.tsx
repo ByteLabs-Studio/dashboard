@@ -18,7 +18,7 @@ export default function HomePage() {
           color="#60a5fa"
           speed={0.3}
           opacity={1.0}
-          mouseInteractive={true}
+          mouseInteractive={false}
         />
       </div>
       <main className="py-12 pb-28 md:pb-32 relative z-10">
