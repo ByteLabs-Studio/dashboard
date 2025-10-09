@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import DashboardActions from "@components/dashboard-actions";
 import Plasma from "./Plasma";
 
@@ -11,9 +14,45 @@ function Container({ children }: { children: React.ReactNode }) {
 }
 
 export default function HomePage() {
+  const [backgroundEnabled, setBackgroundEnabled] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+
+    // Get initial state from localStorage
+    const stored = localStorage.getItem("background-animation");
+    if (stored !== null) {
+      setBackgroundEnabled(stored === "true");
+    }
+
+    // Listen for background toggle events
+    const handleBackgroundChange = (event: CustomEvent) => {
+      setBackgroundEnabled(event.detail.enabled);
+    };
+
+    window.addEventListener(
+      "background-animation-change",
+      handleBackgroundChange as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "background-animation-change",
+        handleBackgroundChange as EventListener,
+      );
+    };
+  }, []);
+
   return (
     <div className="bg-background text-foreground antialiased relative min-h-screen">
-      <div className="absolute inset-0 opacity-20">
+      <div
+        className="absolute inset-0 transition-opacity duration-500 ease-in-out"
+        data-plasma-background
+        style={{
+          opacity: mounted ? (backgroundEnabled ? 0.2 : 0) : 0.2,
+        }}
+      >
         <Plasma
           color="#D375DF"
           speed={0.3}

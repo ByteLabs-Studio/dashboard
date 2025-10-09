@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BsDiscord } from "react-icons/bs";
 import ThemeDropdown from "./theme-dropdown";
+import BackgroundToggle from "./background-toggle";
 
 const DISCORD_INVITE =
   typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE
@@ -97,7 +98,8 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <div className="hidden md:block">
+            <div className="hidden md:flex items-center gap-2">
+              <BackgroundToggle />
               <ThemeDropdown />
             </div>
             <a
@@ -151,6 +153,7 @@ export default function Header() {
               </MobileNavLink>
 
               <div className="pt-2 flex gap-2 items-center">
+                <BackgroundToggle />
                 <ThemeDropdown />
               </div>
             </div>
