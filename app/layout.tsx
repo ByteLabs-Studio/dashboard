@@ -59,7 +59,6 @@ export default function RootLayout({
                       root.style.setProperty('--initial-background-opacity', '0');
                     }
                   } catch (e) {
-                    // Fallback - do nothing
                   }
                 })();
               `,

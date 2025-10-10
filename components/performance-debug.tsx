@@ -24,12 +24,10 @@ export function usePerformanceMonitor(enabled: boolean = false) {
       const frameTime = currentTime - lastTime;
       frameTimes.push(frameTime);
 
-      // Keep only last 60 frames for FPS calculation
       if (frameTimes.length > 60) {
         frameTimes.shift();
       }
 
-      // Update stats every 30 frames (~500ms)
       if (frameTimes.length % 30 === 0) {
         const avgFrameTime =
           frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
@@ -39,7 +37,7 @@ export function usePerformanceMonitor(enabled: boolean = false) {
         if ("memory" in performance) {
           const memory = (performance as { memory: { usedJSHeapSize: number } })
             .memory;
-          memoryUsage = Math.round(memory.usedJSHeapSize / 1024 / 1024); // MB
+          memoryUsage = Math.round(memory.usedJSHeapSize / 1024 / 1024);
         }
 
         setStats({

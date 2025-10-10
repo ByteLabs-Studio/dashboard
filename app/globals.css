@@ -113,37 +113,37 @@
 }
 
 .rose-pine {
-    --background: #191724; /* base */
-    --foreground: #e0def4; /* text */
-    --card: #1f1d2e; /* surface */
-    --card-foreground: #e0def4; /* text */
-    --popover: #26233a; /* overlay */
-    --popover-foreground: #e0def4; /* text */
-    --primary: #c4a7e7; /* iris - light purple for primary buttons like "Go to Downloads" */
-    --primary-foreground: #191724; /* base for contrast */
-    --secondary: #907aa9; /* darker purple for secondary buttons */
-    --secondary-foreground: #e0def4; /* text */
-    --muted: #26233a; /* overlay */
-    --muted-foreground: #6e6a86; /* muted */
-    --accent: #907aa9; /* darker purple for accent elements */
-    --accent-foreground: #e0def4; /* text for better contrast */
-    --destructive: #eb6f92; /* love - pink for destructive actions */
-    --border: #26233a; /* overlay */
-    --input: #1f1d2e; /* surface */
-    --ring: #c4a7e7; /* iris */
-    --chart-1: #ebbcba; /* rose */
-    --chart-2: #c4a7e7; /* iris */
-    --chart-3: #9ccfd8; /* foam */
-    --chart-4: #f6c177; /* gold */
-    --chart-5: #31748f; /* pine */
-    --sidebar: #1f1d2e; /* surface */
-    --sidebar-foreground: #e0def4; /* text */
-    --sidebar-primary: #c4a7e7; /* iris */
-    --sidebar-primary-foreground: #191724; /* base */
-    --sidebar-accent: #26233a; /* overlay */
-    --sidebar-accent-foreground: #e0def4; /* text */
-    --sidebar-border: #26233a; /* overlay */
-    --sidebar-ring: #907aa9; /* darker purple */
+    --background: #191724;
+    --foreground: #e0def4;
+    --card: #1f1d2e;
+    --card-foreground: #e0def4;
+    --popover: #26233a;
+    --popover-foreground: #e0def4;
+    --primary: #c4a7e7;
+    --primary-foreground: #191724;
+    --secondary: #907aa9;
+    --secondary-foreground: #e0def4;
+    --muted: #26233a;
+    --muted-foreground: #6e6a86;
+    --accent: #907aa9;
+    --accent-foreground: #e0def4;
+    --destructive: #eb6f92;
+    --border: #26233a;
+    --input: #1f1d2e;
+    --ring: #c4a7e7;
+    --chart-1: #ebbcba;
+    --chart-2: #c4a7e7;
+    --chart-3: #9ccfd8;
+    --chart-4: #f6c177;
+    --chart-5: #31748f;
+    --sidebar: #1f1d2e;
+    --sidebar-foreground: #e0def4;
+    --sidebar-primary: #c4a7e7;
+    --sidebar-primary-foreground: #191724;
+    --sidebar-accent: #26233a;
+    --sidebar-accent-foreground: #e0def4;
+    --sidebar-border: #26233a;
+    --sidebar-ring: #907aa9;
 }
 
 @layer base {

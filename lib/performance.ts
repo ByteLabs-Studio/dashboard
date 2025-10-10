@@ -27,7 +27,7 @@ class PerformanceMonitor {
   constructor(config: PerformanceConfig = {}) {
     this.config = {
       enableLogging: config.enableLogging ?? false,
-      sampleInterval: config.sampleInterval ?? 1000, // 1 second
+      sampleInterval: config.sampleInterval ?? 1000,
       maxSamples: config.maxSamples ?? 60,
       onMetricsUpdate: config.onMetricsUpdate ?? (() => {}),
     };
@@ -100,26 +100,22 @@ class PerformanceMonitor {
     let memoryUsage: number | undefined;
     let gpuMemoryUsage: number | undefined;
 
-    // Memory usage (if available)
     if ("memory" in performance) {
       const memory = (performance as { memory: { usedJSHeapSize: number } })
         .memory;
-      memoryUsage = memory.usedJSHeapSize / 1024 / 1024; // MB
+      memoryUsage = memory.usedJSHeapSize / 1024 / 1024;
     }
 
-    // GPU memory (experimental, not widely supported)
     try {
       const canvas = document.createElement("canvas");
       const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
       if (gl && "getExtension" in gl) {
         const ext = gl.getExtension("WEBGL_debug_renderer_info");
         if (ext) {
-          // This is very limited and not reliable
           gpuMemoryUsage = undefined;
         }
       }
     } catch {
-      // GPU memory detection failed
     }
 
     return {
@@ -189,9 +185,7 @@ class PerformanceMonitor {
   }
 }
 
-// Utility functions for performance optimization
 export const performanceUtils = {
-  // Debounce function with performance tracking
   debounce<T extends (...args: unknown[]) => unknown>(
     func: T,
     wait: number,
@@ -208,7 +202,6 @@ export const performanceUtils = {
           const end = performance.now();
 
           if (end - start > 16) {
-            // Longer than 16ms (60fps)
             console.warn(`Slow debounced function execution: ${end - start}ms`);
           }
         }
@@ -230,7 +223,6 @@ export const performanceUtils = {
     }) as T;
   },
 
-  // Throttle function with performance tracking
   throttle<T extends (...args: unknown[]) => unknown>(
     func: T,
     limit: number,
@@ -255,12 +247,9 @@ export const performanceUtils = {
     }) as T;
   },
 
-  // Check if device prefers reduced motion
   prefersReducedMotion(): boolean {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   },
-
-  // Get device performance tier
   getPerformanceTier(): "low" | "medium" | "high" {
     const canvas = document.createElement("canvas");
     const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
@@ -276,12 +265,11 @@ export const performanceUtils = {
     const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
     const hasGoodGPU = maxTextureSize >= 4096;
 
-    // Check memory if available
     let hasEnoughMemory = true;
     if ("memory" in performance) {
       const memory = (performance as { memory: { jsHeapSizeLimit: number } })
         .memory;
-      hasEnoughMemory = memory.jsHeapSizeLimit > 1024 * 1024 * 1024; // 1GB
+      hasEnoughMemory = memory.jsHeapSizeLimit > 1024 * 1024 * 1024;
     }
 
     if (isMobile && (!hasGoodGPU || !hasEnoughMemory)) return "low";
@@ -289,7 +277,6 @@ export const performanceUtils = {
     return "medium";
   },
 
-  // Adaptive frame rate targeting
   getTargetFrameRate(): number {
     const tier = this.getPerformanceTier();
     const prefersReduced = this.prefersReducedMotion();
@@ -306,7 +293,6 @@ export const performanceUtils = {
     }
   },
 
-  // Create a performance-aware RAF loop
   createRAFLoop(
     callback: (deltaTime: number, timestamp: number) => void,
     targetFPS?: number,
@@ -321,7 +307,6 @@ export const performanceUtils = {
       const deltaTime = timestamp - lastTime;
 
       if (deltaTime >= interval - 1) {
-        // -1ms tolerance
         callback(deltaTime, timestamp);
         lastTime = timestamp;
       }
@@ -335,7 +320,6 @@ export const performanceUtils = {
   },
 };
 
-// React hook for performance monitoring
 export function usePerformanceMonitor(config?: PerformanceConfig) {
   const [metrics, setMetrics] = React.useState<PerformanceMetrics | null>(null);
   const [monitor] = React.useState(
@@ -366,5 +350,4 @@ export function usePerformanceMonitor(config?: PerformanceConfig) {
 
 export default PerformanceMonitor;
 
-// Add React import for the hook
 import React from "react";

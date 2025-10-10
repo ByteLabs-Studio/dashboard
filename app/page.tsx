@@ -139,7 +139,6 @@ export default function HomePage() {
         </Container>
       </main>
 
-      {/* Performance Debug - only in development */}
       {process.env.NODE_ENV === "development" && (
         <PerformanceDebug
           show={showDebug}

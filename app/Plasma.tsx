@@ -162,7 +162,6 @@ export const Plasma: React.FC<PlasmaProps> = ({
     }
   }, [quality]);
 
-  // Throttled mouse move handler
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       if (!mouseInteractive || !containerRef.current) return;
