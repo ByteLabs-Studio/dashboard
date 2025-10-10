@@ -103,11 +103,11 @@ const debounce = (func: (...args: unknown[]) => void, wait: number) => {
   };
 };
 
-const throttle = (func: (...args: unknown[]) => void, limit: number) => {
-  let inThrottle: boolean;
-  return (...args: unknown[]) => {
+const throttle = <T extends unknown[]>(func: (...args: T) => void, limit: number) => {
+  let inThrottle = false;
+  return function(this: unknown, ...args: T) {
     if (!inThrottle) {
-      func(...args);
+      func.apply(this, args);
       inThrottle = true;
       setTimeout(() => (inThrottle = false), limit);
     }
@@ -193,8 +193,8 @@ export const Plasma: React.FC<PlasmaProps> = ({
     const currentContainer = containerRef.current;
     if (!currentContainer) return;
 
-    let renderer: unknown = null;
-    let mesh: unknown = null;
+    let renderer: import('ogl').Renderer | null = null;
+    let mesh: import('ogl').Mesh | null = null;
     let lastTime = 0;
     const performanceTracker = { frames: 0, lastPerfTime: 0 };
     const frameInterval = 1000 / qualitySettings.targetFps;
@@ -203,7 +203,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
       try {
         await new Promise((resolve) => setTimeout(resolve, 16));
 
-        const { Renderer, Program, Mesh, Triangle } = await import("ogl");
+        const { Renderer, Program, Mesh: OGLMesh, Triangle } = await import("ogl");
 
         const useCustomColor = color ? 1.0 : 0.0;
         const customColorRgb = color ? hexToRgb(color) : [1, 1, 1];
@@ -257,7 +257,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
           },
         });
 
-        mesh = new Mesh(gl, { geometry, program });
+        mesh = new OGLMesh(gl, { geometry, program });
 
         if (mouseInteractive) {
           currentContainer.addEventListener("mousemove", throttledMouseMove, {
@@ -274,7 +274,9 @@ export const Plasma: React.FC<PlasmaProps> = ({
           const scaledHeight = Math.floor(
             rect.height * qualitySettings.renderScale,
           );
-          renderer.setSize(scaledWidth, scaledHeight);
+          if (renderer) {
+            renderer.setSize(scaledWidth, scaledHeight);
+          }
           const res = program.uniforms.iResolution.value as Float32Array;
           res[0] = scaledWidth;
           res[1] = scaledHeight;
@@ -329,7 +331,9 @@ export const Plasma: React.FC<PlasmaProps> = ({
             program.uniforms.iTime.value = timeValue;
 
             try {
-              renderer.render({ scene: mesh });
+              if (renderer && mesh) {
+                renderer.render({ scene: mesh as import('ogl').Mesh });
+              }
             } catch (e) {
               console.warn("WebGL render error, skipping frame:", e);
             }
