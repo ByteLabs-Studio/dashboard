@@ -5,34 +5,32 @@ import { Sparkles } from "lucide-react";
 
 export default function BackgroundToggle() {
   const [mounted, setMounted] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(() => {
-    // Get initial state from data attribute to prevent flash
-    if (typeof document !== "undefined") {
-      const dataAttr = document.documentElement.getAttribute(
-        "data-background-enabled",
-      );
-      return dataAttr === "true";
-    }
-    return true;
-  });
+  const [isEnabled, setIsEnabled] = useState(true);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("background-animation");
+      const shouldEnable = stored !== null ? stored === "true" : true;
+      setIsEnabled(shouldEnable);
+    }
     setMounted(true);
   }, []);
 
   useEffect(() => {
     if (!mounted) return;
 
-    // Save to localStorage
     localStorage.setItem("background-animation", isEnabled.toString());
 
-    // Update the data attribute
     document.documentElement.setAttribute(
       "data-background-enabled",
       isEnabled.toString(),
     );
 
-    // Dispatch custom event for other components to listen to
+    document.documentElement.style.setProperty(
+      "--initial-background-opacity",
+      isEnabled ? "0.6" : "0",
+    );
+
     window.dispatchEvent(
       new CustomEvent("background-animation-change", {
         detail: { enabled: isEnabled },
@@ -45,8 +43,22 @@ export default function BackgroundToggle() {
   }, [isEnabled]);
 
   if (!mounted) {
+    const dataAttr =
+      typeof document !== "undefined"
+        ? document.documentElement.getAttribute("data-background-enabled")
+        : null;
+    const initialEnabled = dataAttr !== null ? dataAttr === "true" : true;
+
     return (
-      <div className="w-9 h-9 bg-muted/50 animate-pulse rounded-md transform-gpu" />
+      <div
+        className={`w-9 h-9 bg-muted/50 rounded-md transform-gpu flex items-center justify-center ${
+          initialEnabled ? "text-foreground" : "text-muted-foreground"
+        }`}
+      >
+        <Sparkles
+          className={`w-4 h-4 ${initialEnabled ? "" : "opacity-50 stroke-1"}`}
+        />
+      </div>
     );
   }
 
