@@ -33,7 +33,6 @@ void main() {
 }
 `;
 
-// Optimized fragment shader with adjustable iterations
 const fragment = `#version 300 es
 precision mediump float;
 uniform vec2 iResolution;
@@ -96,7 +95,6 @@ void main() {
   fragColor = vec4(finalColor * 1.2, alpha);
 }`;
 
-// Debounce utility
 const debounce = (func: (...args: unknown[]) => void, wait: number) => {
   let timeout: NodeJS.Timeout;
   return (...args: unknown[]) => {
@@ -105,12 +103,11 @@ const debounce = (func: (...args: unknown[]) => void, wait: number) => {
   };
 };
 
-// Throttle utility
-const throttle = (func: (...args: unknown[]) => void, limit: number) => {
-  let inThrottle: boolean;
-  return (...args: unknown[]) => {
+const throttle = <T extends unknown[]>(func: (...args: T) => void, limit: number) => {
+  let inThrottle = false;
+  return function(this: unknown, ...args: T) {
     if (!inThrottle) {
-      func(...args);
+      func.apply(this, args);
       inThrottle = true;
       setTimeout(() => (inThrottle = false), limit);
     }
@@ -130,46 +127,57 @@ export const Plasma: React.FC<PlasmaProps> = ({
   const mousePos = useRef({ x: 0, y: 0 });
   const isVisibleRef = useRef(true);
   const animationFrameRef = useRef<number>(0);
+  const isInitializedRef = useRef(false);
+  const performanceTimerRef = useRef<number>(0);
 
-  // Quality settings
   const qualitySettings = useMemo(() => {
+    const devicePixelRatio =
+      typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
+
     switch (quality) {
       case "low":
         return {
-          dpr: 0.75,
-          iterations: 35,
-          targetFps: 45,
+          dpr: 0.5,
+          iterations: 25,
+          targetFps: 30,
           antialias: false,
+          renderScale: 0.7,
         };
       case "high":
         return {
-          dpr: Math.min(window.devicePixelRatio || 1, 2),
-          iterations: 60,
-          targetFps: 60,
-          antialias: true,
-        };
-      default: // medium
-        return {
-          dpr: 1,
-          iterations: 50,
+          dpr: Math.min(devicePixelRatio, 1.5),
+          iterations: 45,
           targetFps: 60,
           antialias: false,
+          renderScale: 1.0,
+        };
+      default:
+        return {
+          dpr: 0.8,
+          iterations: 35,
+          targetFps: 45,
+          antialias: false,
+          renderScale: 0.85,
         };
     }
   }, [quality]);
 
   // Throttled mouse move handler
   const handleMouseMove = useCallback(
-    throttle((e: MouseEvent) => {
+    (e: MouseEvent) => {
       if (!mouseInteractive || !containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       mousePos.current.x = e.clientX - rect.left;
       mousePos.current.y = e.clientY - rect.top;
-    }, 16), // ~60fps
+    },
     [mouseInteractive],
   );
 
-  // Visibility API to pause when tab is hidden
+  const throttledMouseMove = useMemo(
+    () => throttle(handleMouseMove, 16),
+    [handleMouseMove],
+  );
+
   useEffect(() => {
     const handleVisibilityChange = () => {
       isVisibleRef.current = !document.hidden;
@@ -185,14 +193,17 @@ export const Plasma: React.FC<PlasmaProps> = ({
     const currentContainer = containerRef.current;
     if (!currentContainer) return;
 
-    let renderer: unknown = null;
-    let mesh: unknown = null;
+    let renderer: import('ogl').Renderer | null = null;
+    let mesh: import('ogl').Mesh | null = null;
     let lastTime = 0;
+    const performanceTracker = { frames: 0, lastPerfTime: 0 };
     const frameInterval = 1000 / qualitySettings.targetFps;
 
     const initialize = async () => {
       try {
-        const { Renderer, Program, Mesh, Triangle } = await import("ogl");
+        await new Promise((resolve) => setTimeout(resolve, 16));
+
+        const { Renderer, Program, Mesh: OGLMesh, Triangle } = await import("ogl");
 
         const useCustomColor = color ? 1.0 : 0.0;
         const customColorRgb = color ? hexToRgb(color) : [1, 1, 1];
@@ -201,9 +212,9 @@ export const Plasma: React.FC<PlasmaProps> = ({
         renderer = new Renderer({
           webgl: 2,
           alpha: true,
-          antialias: qualitySettings.antialias,
+          antialias: false,
           dpr: qualitySettings.dpr,
-          powerPreference: "low-power", // Better for battery life
+          powerPreference: "high-performance",
         });
 
         const gl = renderer.gl;
@@ -211,7 +222,17 @@ export const Plasma: React.FC<PlasmaProps> = ({
         canvas.style.display = "block";
         canvas.style.width = "100%";
         canvas.style.height = "100%";
-        canvas.style.willChange = "contents"; // Optimize for frequent repaints
+        canvas.style.pointerEvents = "none";
+
+        const rect = currentContainer.getBoundingClientRect();
+        const scaledWidth = Math.floor(
+          rect.width * qualitySettings.renderScale,
+        );
+        const scaledHeight = Math.floor(
+          rect.height * qualitySettings.renderScale,
+        );
+        renderer.setSize(scaledWidth, scaledHeight);
+
         currentContainer.appendChild(canvas);
 
         const geometry = new Triangle(gl);
@@ -221,54 +242,76 @@ export const Plasma: React.FC<PlasmaProps> = ({
           fragment: fragment,
           uniforms: {
             iTime: { value: 0 },
-            iResolution: { value: new Float32Array([1, 1]) },
+            iResolution: {
+              value: new Float32Array([scaledWidth, scaledHeight]),
+            },
             uCustomColor: { value: new Float32Array(customColorRgb) },
             uUseCustomColor: { value: useCustomColor },
-            uSpeed: { value: speed * 0.8 },
+            uSpeed: { value: speed * 0.6 },
             uDirection: { value: directionMultiplier },
-            uScale: { value: scale },
-            uOpacity: { value: Math.min(opacity * 1.5, 1.0) },
+            uScale: { value: scale * qualitySettings.renderScale },
+            uOpacity: { value: Math.min(opacity * 1.2, 1.0) },
             uMouse: { value: new Float32Array([0, 0]) },
             uMouseInteractive: { value: mouseInteractive ? 1.0 : 0.0 },
             uIterations: { value: qualitySettings.iterations },
           },
         });
 
-        mesh = new Mesh(gl, { geometry, program });
+        mesh = new OGLMesh(gl, { geometry, program });
 
         if (mouseInteractive) {
-          currentContainer.addEventListener("mousemove", handleMouseMove, {
+          currentContainer.addEventListener("mousemove", throttledMouseMove, {
             passive: true,
           });
         }
 
-        // Debounced resize handler
         const setSize = debounce(() => {
-          if (!currentContainer) return;
+          if (!currentContainer || !renderer) return;
           const rect = currentContainer.getBoundingClientRect();
-          const width = Math.max(1, Math.floor(rect.width));
-          const height = Math.max(1, Math.floor(rect.height));
-          renderer.setSize(width, height);
+          const scaledWidth = Math.floor(
+            rect.width * qualitySettings.renderScale,
+          );
+          const scaledHeight = Math.floor(
+            rect.height * qualitySettings.renderScale,
+          );
+          if (renderer) {
+            renderer.setSize(scaledWidth, scaledHeight);
+          }
           const res = program.uniforms.iResolution.value as Float32Array;
-          res[0] = gl.drawingBufferWidth;
-          res[1] = gl.drawingBufferHeight;
-        }, 100);
+          res[0] = scaledWidth;
+          res[1] = scaledHeight;
+          program.uniforms.uScale.value = scale * qualitySettings.renderScale;
+        }, 150);
 
         const ro = new ResizeObserver(setSize);
         ro.observe(currentContainer);
-        setSize();
 
         const t0 = performance.now();
+        isInitializedRef.current = true;
 
-        // Frame-rate limited render loop
         const loop = (currentTime: number) => {
-          if (!isVisibleRef.current) {
+          if (!isVisibleRef.current || !isInitializedRef.current) {
             animationFrameRef.current = requestAnimationFrame(loop);
             return;
           }
 
-          // Frame rate limiting
-          if (currentTime - lastTime >= frameInterval) {
+          const deltaTime = currentTime - lastTime;
+          if (deltaTime >= frameInterval - 1) {
+            performanceTracker.frames++;
+            if (currentTime - performanceTracker.lastPerfTime > 1000) {
+              const fps = performanceTracker.frames;
+              performanceTracker.frames = 0;
+              performanceTracker.lastPerfTime = currentTime;
+
+              if (fps < qualitySettings.targetFps * 0.7) {
+                const currentIterations = program.uniforms.uIterations.value;
+                program.uniforms.uIterations.value = Math.max(
+                  15,
+                  currentIterations * 0.9,
+                );
+              }
+            }
+
             const timeValue = (currentTime - t0) * 0.001;
 
             if (direction === "pingpong") {
@@ -276,16 +319,24 @@ export const Plasma: React.FC<PlasmaProps> = ({
               program.uniforms.uDirection.value = cycle;
             }
 
-            // Update mouse position
             if (mouseInteractive) {
               const mouseUniform = program.uniforms.uMouse
                 .value as Float32Array;
-              mouseUniform[0] = mousePos.current.x;
-              mouseUniform[1] = mousePos.current.y;
+              mouseUniform[0] =
+                mousePos.current.x * qualitySettings.renderScale;
+              mouseUniform[1] =
+                mousePos.current.y * qualitySettings.renderScale;
             }
 
             program.uniforms.iTime.value = timeValue;
-            renderer.render({ scene: mesh });
+
+            try {
+              if (renderer && mesh) {
+                renderer.render({ scene: mesh as import('ogl').Mesh });
+              }
+            } catch (e) {
+              console.warn("WebGL render error, skipping frame:", e);
+            }
 
             lastTime = currentTime;
           }
@@ -293,31 +344,46 @@ export const Plasma: React.FC<PlasmaProps> = ({
           animationFrameRef.current = requestAnimationFrame(loop);
         };
 
-        animationFrameRef.current = requestAnimationFrame(loop);
+        setTimeout(() => {
+          if (isInitializedRef.current) {
+            animationFrameRef.current = requestAnimationFrame(loop);
+          }
+        }, 50);
 
         return { ro };
       } catch (error) {
         console.error("Failed to initialize Plasma:", error);
+        isInitializedRef.current = false;
       }
     };
 
     const cleanup = initialize();
 
     return () => {
-      cancelAnimationFrame(animationFrameRef.current);
+      isInitializedRef.current = false;
+      const rafId = animationFrameRef.current;
+      const timerId = performanceTimerRef.current;
+      cancelAnimationFrame(rafId);
+      clearTimeout(timerId);
+
       cleanup.then((result) => {
         if (result) {
           result.ro.disconnect();
         }
-        if (mouseInteractive) {
-          currentContainer.removeEventListener("mousemove", handleMouseMove);
+        if (mouseInteractive && currentContainer) {
+          currentContainer.removeEventListener("mousemove", throttledMouseMove);
         }
       });
-      try {
-        if (currentContainer.firstChild) {
-          currentContainer.removeChild(currentContainer.firstChild);
+
+      requestAnimationFrame(() => {
+        try {
+          if (currentContainer && currentContainer.firstChild) {
+            currentContainer.removeChild(currentContainer.firstChild);
+          }
+        } catch (e) {
+          console.warn("Canvas cleanup warning:", e);
         }
-      } catch {}
+      });
     };
   }, [
     color,
@@ -327,14 +393,19 @@ export const Plasma: React.FC<PlasmaProps> = ({
     opacity,
     mouseInteractive,
     qualitySettings,
-    handleMouseMove,
+    throttledMouseMove,
   ]);
 
   return (
     <div
       ref={containerRef}
       className="w-full h-full relative overflow-hidden"
-      style={{ contain: "layout style paint" }} // CSS containment for performance
+      style={{
+        contain: "layout style paint size",
+        isolation: "isolate",
+        transform: "translateZ(0)",
+        backfaceVisibility: "hidden",
+      }}
     />
   );
 };

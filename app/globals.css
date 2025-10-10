@@ -189,7 +189,6 @@
         min-height: 100vh;
     }
 
-    /* More selective transitions to improve performance */
     button:not([data-framer-motion]):not([data-framer-motion] *):not(
             .no-css-transitions
         ):not(.no-css-transitions *),
@@ -223,10 +222,9 @@
         will-change: transform, opacity;
     }
 
-    /* Optimize will-change for animated elements */
     [data-plasma-background] {
         will-change: contents;
-        transform: translateZ(0); /* Create compositing layer */
+        transform: translateZ(0);
     }
 
     button:hover,
@@ -248,30 +246,20 @@
         transition: color-scheme 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Removed duplicate transition rules - handled above */
-
     .background-animation {
         opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-        transform: translateZ(0); /* Force GPU acceleration */
-        backface-visibility: hidden; /* Prevent flicker */
+        transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        will-change: opacity;
     }
 
     .background-animation.enabled {
-        animation: backgroundFadeIn 0.8s ease-out forwards;
+        opacity: 0.6;
     }
 
     .background-animation.disabled {
         opacity: 0;
-    }
-
-    @keyframes backgroundFadeIn {
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 0.6;
-        }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -286,8 +274,7 @@
         }
 
         .background-animation.enabled {
-            animation: none !important;
-            opacity: 0.4; /* Reduced but still visible for motion sensitivity */
+            opacity: 0.3;
         }
 
         .background-animation.disabled {
@@ -295,7 +282,6 @@
         }
     }
 
-    /* GPU acceleration for smooth animations */
     @media (hover: hover) and (pointer: fine) {
         button:hover,
         a:hover {
@@ -303,11 +289,9 @@
         }
     }
 
-    /* Reduce animations on lower-end devices */
     @media (max-resolution: 1dppx) {
         .background-animation.enabled {
-            opacity: 0.3;
-            animation: none;
+            opacity: 0.25;
             transition: opacity 0.2s ease;
         }
     }

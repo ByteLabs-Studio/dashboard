@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import DashboardActions from "@components/dashboard-actions";
 import Plasma from "./Plasma";
+import PerformanceDebug from "@components/performance-debug";
 
 const DISCORD_INVITE =
   (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE) ||
@@ -14,19 +14,12 @@ function Container({ children }: { children: React.ReactNode }) {
 }
 
 export default function HomePage() {
-  const [backgroundEnabled, setBackgroundEnabled] = useState(() => {
-    // Get initial state from data attribute to prevent flash
-    if (typeof document !== "undefined") {
-      const dataAttr = document.documentElement.getAttribute(
-        "data-background-enabled",
-      );
-      return dataAttr === "true";
-    }
-    return true;
-  });
+  const [backgroundEnabled, setBackgroundEnabled] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [contentLoaded, setContentLoaded] = useState(false);
+  const [animationReady, setAnimationReady] = useState(false);
+  const [showDebug, setShowDebug] = useState(false);
 
-  // Detect device capabilities for adaptive quality
   const deviceQuality = useMemo(() => {
     if (typeof window === "undefined") return "high";
 
@@ -35,7 +28,6 @@ export default function HomePage() {
 
     if (!gl) return "medium";
 
-    // Check device capabilities
     const isMobile =
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent,
@@ -44,7 +36,6 @@ export default function HomePage() {
     const hasGoodGPU = gl.getParameter(gl.MAX_TEXTURE_SIZE) >= 4096;
     const hasWebGL2 = gl instanceof WebGL2RenderingContext;
 
-    // Be less conservative - default to high quality
     if (isMobile && !hasGoodGPU && !hasWebGL2) return "medium";
     if (!isMobile || (hasGoodGPU && hasWebGL2)) return "high";
     return "medium";
@@ -55,15 +46,31 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
+    const dataAttr = document.documentElement.getAttribute(
+      "data-background-enabled",
+    );
+    const initialEnabled = dataAttr !== null ? dataAttr === "true" : true;
+    setBackgroundEnabled(initialEnabled);
+
     setMounted(true);
 
-    // Listen for background toggle events
+    const contentTimer = setTimeout(() => {
+      setContentLoaded(true);
+
+      const animationTimer = setTimeout(() => {
+        setAnimationReady(true);
+      }, 100);
+
+      return () => clearTimeout(animationTimer);
+    }, 50);
+
     window.addEventListener(
       "background-animation-change",
       handleBackgroundChange as EventListener,
     );
 
     return () => {
+      clearTimeout(contentTimer);
       window.removeEventListener(
         "background-animation-change",
         handleBackgroundChange as EventListener,
@@ -74,20 +81,34 @@ export default function HomePage() {
   return (
     <div className="bg-background text-foreground antialiased relative min-h-screen">
       <div
-        className={`absolute inset-0 background-animation ${
-          mounted && backgroundEnabled ? "enabled" : "disabled"
+        className={`absolute inset-0 transition-opacity duration-500 ease-out ${
+          mounted && contentLoaded && backgroundEnabled && animationReady
+            ? "opacity-60"
+            : "opacity-0"
         }`}
         data-plasma-background
+        style={{
+          willChange: animationReady ? "contents" : "auto",
+          transform: "translateZ(0)",
+          backfaceVisibility: "hidden",
+        }}
       >
-        <Plasma
-          color="#D375DF"
-          speed={1.2}
-          opacity={0.8}
-          mouseInteractive={false}
-          quality={deviceQuality}
-        />
+        {mounted && contentLoaded && (
+          <Plasma
+            color="#D375DF"
+            speed={1.0}
+            opacity={1.0}
+            mouseInteractive={false}
+            quality={deviceQuality}
+          />
+        )}
       </div>
-      <main className="py-12 pb-28 md:pb-32 relative z-10">
+
+      <main
+        className={`py-12 pb-28 md:pb-32 relative z-10 transition-opacity duration-300 ${
+          contentLoaded ? "opacity-100" : "opacity-0"
+        }`}
+      >
         <Container>
           <section className="grid gap-8 md:grid-cols-2 items-center">
             <div>
@@ -117,6 +138,14 @@ export default function HomePage() {
           </section>
         </Container>
       </main>
+
+      {/* Performance Debug - only in development */}
+      {process.env.NODE_ENV === "development" && (
+        <PerformanceDebug
+          show={showDebug}
+          onToggle={() => setShowDebug(!showDebug)}
+        />
+      )}
     </div>
   );
 }
