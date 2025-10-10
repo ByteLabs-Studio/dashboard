@@ -73,7 +73,7 @@ export default function Header() {
   const closeMenu = () => setOpen(false);
 
   return (
-    <header className="absolute w-full top-0 z-50 bg-background/70 backdrop-blur-sm border-b border-border">
+    <header className="fixed w-full top-0 z-50 bg-background/70 backdrop-blur-sm border-b border-border">
       <div className="max-w-6xl mx-auto w-full px-6">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-4">
