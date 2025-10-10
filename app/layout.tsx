@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning className="h-full">
         <head>
           <script
             dangerouslySetInnerHTML={{
@@ -65,16 +65,18 @@ export default function RootLayout({
             }}
           />
         </head>
-        <body>
+        <body className="h-full overflow-hidden">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             themes={["light", "dark", "rose-pine"]}
           >
-            <Header />
-            <div className="pt-12">{children}</div>
-            <Footer />
+            <div className="flex flex-col h-full">
+              <Header />
+              <main className="flex-1 overflow-auto">{children}</main>
+              <Footer />
+            </div>
           </ThemeProvider>
         </body>
       </html>

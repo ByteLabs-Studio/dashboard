@@ -105,7 +105,7 @@ export default function HomePage() {
       </div>
 
       <main
-        className={`py-12 pb-28 md:pb-32 relative z-10 transition-opacity duration-300 ${
+        className={`pt-24 pb-28 md:pb-32 relative z-10 transition-opacity duration-300 ${
           contentLoaded ? "opacity-100" : "opacity-0"
         }`}
       >
