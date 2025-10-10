@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import DashboardActions from "@components/dashboard-actions";
 import Plasma from "./Plasma";
+import PerformanceDebug from "@components/performance-debug";
 
 const DISCORD_INVITE =
   (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE) ||
@@ -18,6 +18,7 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const [contentLoaded, setContentLoaded] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
+  const [showDebug, setShowDebug] = useState(false);
 
   const deviceQuality = useMemo(() => {
     if (typeof window === "undefined") return "high";
@@ -137,6 +138,14 @@ export default function HomePage() {
           </section>
         </Container>
       </main>
+
+      {/* Performance Debug - only in development */}
+      {process.env.NODE_ENV === "development" && (
+        <PerformanceDebug
+          show={showDebug}
+          onToggle={() => setShowDebug(!showDebug)}
+        />
+      )}
     </div>
   );
 }

@@ -162,14 +162,20 @@ export const Plasma: React.FC<PlasmaProps> = ({
     }
   }, [quality]);
 
+  // Throttled mouse move handler
   const handleMouseMove = useCallback(
-    throttle((e: MouseEvent) => {
+    (e: MouseEvent) => {
       if (!mouseInteractive || !containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       mousePos.current.x = e.clientX - rect.left;
       mousePos.current.y = e.clientY - rect.top;
-    }, 16),
+    },
     [mouseInteractive],
+  );
+
+  const throttledMouseMove = useMemo(
+    () => throttle(handleMouseMove, 16),
+    [handleMouseMove],
   );
 
   useEffect(() => {
@@ -190,7 +196,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
     let renderer: unknown = null;
     let mesh: unknown = null;
     let lastTime = 0;
-    let performanceTracker = { frames: 0, lastPerfTime: 0 };
+    const performanceTracker = { frames: 0, lastPerfTime: 0 };
     const frameInterval = 1000 / qualitySettings.targetFps;
 
     const initialize = async () => {
@@ -254,7 +260,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
         mesh = new Mesh(gl, { geometry, program });
 
         if (mouseInteractive) {
-          currentContainer.addEventListener("mousemove", handleMouseMove, {
+          currentContainer.addEventListener("mousemove", throttledMouseMove, {
             passive: true,
           });
         }
@@ -289,7 +295,6 @@ export const Plasma: React.FC<PlasmaProps> = ({
 
           const deltaTime = currentTime - lastTime;
           if (deltaTime >= frameInterval - 1) {
-
             performanceTracker.frames++;
             if (currentTime - performanceTracker.lastPerfTime > 1000) {
               const fps = performanceTracker.frames;
@@ -352,15 +357,17 @@ export const Plasma: React.FC<PlasmaProps> = ({
 
     return () => {
       isInitializedRef.current = false;
-      cancelAnimationFrame(animationFrameRef.current);
-      clearTimeout(performanceTimerRef.current);
+      const rafId = animationFrameRef.current;
+      const timerId = performanceTimerRef.current;
+      cancelAnimationFrame(rafId);
+      clearTimeout(timerId);
 
       cleanup.then((result) => {
         if (result) {
           result.ro.disconnect();
         }
         if (mouseInteractive && currentContainer) {
-          currentContainer.removeEventListener("mousemove", handleMouseMove);
+          currentContainer.removeEventListener("mousemove", throttledMouseMove);
         }
       });
 
@@ -382,7 +389,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
     opacity,
     mouseInteractive,
     qualitySettings,
-    handleMouseMove,
+    throttledMouseMove,
   ]);
 
   return (
