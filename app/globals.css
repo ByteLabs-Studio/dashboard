@@ -189,16 +189,27 @@
         min-height: 100vh;
     }
 
-    *:not([data-framer-motion]):not([data-framer-motion] *):not(
+    /* More selective transitions to improve performance */
+    button:not([data-framer-motion]):not([data-framer-motion] *):not(
             .no-css-transitions
-        ):not(.no-css-transitions *) {
+        ):not(.no-css-transitions *),
+    a:not([data-framer-motion]):not([data-framer-motion] *):not(
+            .no-css-transitions
+        ):not(.no-css-transitions *),
+    [class*="bg-"]:not([data-framer-motion]):not([data-framer-motion] *):not(
+            .no-css-transitions
+        ):not(.no-css-transitions *),
+    [class*="text-"]:not([data-framer-motion]):not([data-framer-motion] *):not(
+            .no-css-transitions
+        ):not(.no-css-transitions *),
+    [class*="border-"]:not([data-framer-motion]):not(
+            [data-framer-motion] *
+        ):not(.no-css-transitions):not(.no-css-transitions *) {
         transition:
-            background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-            border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-            color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-            box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-            fill 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-            stroke 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     [data-framer-motion],
@@ -208,8 +219,26 @@
         transition: none !important;
     }
 
-    [data-framer-motion] * {
+    [data-framer-motion] {
         will-change: transform, opacity;
+    }
+
+    /* Optimize will-change for animated elements */
+    [data-plasma-background] {
+        will-change: contents;
+        transform: translateZ(0); /* Create compositing layer */
+    }
+
+    button:hover,
+    a:hover,
+    [role="button"]:hover {
+        will-change: background-color, border-color, box-shadow;
+    }
+
+    button:not(:hover),
+    a:not(:hover),
+    [role="button"]:not(:hover) {
+        will-change: auto;
     }
 
     .dark,
@@ -219,22 +248,17 @@
         transition: color-scheme 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    [class*="bg-"],
-    [class*="text-"],
-    [class*="border-"] {
-        transition:
-            background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-            color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-            border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    /* Removed duplicate transition rules - handled above */
 
     .background-animation {
         opacity: 0;
-        transition: opacity 0.5s ease-in-out;
+        transition: opacity 0.3s ease-in-out;
+        transform: translateZ(0); /* Force GPU acceleration */
+        backface-visibility: hidden; /* Prevent flicker */
     }
 
     .background-animation.enabled {
-        animation: backgroundFadeIn 1s ease-out forwards;
+        animation: backgroundFadeIn 0.8s ease-out forwards;
     }
 
     .background-animation.disabled {
@@ -242,28 +266,49 @@
     }
 
     @keyframes backgroundFadeIn {
-        from {
+        0% {
             opacity: 0;
         }
-        to {
-            opacity: 0.2;
+        100% {
+            opacity: 0.6;
         }
     }
 
     @media (prefers-reduced-motion: reduce) {
-        *,
-        html {
+        button,
+        a,
+        [class*="bg-"],
+        [class*="text-"],
+        [class*="border-"],
+        .background-animation {
             transition: none !important;
             animation: none !important;
         }
 
         .background-animation.enabled {
             animation: none !important;
-            opacity: 0.2;
+            opacity: 0.4; /* Reduced but still visible for motion sensitivity */
         }
 
         .background-animation.disabled {
             opacity: 0;
+        }
+    }
+
+    /* GPU acceleration for smooth animations */
+    @media (hover: hover) and (pointer: fine) {
+        button:hover,
+        a:hover {
+            transform: translateZ(0);
+        }
+    }
+
+    /* Reduce animations on lower-end devices */
+    @media (max-resolution: 1dppx) {
+        .background-animation.enabled {
+            opacity: 0.3;
+            animation: none;
+            transition: opacity 0.2s ease;
         }
     }
 }

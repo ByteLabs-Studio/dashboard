@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import DashboardActions from "@components/dashboard-actions";
 import Plasma from "./Plasma";
 
@@ -26,14 +26,38 @@ export default function HomePage() {
   });
   const [mounted, setMounted] = useState(false);
 
+  // Detect device capabilities for adaptive quality
+  const deviceQuality = useMemo(() => {
+    if (typeof window === "undefined") return "high";
+
+    const canvas = document.createElement("canvas");
+    const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+
+    if (!gl) return "medium";
+
+    // Check device capabilities
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+    const hasHighDPR = window.devicePixelRatio > 1.5;
+    const hasGoodGPU = gl.getParameter(gl.MAX_TEXTURE_SIZE) >= 4096;
+    const hasWebGL2 = gl instanceof WebGL2RenderingContext;
+
+    // Be less conservative - default to high quality
+    if (isMobile && !hasGoodGPU && !hasWebGL2) return "medium";
+    if (!isMobile || (hasGoodGPU && hasWebGL2)) return "high";
+    return "medium";
+  }, []);
+
+  const handleBackgroundChange = useCallback((event: CustomEvent) => {
+    setBackgroundEnabled(event.detail.enabled);
+  }, []);
+
   useEffect(() => {
     setMounted(true);
 
     // Listen for background toggle events
-    const handleBackgroundChange = (event: CustomEvent) => {
-      setBackgroundEnabled(event.detail.enabled);
-    };
-
     window.addEventListener(
       "background-animation-change",
       handleBackgroundChange as EventListener,
@@ -45,7 +69,7 @@ export default function HomePage() {
         handleBackgroundChange as EventListener,
       );
     };
-  }, []);
+  }, [handleBackgroundChange]);
 
   return (
     <div className="bg-background text-foreground antialiased relative min-h-screen">
@@ -57,9 +81,10 @@ export default function HomePage() {
       >
         <Plasma
           color="#D375DF"
-          speed={0.3}
-          opacity={50}
+          speed={1.2}
+          opacity={0.8}
           mouseInteractive={false}
+          quality={deviceQuality}
         />
       </div>
       <main className="py-12 pb-28 md:pb-32 relative z-10">

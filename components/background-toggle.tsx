@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Sparkles } from "lucide-react";
 
 export default function BackgroundToggle() {
@@ -40,18 +40,20 @@ export default function BackgroundToggle() {
     );
   }, [isEnabled, mounted]);
 
-  const toggleBackground = () => {
+  const toggleBackground = useCallback(() => {
     setIsEnabled(!isEnabled);
-  };
+  }, [isEnabled]);
 
   if (!mounted) {
-    return <div className="w-9 h-9 bg-muted/50 animate-pulse rounded-md" />;
+    return (
+      <div className="w-9 h-9 bg-muted/50 animate-pulse rounded-md transform-gpu" />
+    );
   }
 
   return (
     <button
       onClick={toggleBackground}
-      className={`inline-flex items-center justify-center rounded-md p-2 text-sm transition-all duration-200 hover:bg-foreground/10 ${
+      className={`inline-flex items-center justify-center rounded-md p-2 text-sm transition-all duration-200 ease-out hover:bg-foreground/10 hover:scale-110 active:scale-95 transform-gpu ${
         isEnabled ? "text-foreground" : "text-muted-foreground"
       }`}
       aria-label={`${isEnabled ? "Disable" : "Enable"} background animation`}
@@ -59,9 +61,9 @@ export default function BackgroundToggle() {
     >
       <div className="relative w-4 h-4 flex-shrink-0">
         {isEnabled ? (
-          <Sparkles className="w-4 h-4" />
+          <Sparkles className="w-4 h-4 transition-transform duration-200 hover:rotate-12" />
         ) : (
-          <Sparkles className="w-4 h-4 opacity-50 stroke-1" />
+          <Sparkles className="w-4 h-4 opacity-50 stroke-1 transition-all duration-200" />
         )}
       </div>
     </button>
