@@ -16,7 +16,7 @@ export default function GitPage() {
 
             <section className="grid gap-4 sm:grid-cols-2">
               <a
-                href="https://github.com/ByteLabs-Studio/ByteLabs"
+                href="https://github.com/ByteLabs-Studio/ByteLab"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-md border border-border p-6 bg-card hover:shadow-md transition"
@@ -48,7 +48,7 @@ export default function GitPage() {
               </a>
 
               <a
-                href="https://gitlab.com/ByteLabs-studio/ByteLabs"
+                href="https://gitlab.com/ByteLabs-studio/ByteLab"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-md border border-border p-6 bg-card hover:shadow-md transition"
