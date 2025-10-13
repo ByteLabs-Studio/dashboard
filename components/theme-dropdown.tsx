@@ -66,7 +66,7 @@ export default function ThemeDropdown() {
     <div className="relative" data-theme-dropdown>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-foreground/10 transition-colors"
+        className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-foreground/10 transition-colors cursor-pointer"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
