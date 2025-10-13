@@ -23,7 +23,7 @@ export default function TermsPage() {
               </div>
               <p className="mt-6 text-muted-foreground max-w-3xl">
                 These Terms of Service (&quot;Terms&quot;) govern your use of
-                the Bytelabs Website and related services. They explain your
+                the ByteLabs Website and related services. They explain your
                 rights and responsibilities as a user.
               </p>
             </div>
@@ -77,7 +77,7 @@ export default function TermsPage() {
               <h2>4. Intellectual Property</h2>
               <p>
                 All content, features and functionality of the Service are the
-                exclusive property of Bytelabs or its licensors. You
+                exclusive property of ByteLabs or its licensors. You
                 retain ownership of content you submit, but you grant us the
                 license necessary to operate the Service.
               </p>
@@ -97,7 +97,7 @@ export default function TermsPage() {
               <h2>6. Warranties and Disclaimers</h2>
               <p>
                 The Service is provided &quot;as is&quot; and &quot;as
-                available&quot;. To the fullest extent permitted by law, Bytelabs
+                available&quot;. To the fullest extent permitted by law, ByteLabs
                 disclaims all warranties, express or implied.
               </p>
             </section>
@@ -105,7 +105,7 @@ export default function TermsPage() {
             <section id="liability" className="mt-6">
               <h2>7. Limitation of Liability</h2>
               <p>
-                In no event will Bytelabs be liable for any indirect,
+                In no event will ByteLabs be liable for any indirect,
                 incidental, special, consequential or punitive damages arising
                 out of or related to your use of the Service.
               </p>
@@ -125,10 +125,10 @@ export default function TermsPage() {
               <p>
                 Questions about these Terms? Contact us at{" "}
                 <a
-                  href="mailto:legal@bytelabs.uk"
+                  href="mailto:legal@ByteLabs-.uk"
                   className="text-primary underline"
                 >
-                  legal@bytelabs.uk
+                  legal@ByteLabs.uk
                 </a>
                 .
               </p>

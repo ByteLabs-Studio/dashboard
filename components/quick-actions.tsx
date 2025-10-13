@@ -34,7 +34,7 @@ export default function QuickActions() {
         </button>
       </Link>
 
-      <a
+      {/* <a
         href={DISCORD_INVITE}
         target="_blank"
         rel="noopener noreferrer"
@@ -47,7 +47,7 @@ export default function QuickActions() {
         >
           Support
         </button>
-      </a>
+      </a> */}
 
       <button
         type="button"

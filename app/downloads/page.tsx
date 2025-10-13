@@ -112,7 +112,7 @@ export default function DownloadsPage() {
                           </p>
                           <a
                             className="bg-foreground font-semibold hover:brightness-95 py-1.5 px-5 mt-4 rounded text-background text-center"
-                            href="https://gitlab.com/bytelab-studio/ByteLab/-/archive/main/ByteLab-main.tar.gz?ref_type=heads"
+                            href="https://gitlab.com/ByteLabs-studio/ByteLabs/-/archive/main/ByteLabs-main.tar.gz?ref_type=heads"
                           >
                             Download .tar.gz (main)
                           </a>

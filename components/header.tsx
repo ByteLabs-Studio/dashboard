@@ -82,9 +82,9 @@ export default function Header() {
                 BL
               </span>
               <div className="flex flex-col leading-tight">
-                <span className="text-base font-semibold">Bytelab</span>
+                <span className="text-base font-semibold">ByteLabs</span>
                 <span className="text-xs text-muted-foreground -mt-0.5">
-                  Dashboard
+                  Homepage
                 </span>
               </div>
             </Link>
@@ -102,14 +102,14 @@ export default function Header() {
               <BackgroundToggle />
               <ThemeDropdown />
             </div>
-            <a
+            {/* <a
               href={DISCORD_INVITE}
               className="hidden sm:inline-flex items-center rounded-md bg-[#6577E6] p-6 py-2 text-sm font-medium text-background shadow hover:brightness-95"
             >
               <BsDiscord className="w-5 h-5" />
               <span className="w-2" />
               Support
-            </a>
+            </a> */}
 
             <button
               className="inline-flex items-center gap-2 rounded-md p-2 md:hidden hover:bg-muted"

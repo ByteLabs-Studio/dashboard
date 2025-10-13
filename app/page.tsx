@@ -78,7 +78,7 @@ export default function HomePage() {
   }, [handleBackgroundChange]);
 
   return (
-    <div className="bg-background text-foreground antialiased relative min-h-screen">
+    <div className="bg-background text-foreground antialiased relative h-[calc(100vh-4rem)] overflow-hidden">
       <div
         className={`absolute inset-0 transition-opacity duration-500 ease-out ${
           mounted && contentLoaded && backgroundEnabled && animationReady
@@ -103,40 +103,61 @@ export default function HomePage() {
         )}
       </div>
 
-      <main
-        className={`pt-14 pb-28 md:pb-32 relative z-10 transition-opacity duration-300 ${
-          contentLoaded ? "opacity-100" : "opacity-0"
-        }`}
-      >
+      <div className={`relative h-full transition-opacity duration-300 ${
+        contentLoaded ? "opacity-100" : "opacity-0"
+      }`}>
+        <div className="pt-20">
         <Container>
-          <section className="grid gap-8 md:grid-cols-2 items-center">
-            <div>
-              <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight">
-                ByteLabs
+          <div className="flex flex-col md:flex-row items-start justify-center h-full gap-8 px-6">
+            <div className="w-full md:w-1/2 text-center md:text-left">
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl mb-3">
+                <span className="text-primary">ByteLabs</span>
               </h1>
-              <p className="mt-4 text-muted-foreground max-w-xl">
-                Code. Sound. Visualize — ByteLab is an App made with Electron
-                desgined to create Music or just Audio in general just by using
-                Bytes.
+              <p className="text-lg text-muted-foreground mb-3">
+              Code. Sound. Visualize — ByteLabs is an App made with Electron desgined
+              to create Music or just Audio in general just by using Bytes.
               </p>
-
-              <DashboardActions />
-            </div>
-
-            <div>
-              <div className="rounded-lg border border-border p-6 bg-card/80 backdrop-blur-sm shadow-sm">
-                <h3 className="font-semibold">Quick overview</h3>
-                <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-                  <li>• Version: v1.1.0 Public Release</li>
-                  <li>• Contributors: 3</li>
-                  <li>• Status: Active Development</li>
-                </ul>
-                <div className="mt-6" />
+              <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                <DashboardActions />
               </div>
             </div>
-          </section>
+
+            <div className="w-full md:w-1/2 pt-1.5">
+              <div className="rounded-lg border border-border p-8 bg-card/80 backdrop-blur-sm shadow-sm h-full">
+                <h3 className="font-semibold text-lg">Quick Overview</h3>
+                <ul className="mt-4 space-y-3 text-muted-foreground">
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">•</span>
+                    <span>Version: v1.1.0 Public Release</span>
+                  </li>
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">•</span>
+                    <span>Contributors: 3</span>
+                  </li>
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">•</span>
+                    <span>Status: Active Development</span>
+                  </li>
+                  <li className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-muted"></div>
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="px-2 text-xs uppercase tracking-wider text-muted-foreground">
+                        Developers Note
+                      </span>
+                    </div>
+                  </li>
+                  <li className="text-sm text-muted-foreground mb-4 text-center px-4">
+                    This website is being constantly updated. The ByteLabs app will not have any active releases until the Rust rewrite is complete. Please be patient.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </Container>
-      </main>
+        </div>
+      </div>
     </div>
   );
 }

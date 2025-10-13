@@ -24,10 +24,10 @@ export default function PrivacyPage() {
               </div>
 
               <p className="mt-6 text-muted-foreground max-w-3xl">
-                At Bytelabs we value your privacy. This Privacy Policy
+                At ByteLabs we value your privacy. This Privacy Policy
                 explains what information we collect, how we use it, and the
                 choices you have regarding your information when using the
-                Bytelabs Website.
+                ByteLabs Website.
               </p>
 
             </div>
@@ -119,10 +119,10 @@ export default function PrivacyPage() {
                 If you have questions or requests about this Privacy Policy,
                 contact us at{" "}
                 <a
-                  href="mailto:legal@bytelabs.uk"
+                  href="mailto:legal@ByteLabs.uk"
                   className="text-primary underline"
                 >
-                  legal@bytelabs.uk
+                  legal@ByteLabs.uk
                 </a>
                 .
               </p>
