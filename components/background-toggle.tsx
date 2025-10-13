@@ -52,7 +52,7 @@ export default function BackgroundToggle() {
 
   return (
     <button
-      className={`w-9 h-9 rounded-md transform-gpu flex items-center justify-center transition-all duration-200 ${
+      className={`w-9 h-9 rounded-md transform-gpu flex items-center justify-center transition-all duration-200 cursor-pointer ${
         isEnabled 
           ? "hover:bg-muted/10" 
           : ""
