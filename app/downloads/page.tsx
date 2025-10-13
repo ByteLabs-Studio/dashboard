@@ -4,6 +4,7 @@ import { FaLinux, FaApple, FaWindows } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { SiNixos } from "react-icons/si";
+import DownloadOption from "@/components/DownloadOption";
 
 export default function DownloadsPage() {
   const [sourceCodeOpen, setSourceCodeOpen] = useState(false);
@@ -18,71 +19,45 @@ export default function DownloadsPage() {
                 Downloads
               </h1>
               <p className="text-muted-foreground">
-                Choose your platform below to get the latest builds or
-                installers.
+                Choose your platform below to get the latest builds or installers.
               </p>
             </header>
 
             <section className="grid grid-cols-1 md:grid-cols-2 gap-10">
-              <div>
+              <div className="space-y-4">
                 <p className="mb-1 uppercase font-bold text-white/95">Download for</p>
-                <div className="flex flex-col gap-3">
-                <button
-                  className="h-23.5 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
-                >
-                  <div className="flex items-center justify-between w-full px-6 text-left">
-                    <div>
-                      <h3 className="text-lg font-semibold">Nix</h3>
-                      <p className="text-sm text-muted-foreground italic mt-1 mr-4">
-                        A Nix flake output and overlay
-                      </p>
-                    </div>
-
-                    <SiNixos className="text-foreground/70 w-6.5 h-6.5" aria-hidden />
-                  </div>
-                </button>
-                <button
-                  className="h-23.5 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
-                >
-                  <div className="flex items-center justify-between w-full px-6 text-left">
-                    <div>
-                      <h3 className="text-lg font-semibold">Linux</h3>
-                      <p className="text-sm text-muted-foreground italic mt-1 mr-4">
-                        FUSE2 (AppImage)
-                      </p>
-                    </div>
-
-                    <FaLinux className="text-foreground/70 w-6.5 h-6.5" aria-hidden />
-                  </div>
-                </button>
-                <button
-                  className="h-23.5 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
-                >
-                  <div className="flex items-center justify-between w-full px-6 text-left">
-                    <div>
-                      <h3 className="text-lg font-semibold">macOS</h3>
-                      <p className="text-sm text-muted-foreground italic mt-1 mr-4">
-                        Universal DMG.
-                      </p>
-                    </div>
-
-                    <FaApple className="text-foreground/70 w-6.5 h-6.5" aria-hidden />
-                  </div>
-                </button>
-                <button
-                  className="h-23.5 w-full rounded-md border border-border bg-card hover:shadow-md transition flex gap-4"
-                >
-                  <div className="flex items-center justify-between w-full px-6 text-left">
-                    <div>
-                      <h3 className="text-lg font-semibold">Windows</h3>
-                      <p className="text-sm text-muted-foreground italic mt-1 mr-4">
-                        Windows executable (exe)
-                      </p>
-                    </div>
-
-                    <FaWindows className="text-foreground/70 w-6.5 h-6.5" aria-hidden />
-                  </div>
-                </button>
+                <div className="space-y-4">
+                  <DownloadOption
+                    title="Nix"
+                    description="A Nix flake output and overlay"
+                    icon={<SiNixos className="text-foreground/70 w-6 h-6" />}
+                    fileType="Nix Flake"
+                    disabled={true}
+                  />
+                  
+                  <DownloadOption
+                    title="Linux"
+                    description="FUSE2 (AppImage)"
+                    icon={<FaLinux className="text-foreground/70 w-6 h-6" />}
+                    fileType="AppImage"
+                    disabled={true}
+                  />
+                  
+                  <DownloadOption
+                    title="macOS"
+                    description="Universal DMG"
+                    icon={<FaApple className="text-foreground/70 w-6 h-6" />}
+                    fileType="DMG"
+                    disabled={true}
+                  />
+                  
+                  <DownloadOption
+                    title="Windows"
+                    description="Windows executable"
+                    icon={<FaWindows className="text-foreground/70 w-6 h-6" />}
+                    fileType="EXE"
+                    disabled={true}
+                  />
                 </div>
               </div>
 
