@@ -66,7 +66,7 @@ export default function RootLayout({
           />
         <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
         </head>
-        <body className="h-full overflow-hidden">
+        <body className="h-full">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -75,7 +75,7 @@ export default function RootLayout({
           >
             <div className="flex flex-col h-full">
               <Header />
-              <main className="flex-1 overflow-auto pt-12">{children}</main>
+              <main className="flex-1 pt-16">{children}</main>
               <Footer />
             </div>
           </ThemeProvider>
