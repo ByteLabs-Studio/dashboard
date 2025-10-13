@@ -1,12 +1,8 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import DashboardActions from "@components/dashboard-actions";
 import Plasma from "./Plasma";
-
-const DISCORD_INVITE =
-  (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE) ||
-  "https://discord.gg/vortexbot";
 
 function Container({ children }: { children: React.ReactNode }) {
   return <div className="max-w-6xl mx-auto w-full px-6">{children}</div>;
@@ -17,7 +13,6 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const [contentLoaded, setContentLoaded] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
-  const [showDebug, setShowDebug] = useState(false);
 
   const deviceQuality = useMemo(() => {
     if (typeof window === "undefined") return "high";
@@ -31,7 +26,6 @@ export default function HomePage() {
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent,
       );
-    const hasHighDPR = window.devicePixelRatio > 1.5;
     const hasGoodGPU = gl.getParameter(gl.MAX_TEXTURE_SIZE) >= 4096;
     const hasWebGL2 = gl instanceof WebGL2RenderingContext;
 

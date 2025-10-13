@@ -356,14 +356,20 @@ export const Plasma: React.FC<PlasmaProps> = ({
       }
     };
 
-    const cleanup = initialize();
+    let performanceTimerId: number;
+    const cleanup = initialize().then((result) => {
+      // Store the timer ID when it's set
+      performanceTimerId = performanceTimerRef.current;
+      return result;
+    });
 
     return () => {
       isInitializedRef.current = false;
       const rafId = animationFrameRef.current;
-      const timerId = performanceTimerRef.current;
       cancelAnimationFrame(rafId);
-      clearTimeout(timerId);
+      if (performanceTimerId) {
+        clearTimeout(performanceTimerId);
+      }
 
       cleanup.then((result) => {
         if (result) {

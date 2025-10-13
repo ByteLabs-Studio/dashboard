@@ -1,6 +1,4 @@
 import React from "react";
-import Link from "next/link";
-
 export default function PrivacyPage() {
   const now = new Date();
   const updated = now.toLocaleDateString(undefined, {

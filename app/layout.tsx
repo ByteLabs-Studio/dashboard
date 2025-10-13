@@ -64,7 +64,7 @@ export default function RootLayout({
               `,
             }}
           />
-        <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
+        <script async src="https://unpkg.com/react-scan/dist/auto.global.js" />
         </head>
         <body className="h-full">
           <ThemeProvider

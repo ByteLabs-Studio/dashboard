@@ -1,16 +1,9 @@
 "use client";
-
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BsDiscord } from "react-icons/bs";
 import ThemeDropdown from "./theme-dropdown";
 import BackgroundToggle from "./background-toggle";
-
-const DISCORD_INVITE =
-  typeof process !== "undefined" && process.env?.NEXT_PUBLIC_DISCORD_INVITE
-    ? (process.env.NEXT_PUBLIC_DISCORD_INVITE as string)
-    : "https://discord.gg/vortexbot";
 
 function NavLink({
   href,

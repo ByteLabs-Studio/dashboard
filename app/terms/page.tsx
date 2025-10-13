@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export default function TermsPage() {
   const now = new Date();
   const updated = now.toLocaleDateString(undefined, {
