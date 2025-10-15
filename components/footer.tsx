@@ -6,7 +6,7 @@ function Container({ children }: { children: React.ReactNode }) {
 
 export default function Footer() {
   return (
-    <footer className="fixed bottom-0 left-0 right-0 border-t border-border bg-background/60">
+    <footer className="fixed bottom-0 left-0 right-0 border-t border-border/50 bg-background/80 backdrop-blur-sm">
       <Container>
         <div className="flex items-center justify-between py-4 text-sm text-muted-foreground">
           <div>&copy; {new Date().getFullYear()} ByteLabs Studio</div>
