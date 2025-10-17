@@ -2,12 +2,32 @@
 
 import { FaLinux, FaApple, FaWindows } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { SiNixos } from "react-icons/si";
 import DownloadOption from "@/components/DownloadOption";
+import { ClipboardIcon } from "lucide-react";
 
 export default function DownloadsPage() {
+  const [cbHovered, setCbHovered] = useState(false);
   const [sourceCodeOpen, setSourceCodeOpen] = useState(false);
+
+  const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (hoverTimeout.current) {
+      clearTimeout(hoverTimeout.current);
+      hoverTimeout.current = null;
+    }
+    setCbHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    hoverTimeout.current = setTimeout(() => {
+      setCbHovered(false);
+      hoverTimeout.current = null;
+    }, 500);
+  };
+
 
   return (
     <div className="bg-background text-foreground antialiased px-6">
@@ -30,15 +50,46 @@ export default function DownloadsPage() {
                   <DownloadOption
                     title="Nix"
                     description="A Nix flake output and overlay"
+                    instructions ={(
+                      <div className="flex flex-col">
+                        <h3 className="text-foreground text-xl font-semibold">Installing via Flake</h3>
+                        <p>Running the flake is as simple as</p>
+                        <div className="relative">
+                          <pre className="mt-2">
+                            <code
+                              id="nix-run-cb-content"
+                              className="bg-foreground/5 rounded py-2 px-4"
+                              onMouseEnter={handleMouseEnter}
+                              onMouseLeave={handleMouseLeave}
+                            >
+                              nix run gitlab:bytelab-studio/ByteLab/reimpl
+                            </code>
+                          </pre>
+                          <button
+                            onClick={() =>
+                              navigator.clipboard.writeText(
+                                document.getElementById("nix-run-cb-content")?.textContent ?? ""
+                              )
+                            }
+                            className={`absolute top-1 right-14 bg-background rounded p-1 transition-opacity ${
+                              cbHovered ? "opacity-100" : "opacity-0"
+                            }`}
+                          >
+                            <ClipboardIcon />
+                          </button>
+                        </div>
+                      </div>
+                    )}
                     icon={<SiNixos className="text-foreground/70 w-6 h-6" />}
-                    fileType="Nix Flake"
-                    disabled={true}
+                    type="commands"
+                    disabled={false}
                   />
                   
-                  <DownloadOption
+                    <DownloadOption
                     title="Linux"
                     description="FUSE2 (AppImage)"
                     icon={<FaLinux className="text-foreground/70 w-6 h-6" />}
+                    type="file"
                     fileType="AppImage"
                     disabled={true}
                   />
@@ -47,6 +98,7 @@ export default function DownloadsPage() {
                     title="macOS"
                     description="Universal DMG"
                     icon={<FaApple className="text-foreground/70 w-6 h-6" />}
+                    type="file"
                     fileType="DMG"
                     disabled={true}
                   />
@@ -55,6 +107,7 @@ export default function DownloadsPage() {
                     title="Windows"
                     description="Windows executable"
                     icon={<FaWindows className="text-foreground/70 w-6 h-6" />}
+                    type="file"
                     fileType="EXE"
                     disabled={true}
                   />

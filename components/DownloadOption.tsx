@@ -1,20 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type DownloadOptionProps = {
   title: string;
   description: string;
   icon: React.ReactNode;
-  fileType: string;
+  type: "commands" | "file"
+  instructions?: ReactElement;
+  fileType?: string;
   disabled?: boolean;
 };
 
 export default function DownloadOption({
   title,
   description,
+  instructions,
   icon,
+  type,
   fileType,
   disabled = true,
 }: DownloadOptionProps) {
@@ -70,19 +74,24 @@ export default function DownloadOption({
               className="overflow-hidden"
             >
               <div className="px-6 py-4 border-t border-border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      File type: <span className="font-mono">{fileType}</span>
-                    </p>
+                {fileType && type === "file" ? (
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        File type: <span className="font-mono">{fileType}</span>
+                      </p>
+                    </div>
+                    <button
+                      className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
+                      disabled={disabled}
+                    >
+                      Download
+                    </button>
                   </div>
-                  <button
-                    className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
-                    disabled={disabled}
-                  >
-                    Download
-                  </button>
-                </div>
+                ): null}
+                {instructions && type === "commands" ? (
+                  instructions
+                ): null}
               </div>
             </motion.div>
           )}
