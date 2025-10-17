@@ -2,6 +2,7 @@
 
 import { ReactElement, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 
 type DownloadOptionProps = {
   title: string;
@@ -26,12 +27,12 @@ export default function DownloadOption({
 
   return (
     <div className="w-full">
-      <div className="border border-border bg-card flex flex-col rounded-md overflow-hidden">
+      <div className="border border-border bg-card flex flex-col rounded-md overflow-hidden select-none">
         <button
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
           className={`w-full px-6 py-4 text-left transition-colors ${
-            disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-accent/10"
+            disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-accent/10 cursor-pointer"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -52,13 +53,13 @@ export default function DownloadOption({
                   Coming Soon
                 </span>
               ) : (
-                <motion.span
+                <motion.div
                   animate={{ rotate: isOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                   className="text-muted-foreground"
                 >
-                  ▼
-                </motion.span>
+                  <ChevronDown className="w-4 h-4" />
+                </motion.div>
               )}
             </div>
           </div>
