@@ -1,20 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 
 type DownloadOptionProps = {
   title: string;
   description: string;
   icon: React.ReactNode;
-  fileType: string;
+  type: "commands" | "file"
+  instructions?: ReactElement;
+  fileType?: string;
   disabled?: boolean;
 };
 
 export default function DownloadOption({
   title,
   description,
+  instructions,
   icon,
+  type,
   fileType,
   disabled = true,
 }: DownloadOptionProps) {
@@ -22,12 +27,12 @@ export default function DownloadOption({
 
   return (
     <div className="w-full">
-      <div className="border border-border bg-card flex flex-col rounded-md overflow-hidden">
+      <div className="border border-border bg-card flex flex-col rounded-md overflow-hidden select-none">
         <button
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
           className={`w-full px-6 py-4 text-left transition-colors ${
-            disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-accent/10"
+            disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-accent/10 cursor-pointer"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -48,13 +53,13 @@ export default function DownloadOption({
                   Coming Soon
                 </span>
               ) : (
-                <motion.span
+                <motion.div
                   animate={{ rotate: isOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                   className="text-muted-foreground"
                 >
-                  ▼
-                </motion.span>
+                  <ChevronDown className="w-4 h-4" />
+                </motion.div>
               )}
             </div>
           </div>
@@ -70,19 +75,24 @@ export default function DownloadOption({
               className="overflow-hidden"
             >
               <div className="px-6 py-4 border-t border-border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      File type: <span className="font-mono">{fileType}</span>
-                    </p>
+                {fileType && type === "file" ? (
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        File type: <span className="font-mono">{fileType}</span>
+                      </p>
+                    </div>
+                    <button
+                      className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
+                      disabled={disabled}
+                    >
+                      Download
+                    </button>
                   </div>
-                  <button
-                    className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
-                    disabled={disabled}
-                  >
-                    Download
-                  </button>
-                </div>
+                ): null}
+                {instructions && type === "commands" ? (
+                  instructions
+                ): null}
               </div>
             </motion.div>
           )}

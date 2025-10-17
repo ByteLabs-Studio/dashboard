@@ -5,7 +5,7 @@ import DashboardActions from "@components/dashboard-actions";
 import Plasma from "./Plasma";
 
 function Container({ children }: { children: React.ReactNode }) {
-  return <div className="max-w-6xl mx-auto w-full px-6">{children}</div>;
+  return <div className="max-w-6xl mx-auto w-full px-6 select-none">{children}</div>;
 }
 
 export default function HomePage() {
@@ -103,11 +103,11 @@ export default function HomePage() {
         <div className="pt-20">
         <Container>
           <div className="flex flex-col md:flex-row items-start justify-center h-full gap-8 px-6">
-            <div className="w-full md:w-1/2 text-center md:text-left">
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl mb-3">
+            <div className="w-full md:w-1/2 text-center md:text-left select-none">
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl mb-3 select-none">
                 <span className="text-primary">ByteLabs</span>
               </h1>
-              <p className="text-lg text-muted-foreground mb-3">
+              <p className="text-lg text-muted-foreground mb-3 select-none">
               Code. Sound. Visualize — ByteLabs is an App made with Electron desgined
               to create Music or just Audio in general just by using Bytes.
               </p>
@@ -116,8 +116,8 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="w-full md:w-1/2 pt-1.5">
-              <div className="rounded-lg border border-border p-8 bg-card/80 backdrop-blur-sm shadow-sm h-full">
+            <div className="w-full md:w-1/2 pt-1.5 select-none">
+              <div className="rounded-lg border border-border p-8 bg-card/80 backdrop-blur-sm shadow-sm h-full select-none">
                 <h3 className="font-semibold text-lg">Quick Overview</h3>
                 <ul className="mt-4 space-y-3 text-muted-foreground">
                   <li className="flex items-center">
