@@ -64,7 +64,9 @@ export default function RootLayout({
               `,
             }}
           />
-        <script async src="https://unpkg.com/react-scan/dist/auto.global.js" />
+          {process.env.NODE_ENV === "development" ? (
+            <script async src="https://unpkg.com/react-scan/dist/auto.global.js"></script>
+          ) : null}
         </head>
         <body className="h-full">
           <ThemeProvider
