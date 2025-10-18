@@ -64,21 +64,18 @@ export default function DownloadsPage() {
                         <h3 className="text-foreground text-xl font-semibold select-none">Installing via Flake</h3>
                         <p className="select-none">Running the flake is as simple as</p>
                         <div className="relative mt-2">
-                          <div className="bg-accent/10 rounded-md p-3 font-mono text-sm overflow-x-auto text-foreground/90 border border-border">
-                            <div className="flex items-center justify-between mb-1 select-none">
-                              <div className="flex items-center gap-1">
-                                <span className="text-sm text-muted-foreground font-mono cursor-default">$</span>
-                              </div>
+                          <div className="bg-accent/10 rounded-md pr-9 font-mono text-sm overflow-x-auto text-foreground/90 border border-border">
+                            <div className="absolute top-2 right-2 select-none">
                               <button
                                 onClick={handleCopy}
                                 disabled={isCopied}
                                 className={`transition-colors cursor-pointer select-none ${isCopied ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
                                 title={isCopied ? 'Copied!' : 'Copy to clipboard'}
                               >
-                                {isCopied ? 'Copied!' : <ClipboardIcon className="w-3.5 h-3.5" />}
+                                {isCopied ? 'Copied!' : <ClipboardIcon className="w-4.5 h-4.5" />}
                               </button>
                             </div>
-                            <div className="font-mono text-[15px] leading-5 tracking-tight font-medium text-foreground select-text">nix run gitlab:bytelab-studio/ByteLab/reimpl</div>
+                            <pre className="text-[15px] p-3 font-medium text-foreground select-text overflow-x-auto"><code>nix run gitlab:bytelab-studio/ByteLab/reimpl</code></pre>
                           </div>
                         </div>
                       </div>
