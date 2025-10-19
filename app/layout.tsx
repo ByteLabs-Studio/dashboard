@@ -1,17 +1,10 @@
+"use client";
+
 import React from "react";
 import "./globals.css";
 import { ThemeProvider } from "@components/theme-provider";
-import type { Metadata } from "next";
-import { usePathname } from 'next/navigation';
-import { cn } from "@/lib/utils";
 import Header from "@components/header";
 import Footer from "@components/footer";
-import Plasma from "./Plasma";
-
-export const metadata: Metadata = {
-  title: "ByteLabs",
-  description: "Code. Sound. Visualize.",
-};
 
 export default function RootLayout({
   children,

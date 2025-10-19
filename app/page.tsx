@@ -196,7 +196,7 @@ export default function HomePage() {
                   <p className="text-muted-foreground">
                     ByteLabs aims to capture the simplicity of Bytebeats and the creative power of bitwise operations 
                     in a user-friendly application that is both intuitive and accessible. 
-                    Inspired by <a href="https://dollchan.net/bytebeat/" className="text-primary hover:underline">Dollchan's Bytebeat Composer</a>, 
+                    Inspired by <a href="https://dollchan.net/bytebeat/" className="text-primary hover:underline">Dollchan&apos;s Bytebeat Composer</a>, 
                     ByteLabs expands on the concept by offering an offline experience 
                     designed for creators who want to experiment, compose, and explore sound without limitations.
                   </p>
