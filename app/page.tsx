@@ -156,67 +156,63 @@ export default function HomePage() {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4 mt-0.5">
-                    <span className="text-primary font-medium">1</span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold mb-1">The Math Behind the Music</h3>
-                    <p className="text-muted-foreground text-sm">
-                      Byte beats work by using short programs that generate audio as a function of time, 
-                      typically producing sound in a loop. These programs use mathematical operations to create musical patterns, 
-                      with each output representing a sample of sound played at specific intervals.
-                    </p>
-                  </div>
+            <div className="space-y-8 max-w-3xl mx-auto">
+              <div className="flex items-start p-6 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-colors">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4 mt-0.5">
+                  <span className="text-primary font-medium">1</span>
                 </div>
-                
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4 mt-0.5">
-                    <span className="text-primary font-medium">2</span>
-                  </div>
-                  <div>
-                  <h3 className="text-lg font-semibold mb-1">Bitwise Operations</h3>
-                  <p className="text-muted-foreground text-sm">
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">The Math Behind the Music</h3>
+                  <p className="text-muted-foreground">
+                    Byte beats work by using short programs that generate audio as a function of time, 
+                    typically producing sound in a loop. These programs use mathematical operations to create musical patterns, 
+                    with each output representing a sample of sound played at specific intervals.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start p-6 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-colors">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4 mt-0.5">
+                  <span className="text-primary font-medium">2</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Bitwise Operations</h3>
+                  <p className="text-muted-foreground">
                     The magic comes from <strong>bitwise operations</strong> (like <code>&amp;</code>, <code>|</code>, <code>^</code>, <code>~</code>, <code>&lt;&lt;</code>, <code>&gt;&gt;</code>) applied to a simple counter variable. 
                     These operations manipulate the binary data in unique ways, turning the counter into intricate, often musical patterns. 
                     This is what gives Bytebeats their distinctive glitchy, 8-bit sound.
                     However, if you change the type of counter or use different kinds of operations—for example, using floating-point math instead of integers—you
                     get a variation known as <strong>Floatbeat</strong>, which can produce smoother or more fluid sounds.
                   </p>
-                  </div>
                 </div>
               </div>
               
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4 mt-0.5">
-                    <span className="text-primary font-medium">3</span>
-                  </div>
-                  <div>
-                  <h3 className="text-lg font-semibold mb-1">The ByteLabs Difference</h3>
-                  <p className="text-muted-foreground text-sm">
+              <div className="flex items-start p-6 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-colors">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4 mt-0.5">
+                  <span className="text-primary font-medium">3</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">The ByteLabs Difference</h3>
+                  <p className="text-muted-foreground">
                     ByteLabs aims to capture the simplicity of Bytebeats and the creative power of bitwise operations 
                     in a user-friendly application that is both intuitive and accessible. 
-                    Inspired by <strong><a href="https://dollchan.net/bytebeat/">Dollchan's Bytebeat Composer</a></strong>, 
+                    Inspired by <a href="https://dollchan.net/bytebeat/" className="text-primary hover:underline">Dollchan's Bytebeat Composer</a>, 
                     ByteLabs expands on the concept by offering an offline experience 
                     designed for creators who want to experiment, compose, and explore sound without limitations.
                   </p>
-                  </div>
                 </div>
-                
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4 mt-0.5">
-                    <span className="text-primary font-medium">4</span>
-                  </div>
-                  <div>
-                  <h3 className="text-lg font-semibold mb-1">Endless Possibilities</h3>
-                  <p className="text-muted-foreground text-sm">
+              </div>
+              
+              <div className="flex items-start p-6 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-colors">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4 mt-0.5">
+                  <span className="text-primary font-medium">4</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Endless Possibilities</h3>
+                  <p className="text-muted-foreground">
                     From simple beeps to intricate musical patterns, the possibilities are virtually limitless. 
                     You can blend different formulas, experiment with effects, and craft evolving soundscapes that grow and change over time.
                   </p>
-                  </div>
                 </div>
               </div>
             </div>

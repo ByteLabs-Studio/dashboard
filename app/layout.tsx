@@ -70,20 +70,20 @@ export default function RootLayout({
           <script async src="https://unpkg.com/react-scan/dist/auto.global.js"></script>
         ) : null}
       </head>
-      <body className="min-h-screen bg-background font-sans antialiased">
+      <body className="min-h-screen bg-background font-sans antialiased flex flex-col">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           themes={["light", "dark", "rose-pine"]}
         >
-          <div className="flex flex-col min-h-screen">
+          <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border/50">
             <Header />
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
           </div>
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
