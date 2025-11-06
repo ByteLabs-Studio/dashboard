@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeDropdown from "./theme-dropdown";
@@ -62,13 +62,44 @@ function MobileNavLink({
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [detached, setDetached] = useState(false);
 
-  const closeMenu = () => setOpen(false);
+  const THRESHOLD = 40;
+
+  useEffect(() => {
+    let raf = 0;
+    const handleScroll = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY || window.pageYOffset;
+        setDetached(y > THRESHOLD);
+      });
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  const wrapperClasses = detached
+    ? "fixed top-4 left-0 right-0 z-40 flex justify-center pointer-events-none"
+    : "relative w-full";
+
+  const headerClasses = detached
+    ? "pointer-events-auto w-[calc(100%-2rem)] max-w-6xl rounded-xl bg-background/85 backdrop-blur-md border border-border/10 shadow-xl transition-all duration-500 ease-[cubic-bezier(.2,.8,.2,1)] transform-gpu"
+    : "w-full bg-background/95 backdrop-blur-md border-b border-border shadow-sm transition-all duration-300 ease-[cubic-bezier(.2,.8,.2,1)]";
+
+  const innerPadding = detached ? "px-4 py-2" : "max-w-6xl mx-auto w-full px-4";
 
   return (
-    <header className="w-full bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
-      <div className="max-w-6xl mx-auto w-full px-6">
-        <div className="flex h-16 items-center justify-between">
+    <div className={wrapperClasses} aria-hidden={detached ? "false" : "true"}>
+      <div className={detached ? "h-16" : "h-0"} />
+
+      <header className={`${headerClasses} ${innerPadding}`}>
+        <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-3">
           <div className="flex items-center gap-4">
             <Link href="/" className="inline-flex items-center gap-3">
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-primary to-secondary text-background shadow">
@@ -83,26 +114,20 @@ export default function Header() {
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-6 justify-center">
             <NavLink href="/">Home</NavLink>
             <NavLink href="/downloads">Downloads</NavLink>
             <NavLink href="/git">Git</NavLink>
             <NavLink href="/docs">Docs</NavLink>
           </nav>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-2">
-              <BackgroundToggle />
-              <ThemeDropdown />
+          <div className="flex items-center justify-end min-w-[130px]">
+            <div className="hidden md:flex items-center">
+              <BackgroundToggle className="mr-0.5" />
+              <div className="w-[90px] flex items-center">
+                <ThemeDropdown {...({ fixedLabelWidth: true } as any)} />
+              </div>
             </div>
-            {/* <a
-              href={DISCORD_INVITE}
-              className="hidden sm:inline-flex items-center rounded-md bg-[#6577E6] p-6 py-2 text-sm font-medium text-background shadow hover:brightness-95"
-            >
-              <BsDiscord className="w-5 h-5" />
-              <span className="w-2" />
-              Support
-            </a> */}
 
             <button
               className="inline-flex items-center gap-2 rounded-md p-2 md:hidden hover:bg-muted"
@@ -130,18 +155,18 @@ export default function Header() {
         </div>
 
         {open && (
-          <div className="md:hidden py-3 aboslute top-0">
-            <div className="flex flex-col gap-2">
-              <MobileNavLink href="/" onClick={closeMenu}>
+          <div className="md:hidden py-3 absolute top-full left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)]">
+            <div className="flex flex-col gap-2 bg-background/95 p-3 rounded-md shadow">
+              <MobileNavLink href="/" onClick={() => setOpen(false)}>
                 Home
               </MobileNavLink>
-              <MobileNavLink href="/downloads" onClick={closeMenu}>
+              <MobileNavLink href="/downloads" onClick={() => setOpen(false)}>
                 Downloads
               </MobileNavLink>
-              <MobileNavLink href="/git" onClick={closeMenu}>
+              <MobileNavLink href="/git" onClick={() => setOpen(false)}>
                 Git
               </MobileNavLink>
-              <MobileNavLink href="/docs" onClick={closeMenu}>
+              <MobileNavLink href="/docs" onClick={() => setOpen(false)}>
                 Docs
               </MobileNavLink>
 
@@ -152,7 +177,7 @@ export default function Header() {
             </div>
           </div>
         )}
-      </div>
-    </header>
+      </header>
+    </div>
   );
 }

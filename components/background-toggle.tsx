@@ -1,9 +1,15 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
+import { useTheme } from "next-themes";
 import { Sparkles } from "lucide-react";
 
-export default function BackgroundToggle() {
+interface BackgroundToggleProps {
+  className?: string;
+}
+
+export default function BackgroundToggle({ className = '' }: BackgroundToggleProps) {
+  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isEnabled, setIsEnabled] = useState(true);
 
@@ -50,23 +56,36 @@ export default function BackgroundToggle() {
     );
   }
 
+  const getButtonClasses = () => {
+    if (!isEnabled) return 'text-muted-foreground/60 hover:text-foreground/80 hover:bg-muted/50';
+    
+    switch(theme) {
+      case 'light':
+        return 'bg-black/90 text-white ring-1 ring-border/20';
+      case 'rose-pine':
+        return 'bg-[#c4a7e7] text-[#191724] ring-1 ring-[#c4a7e7]/30';
+      case 'dark':
+      default:
+        return 'bg-white/90 text-black ring-1 ring-border/20';
+    }
+  };
+
   return (
     <button
-      className={`w-9 h-9 rounded-md transform-gpu flex items-center justify-center transition-all duration-200 cursor-pointer ${
-        isEnabled 
-          ? "hover:bg-muted/10" 
-          : ""
-      }`}
+      className={`w-9 h-9 rounded-lg transform-gpu flex items-center justify-center transition-all duration-200 ${getButtonClasses()} ${className}`}
       onClick={toggleBackground}
       aria-label={isEnabled ? "Disable background animation" : "Enable background animation"}
       title={isEnabled ? "Disable background animation" : "Enable background animation"}
     >
       <Sparkles 
-        className="w-4 h-4" 
+        className="w-4 h-4 transition-transform duration-200" 
         style={!isEnabled ? { 
           opacity: 0.5, 
           strokeWidth: 1 
-        } : undefined} 
+        } : { 
+          transform: 'scale(1.1)',
+          filter: 'drop-shadow(0 0 2px rgba(255,255,255,0.3))'
+        }} 
       />
     </button>
   );
