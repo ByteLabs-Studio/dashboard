@@ -206,7 +206,7 @@ export default function HomePage() {
                     The magic comes from <strong>bitwise operations</strong> (like <code>&amp;</code>, <code>|</code>, <code>^</code>, <code>~</code>, <code>&lt;&lt;</code>, <code>&gt;&gt;</code>) applied to a simple counter variable. 
                     These operations manipulate the binary data in unique ways, turning the counter into intricate, often musical patterns. 
                     This is what gives Bytebeats their distinctive glitchy, 8-bit sound.
-                    However, if you change the type of counter or use different kinds of operations—for example, using floating-point math instead of integers—you
+                    However, if you change the type of counter or use different kinds of operations—for example, using floating-point arithmetic instead of integers—you
                     get a variation known as <strong>Floatbeat</strong>, which can produce smoother or more fluid sounds.
                   </p>
                 </div>
