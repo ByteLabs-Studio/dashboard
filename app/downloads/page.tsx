@@ -28,7 +28,6 @@ export default function DownloadsPage() {
     }, 1500);
   };
 
-  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (copyTimeout.current) {
