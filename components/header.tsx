@@ -84,36 +84,35 @@ export default function Header() {
     };
   }, []);
 
-  const wrapperClasses = detached
-    ? "fixed top-4 left-0 right-0 z-40 flex justify-center pointer-events-none transition-all duration-700 ease-out"
-    : "sticky top-0 z-40 w-full transition-all duration-700 ease-out";
+  const wrapperClasses = "fixed top-0 left-0 right-0 z-40 flex justify-center";
 
-  const headerClasses = detached
-    ? `pointer-events-auto w-[calc(100%-2rem)] max-w-6xl rounded-xl bg-background/90 backdrop-blur-md border border-border/10 shadow-xl
-       transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu ${
-         detached ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-100"
-       }`
-    : `w-full bg-background/95 backdrop-blur-md border-b border-border/20
-       transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-         detached ? "opacity-100" : "opacity-100"
-       }`;
+  const headerClasses = `w-full max-w-6xl transition-all duration-300 ease-out transform-gpu ${
+    detached 
+      ? 'mt-4 mx-4 rounded-xl bg-background/95 backdrop-blur-md border border-border/10 shadow-xl pointer-events-auto' 
+      : 'bg-background/95 backdrop-blur-md border-b border-border/20 pointer-events-auto'
+  }`;
 
   const innerPadding = detached ? "px-4 py-2" : "max-w-[100vw] w-full px-6";
 
   return (
-    <div
-      className={`${wrapperClasses} ${detached ? "opacity-100" : "opacity-100"}`}
-      style={
-        {
-          "--tw-translate-y": detached ? "-1rem" : "0",
-        } as React.CSSProperties
-      }
+    <div 
+      className={wrapperClasses}
+      style={{
+        '--tw-translate-y': detached ? '0' : '0',
+      } as React.CSSProperties}
       aria-hidden={detached ? "false" : "true"}
     >
-      <div className={detached ? "h-16" : "h-0"} />
+      <div className={detached ? "h-24" : "h-16"} />
 
-      <header className={`${headerClasses} ${innerPadding}`}>
-        <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-2 w-full max-w-6xl mx-auto">
+      <header 
+        className={`${headerClasses} ${innerPadding}`}
+        style={{
+          transition: 'all 300ms ease-out',
+          transform: detached ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
+          opacity: 1
+        }}
+      >
+        <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-2 w-full mx-auto">
           <div className="flex items-center gap-4">
             <Link href="/" className="inline-flex items-center gap-3">
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-primary to-secondary text-background shadow">

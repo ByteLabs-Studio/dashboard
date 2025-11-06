@@ -74,7 +74,7 @@ export default function RootLayout({
           themes={["light", "dark", "rose-pine"]}
         >
           <Header />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 pt-20 md:pt-24">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>
