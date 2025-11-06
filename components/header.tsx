@@ -98,7 +98,7 @@ export default function Header() {
          detached ? "opacity-100" : "opacity-100"
        }`;
 
-  const innerPadding = detached ? "px-4 py-2" : "max-w-[100vw] w-full px-4";
+  const innerPadding = detached ? "px-4 py-2" : "max-w-[100vw] w-full px-6";
 
   return (
     <div
@@ -135,10 +135,10 @@ export default function Header() {
             <NavLink href="/docs">Docs</NavLink>
           </nav>
 
-          <div className="flex items-center justify-end gap-3 min-w-[150px]">
-            <div className="hidden md:flex items-center gap-2">
-              <BackgroundToggle />
-              <div className="w-[92px] flex items-center justify-end">
+          <div className="flex items-center justify-end gap-3 min-w-[140px] pr-1">
+            <div className="hidden md:flex items-center gap-3">
+              <BackgroundToggle className="relative z-50 mr-15" />
+              <div className="w-[80px] flex items-center justify-end relative z-10">
                 <ThemeDropdown {...({ fixedLabelWidth: true } as any)} />
               </div>
             </div>
@@ -184,8 +184,8 @@ export default function Header() {
                 Docs
               </MobileNavLink>
 
-              <div className="pt-2 flex gap-2 items-center">
-                <BackgroundToggle />
+              <div className="pt-2 flex gap-3 items-center">
+                <BackgroundToggle className="relative z-50 mr-6" />
                 <ThemeDropdown />
               </div>
             </div>

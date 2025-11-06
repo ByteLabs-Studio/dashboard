@@ -115,7 +115,7 @@ export default function ThemeDropdown({
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         type="button"
-        className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-foreground/10 transition-colors cursor-pointer"
+        className="inline-flex items-center justify-center rounded-md px-3 py-1.5 text-sm text-foreground hover:bg-foreground/10 transition-all duration-200 cursor-pointer w-auto"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
@@ -123,12 +123,12 @@ export default function ThemeDropdown({
           <IconComponent className="w-4 h-4" />
         </div>
         <span
-          className={`hidden sm:inline ${fixedLabelWidth ? "w-20 inline-block text-right" : ""}`}
+          className={`hidden sm:inline-block text-center ${fixedLabelWidth ? "w-20" : "w-auto"} min-w-[40px]`}
         >
           {selectedTheme.label}
         </span>
         <ChevronDown
-          className={`w-3 h-3 transition-transform duration-200 ${
+          className={`w-3 h-3 transition-transform duration-200 flex-shrink-0 ${
             isOpen ? "rotate-180" : ""
           }`}
         />

@@ -8,7 +8,9 @@ interface BackgroundToggleProps {
   className?: string;
 }
 
-export default function BackgroundToggle({ className = '' }: BackgroundToggleProps) {
+export default function BackgroundToggle({
+  className = "",
+}: BackgroundToggleProps) {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isEnabled, setIsEnabled] = useState(true);
@@ -45,7 +47,7 @@ export default function BackgroundToggle({ className = '' }: BackgroundTogglePro
   }, [isEnabled, mounted]);
 
   const toggleBackground = useCallback(() => {
-    setIsEnabled(prev => !prev);
+    setIsEnabled((prev) => !prev);
   }, []);
 
   if (!mounted) {
@@ -57,35 +59,58 @@ export default function BackgroundToggle({ className = '' }: BackgroundTogglePro
   }
 
   const getButtonClasses = () => {
-    if (!isEnabled) return 'text-muted-foreground/60 hover:text-foreground/80 hover:bg-muted/50';
+    const baseClasses = "transition-all duration-400 ease-[cubic-bezier(0.4, 0, 0.2, 1)]";
     
-    switch(theme) {
-      case 'light':
-        return 'bg-black/90 text-white ring-1 ring-border/20';
-      case 'rose-pine':
-        return 'bg-[#c4a7e7] text-[#191724] ring-1 ring-[#c4a7e7]/30';
-      case 'dark':
+    if (!isEnabled) {
+      if (theme === 'rose-pine') {
+        return `${baseClasses} text-muted-foreground/60 hover:bg-[#c4a7e7]/50 hover:text-foreground/80`;
+      }
+      if (theme === 'dark') {
+        return `${baseClasses} text-muted-foreground/60 hover:bg-white/20 hover:text-foreground/80`;
+      }
+      return `${baseClasses} text-muted-foreground/60 hover:bg-black/20 hover:text-foreground/80`;
+    }
+
+    switch (theme) {
+      case "light":
+        return `${baseClasses} bg-black/90 text-white ring-1 ring-border/20 hover:bg-black/80`;
+      case "rose-pine":
+        return `${baseClasses} bg-[#c4a7e7]/90 text-black ring-1 ring-[#c4a7e7]/20 hover:bg-[#c4a7e7]/80`;
+      case "dark":
+        return `${baseClasses} bg-white/90 text-black ring-1 ring-border/20 hover:bg-white/80`;
       default:
-        return 'bg-white/90 text-black ring-1 ring-border/20';
+        return `${baseClasses} bg-white/90 text-black ring-1 ring-border/20 hover:bg-white/80`;
     }
   };
 
   return (
     <button
-      className={`w-9 h-9 rounded-lg transform-gpu flex items-center justify-center transition-all duration-200 ${getButtonClasses()} ${className}`}
+      className={`w-9 h-9 rounded-lg transform-gpu flex items-center justify-center ${getButtonClasses()} ${className}`}
       onClick={toggleBackground}
-      aria-label={isEnabled ? "Disable background animation" : "Enable background animation"}
-      title={isEnabled ? "Disable background animation" : "Enable background animation"}
+      aria-label={
+        isEnabled
+          ? "Disable background animation"
+          : "Enable background animation"
+      }
+      title={
+        isEnabled
+          ? "Disable background animation"
+          : "Enable background animation"
+      }
     >
-      <Sparkles 
-        className="w-4 h-4 transition-transform duration-200" 
-        style={!isEnabled ? { 
-          opacity: 0.5, 
-          strokeWidth: 1 
-        } : { 
-          transform: 'scale(1.1)',
-          filter: 'drop-shadow(0 0 2px rgba(255,255,255,0.3))'
-        }} 
+      <Sparkles
+        className="w-4 h-4 transition-all duration-400 ease-[cubic-bezier(0.4, 0, 0.2, 1)]"
+        style={
+          !isEnabled
+            ? {
+                opacity: 2,
+                strokeWidth: 1,
+              }
+            : {
+                transform: "scale(1.3)",
+                filter: "drop-shadow(0 0 2px rgba(255,255,255,0.3))",
+              }
+        }
       />
     </button>
   );
