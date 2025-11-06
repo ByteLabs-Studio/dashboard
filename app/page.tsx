@@ -13,6 +13,7 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const [contentLoaded, setContentLoaded] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
+  const [theme, setTheme] = useState<string>("light");
 
   const deviceQuality = useMemo(() => {
     if (typeof window === "undefined") return "high";
@@ -46,6 +47,15 @@ export default function HomePage() {
     setBackgroundEnabled(initialEnabled);
 
     setMounted(true);
+    const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+    setTheme(currentTheme);
+
+    const themeObserver = new MutationObserver(() => {
+    const newTheme = document.documentElement.getAttribute("data-theme") || "light";
+    setTheme(newTheme);
+    });
+
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
     const contentTimer = setTimeout(() => {
       setContentLoaded(true);
@@ -82,12 +92,19 @@ export default function HomePage() {
             }`}
           >
             <Plasma
-              color="#D375DF"
+              color={
+                theme === "dark"
+                  ? "#5C6BC0"      // bluish for dark
+                  : theme === "rose-pine"
+                  ? "#D375DF"      // purple-pink for rose-pine
+                  : "#7E57C2"      // soft violet for light
+              }
               speed={1.0}
               opacity={1.0}
               mouseInteractive={false}
               quality={deviceQuality}
             />
+    
           </div>
         )}
       </div>
