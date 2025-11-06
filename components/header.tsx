@@ -99,7 +99,7 @@ export default function Header() {
       <div className={detached ? "h-16" : "h-0"} />
 
       <header className={`${headerClasses} ${innerPadding}`}>
-        <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-3">
+        <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-2 w-[calc(100%-3rem)]">
           <div className="flex items-center gap-4">
             <Link href="/" className="inline-flex items-center gap-3">
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-primary to-secondary text-background shadow">
@@ -121,10 +121,10 @@ export default function Header() {
             <NavLink href="/docs">Docs</NavLink>
           </nav>
 
-          <div className="flex items-center justify-end min-w-[130px]">
-            <div className="hidden md:flex items-center">
-              <BackgroundToggle className="mr-0.5" />
-              <div className="w-[90px] flex items-center">
+          <div className="flex items-center justify-end min-w-[120px] pr-1">
+            <div className="hidden md:flex items-center gap-1">
+              <BackgroundToggle />
+              <div className="w-[92px] flex items-center">
                 <ThemeDropdown {...({ fixedLabelWidth: true } as any)} />
               </div>
             </div>
