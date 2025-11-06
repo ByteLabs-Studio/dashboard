@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useCallback, useMemo } from "react";
+import { Program } from 'ogl';
 
 interface PlasmaProps {
   color?: string;
@@ -177,6 +178,17 @@ export const Plasma: React.FC<PlasmaProps> = ({
     [handleMouseMove],
   );
 
+  // Store the program ref to update color when it changes
+  const programRef = useRef<Program | null>(null);
+
+  // Update color when it changes
+  useEffect(() => {
+    if (programRef.current) {
+      programRef.current.uniforms.uCustomColor.value = new Float32Array(hexToRgb(color));
+      programRef.current.uniforms.uUseCustomColor.value = 1.0;
+    }
+  }, [color]);
+
   useEffect(() => {
     const handleVisibilityChange = () => {
       isVisibleRef.current = !document.hidden;
@@ -187,6 +199,9 @@ export const Plasma: React.FC<PlasmaProps> = ({
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
+
+  // Convert hex color to RGB for the shader
+  const rgbColor = useMemo(() => hexToRgb(color), [color]);
 
   useEffect(() => {
     const currentContainer = containerRef.current;
@@ -257,6 +272,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
         });
 
         mesh = new OGLMesh(gl, { geometry, program });
+        programRef.current = program; // Store program ref for color updates
 
         if (mouseInteractive) {
           currentContainer.addEventListener("mousemove", throttledMouseMove, {
@@ -319,6 +335,10 @@ export const Plasma: React.FC<PlasmaProps> = ({
             }
 
             if (mouseInteractive) {
+              // Set up uniforms
+              program.uniforms.uCustomColor = {
+                value: rgbColor,
+              };
               const mouseUniform = program.uniforms.uMouse
                 .value as Float32Array;
               mouseUniform[0] =
@@ -391,6 +411,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
       });
     };
   }, [
+    rgbColor,
     color,
     speed,
     direction,

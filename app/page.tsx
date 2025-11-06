@@ -14,6 +14,12 @@ export default function HomePage() {
   const [contentLoaded, setContentLoaded] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
   const [theme, setTheme] = useState<string>("light");
+  const [remountKey, setRemountKey] = useState(0);
+
+  // Force remount of Plasma component when theme changes
+  useEffect(() => {
+    setRemountKey(prev => prev + 1);
+  }, [theme]);
 
   const deviceQuality = useMemo(() => {
     if (typeof window === "undefined") return "high";
@@ -86,25 +92,27 @@ export default function HomePage() {
       {/* Background */}
       <div className="fixed inset-0 -z-10">
         {mounted && contentLoaded && (
-          <div 
+          <div
             className={`absolute inset-0 w-full h-full transition-opacity duration-500 ease-out ${
               backgroundEnabled && animationReady ? "opacity-60" : "opacity-0"
             }`}
           >
-            <Plasma
-              color={
-                theme === "dark"
-                  ? "#5C6BC0"      // bluish for dark
-                  : theme === "rose-pine"
-                  ? "#D375DF"      // purple-pink for rose-pine
-                  : "#7E57C2"      // soft violet for light
-              }
-              speed={1.0}
-              opacity={1.0}
-              mouseInteractive={false}
-              quality={deviceQuality}
-            />
-    
+            <div className="absolute inset-0 w-full h-full">
+              <Plasma
+                key={`plasma-${theme}-${remountKey}`}
+                color={
+                  theme === "dark"
+                    ? "#333333" // Dark
+                    : theme === "rose-pine"
+                    ? "#D375DF" // Rose-Pine
+                    : "#FFFFFF" // Light
+                }
+                speed={1.0}
+                opacity={1.0}
+                mouseInteractive={false}
+                quality={deviceQuality}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -198,7 +206,7 @@ export default function HomePage() {
                     The magic comes from <strong>bitwise operations</strong> (like <code>&amp;</code>, <code>|</code>, <code>^</code>, <code>~</code>, <code>&lt;&lt;</code>, <code>&gt;&gt;</code>) applied to a simple counter variable. 
                     These operations manipulate the binary data in unique ways, turning the counter into intricate, often musical patterns. 
                     This is what gives Bytebeats their distinctive glitchy, 8-bit sound.
-                    However, if you change the type of counter or use different kinds of operations—for example, using floating-point math instead of integers—you
+                    However, if you change the type of counter or use different kinds of operations—for example, using floating-point arithmetic instead of integers—you
                     get a variation known as <strong>Floatbeat</strong>, which can produce smoother or more fluid sounds.
                   </p>
                 </div>
