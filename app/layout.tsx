@@ -60,7 +60,10 @@ export default function RootLayout({
           }}
         />
         {process.env.NODE_ENV === "development" ? (
-          <script async src="https://unpkg.com/react-scan/dist/auto.global.js"></script>
+          <script
+            async
+            src="https://unpkg.com/react-scan/dist/auto.global.js"
+          ></script>
         ) : null}
       </head>
       <body className="min-h-screen bg-background font-sans antialiased flex flex-col">
@@ -70,12 +73,8 @@ export default function RootLayout({
           enableSystem
           themes={["light", "dark", "rose-pine"]}
         >
-          <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border/50">
-            <Header />
-          </div>
-          <main className="flex-1">
-            {children}
-          </main>
+          <Header />
+          <main className="flex-1 pt-20 md:pt-24">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>

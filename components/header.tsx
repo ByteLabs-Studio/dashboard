@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeDropdown from "./theme-dropdown";
@@ -62,13 +62,57 @@ function MobileNavLink({
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [detached, setDetached] = useState(false);
 
-  const closeMenu = () => setOpen(false);
+  const THRESHOLD = 40;
+
+  useEffect(() => {
+    let raf = 0;
+    const handleScroll = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY || window.pageYOffset;
+        setDetached(y > THRESHOLD);
+      });
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  const wrapperClasses = "fixed top-0 left-0 right-0 z-40 flex justify-center";
+
+  const headerClasses = `w-full max-w-6xl transition-all duration-300 ease-out transform-gpu ${
+    detached 
+      ? 'mt-4 mx-4 rounded-xl bg-background/95 backdrop-blur-md border border-border/10 shadow-xl pointer-events-auto' 
+      : 'bg-background/95 backdrop-blur-md border-b border-border/20 pointer-events-auto'
+  }`;
+
+  const innerPadding = detached ? "px-4 py-2" : "max-w-[100vw] w-full px-6";
 
   return (
-    <header className="w-full bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
-      <div className="max-w-6xl mx-auto w-full px-6">
-        <div className="flex h-16 items-center justify-between">
+    <div 
+      className={wrapperClasses}
+      style={{
+        '--tw-translate-y': detached ? '0' : '0',
+      } as React.CSSProperties}
+      aria-hidden={detached ? "false" : "true"}
+    >
+      <div className={detached ? "h-24" : "h-16"} />
+
+      <header 
+        className={`${headerClasses} ${innerPadding}`}
+        style={{
+          transition: 'all 300ms ease-out',
+          transform: detached ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
+          opacity: 1
+        }}
+      >
+        <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-2 w-full mx-auto">
           <div className="flex items-center gap-4">
             <Link href="/" className="inline-flex items-center gap-3">
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-primary to-secondary text-background shadow">
@@ -83,26 +127,20 @@ export default function Header() {
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-6 justify-center">
             <NavLink href="/">Home</NavLink>
             <NavLink href="/downloads">Downloads</NavLink>
             <NavLink href="/git">Git</NavLink>
             <NavLink href="/docs">Docs</NavLink>
           </nav>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-2">
-              <BackgroundToggle />
-              <ThemeDropdown />
+          <div className="flex items-center justify-end gap-3 min-w-[140px] pr-1">
+            <div className="hidden md:flex items-center gap-3">
+              <BackgroundToggle className="relative z-50 mr-15" />
+              <div className="w-[80px] flex items-center justify-end relative z-10">
+                <ThemeDropdown fixedLabelWidth={true} />
+              </div>
             </div>
-            {/* <a
-              href={DISCORD_INVITE}
-              className="hidden sm:inline-flex items-center rounded-md bg-[#6577E6] p-6 py-2 text-sm font-medium text-background shadow hover:brightness-95"
-            >
-              <BsDiscord className="w-5 h-5" />
-              <span className="w-2" />
-              Support
-            </a> */}
 
             <button
               className="inline-flex items-center gap-2 rounded-md p-2 md:hidden hover:bg-muted"
@@ -130,29 +168,29 @@ export default function Header() {
         </div>
 
         {open && (
-          <div className="md:hidden py-3 aboslute top-0">
-            <div className="flex flex-col gap-2">
-              <MobileNavLink href="/" onClick={closeMenu}>
+          <div className="md:hidden py-3 absolute top-full left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)]">
+            <div className="flex flex-col gap-2 bg-background/95 p-3 rounded-md shadow">
+              <MobileNavLink href="/" onClick={() => setOpen(false)}>
                 Home
               </MobileNavLink>
-              <MobileNavLink href="/downloads" onClick={closeMenu}>
+              <MobileNavLink href="/downloads" onClick={() => setOpen(false)}>
                 Downloads
               </MobileNavLink>
-              <MobileNavLink href="/git" onClick={closeMenu}>
+              <MobileNavLink href="/git" onClick={() => setOpen(false)}>
                 Git
               </MobileNavLink>
-              <MobileNavLink href="/docs" onClick={closeMenu}>
+              <MobileNavLink href="/docs" onClick={() => setOpen(false)}>
                 Docs
               </MobileNavLink>
 
-              <div className="pt-2 flex gap-2 items-center">
-                <BackgroundToggle />
+              <div className="pt-2 flex gap-3 items-center">
+                <BackgroundToggle className="relative z-50 mr-6" />
                 <ThemeDropdown />
               </div>
             </div>
           </div>
         )}
-      </div>
-    </header>
+      </header>
+    </div>
   );
 }
