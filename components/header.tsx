@@ -85,21 +85,35 @@ export default function Header() {
   }, []);
 
   const wrapperClasses = detached
-    ? "fixed top-4 left-0 right-0 z-40 flex justify-center pointer-events-none"
-    : "relative w-full";
+    ? "fixed top-4 left-0 right-0 z-40 flex justify-center pointer-events-none transition-all duration-700 ease-out"
+    : "sticky top-0 z-40 w-full transition-all duration-700 ease-out";
 
   const headerClasses = detached
-    ? "pointer-events-auto w-[calc(100%-2rem)] max-w-6xl rounded-xl bg-background/85 backdrop-blur-md border border-border/10 shadow-xl transition-all duration-500 ease-[cubic-bezier(.2,.8,.2,1)] transform-gpu"
-    : "w-full bg-background/95 backdrop-blur-md border-b border-border shadow-sm transition-all duration-300 ease-[cubic-bezier(.2,.8,.2,1)]";
+    ? `pointer-events-auto w-[calc(100%-2rem)] max-w-6xl rounded-xl bg-background/90 backdrop-blur-md border border-border/10 shadow-xl 
+       transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu ${
+         detached ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-100'
+       }`
+    : `w-full bg-background/95 backdrop-blur-md border-b border-border/20 
+       transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+         detached ? 'opacity-100' : 'opacity-100'
+       }`;
 
-  const innerPadding = detached ? "px-4 py-2" : "max-w-6xl mx-auto w-full px-4";
+  const innerPadding = detached 
+    ? "px-4 py-2" 
+    : "max-w-[100vw] w-full px-4";
 
   return (
-    <div className={wrapperClasses} aria-hidden={detached ? "false" : "true"}>
+    <div 
+      className={`${wrapperClasses} ${detached ? 'opacity-100' : 'opacity-100'}`}
+      style={{
+        '--tw-translate-y': detached ? '-1rem' : '0',
+      } as React.CSSProperties}
+      aria-hidden={detached ? "false" : "true"}
+    >
       <div className={detached ? "h-16" : "h-0"} />
 
       <header className={`${headerClasses} ${innerPadding}`}>
-        <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-2 w-[calc(100%-3rem)]">
+        <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-2 w-full max-w-6xl mx-auto">
           <div className="flex items-center gap-4">
             <Link href="/" className="inline-flex items-center gap-3">
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-primary to-secondary text-background shadow">
