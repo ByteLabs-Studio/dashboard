@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useCallback, useMemo } from "react";
+import { Program } from 'ogl';
 
 interface PlasmaProps {
   color?: string;
@@ -178,7 +179,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
   );
 
   // Store the program ref to update color when it changes
-  const programRef = useRef<any>(null);
+  const programRef = useRef<Program | null>(null);
 
   // Update color when it changes
   useEffect(() => {
@@ -410,6 +411,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
       });
     };
   }, [
+    rgbColor,
     color,
     speed,
     direction,
