@@ -14,6 +14,12 @@ export default function HomePage() {
   const [contentLoaded, setContentLoaded] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
   const [theme, setTheme] = useState<string>("light");
+  const [remountKey, setRemountKey] = useState(0);
+
+  // Force remount of Plasma component when theme changes
+  useEffect(() => {
+    setRemountKey(prev => prev + 1);
+  }, [theme]);
 
   const deviceQuality = useMemo(() => {
     if (typeof window === "undefined") return "high";
@@ -93,13 +99,13 @@ export default function HomePage() {
           >
             <div className="absolute inset-0 w-full h-full">
               <Plasma
-                key={theme} // Key on theme to force reinitialization when theme changes
+                key={`plasma-${theme}-${remountKey}`}
                 color={
                   theme === "dark"
-                    ? "#5C6BC0" // bluish for dark
+                    ? "#333333" // Dark
                     : theme === "rose-pine"
-                    ? "#D375DF" // purple-pink for rose-pine
-                    : "#7E57C2" // soft violet for light
+                    ? "#D375DF" // Rose-Pine
+                    : "#FFFFFF" // Light
                 }
                 speed={1.0}
                 opacity={1.0}
