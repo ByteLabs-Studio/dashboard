@@ -139,7 +139,7 @@ export default function Header() {
             <div className="hidden md:flex items-center gap-3">
               <BackgroundToggle className="relative z-50 mr-15" />
               <div className="w-[80px] flex items-center justify-end relative z-10">
-                <ThemeDropdown {...({ fixedLabelWidth: true } as any)} />
+                <ThemeDropdown fixedLabelWidth={true} />
               </div>
             </div>
 
