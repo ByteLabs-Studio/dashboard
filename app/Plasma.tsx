@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useCallback, useMemo } from "react";
-import { Program } from 'ogl';
+import { Program } from "ogl";
 
 interface PlasmaProps {
   color?: string;
@@ -104,9 +104,12 @@ const debounce = (func: (...args: unknown[]) => void, wait: number) => {
   };
 };
 
-const throttle = <T extends unknown[]>(func: (...args: T) => void, limit: number) => {
+const throttle = <T extends unknown[]>(
+  func: (...args: T) => void,
+  limit: number,
+) => {
   let inThrottle = false;
-  return function(this: unknown, ...args: T) {
+  return function (this: unknown, ...args: T) {
     if (!inThrottle) {
       func.apply(this, args);
       inThrottle = true;
@@ -180,11 +183,17 @@ export const Plasma: React.FC<PlasmaProps> = ({
 
   // Store the program ref to update color when it changes
   const programRef = useRef<Program | null>(null);
+  // Keep latest color in a ref so the render loop can read it directly without requiring a full reinitialize
+  const colorRef = useRef<number[]>(hexToRgb(color));
 
-  // Update color when it changes
+  // Update the color ref and, if the shader program already exists, update the uniform immediately.
+  // Using a ref prevents the render loop closure from holding a stale color value.
   useEffect(() => {
-    if (programRef.current) {
-      programRef.current.uniforms.uCustomColor.value = new Float32Array(hexToRgb(color));
+    colorRef.current = hexToRgb(color);
+    if (programRef.current && programRef.current.uniforms) {
+      programRef.current.uniforms.uCustomColor.value = new Float32Array(
+        colorRef.current,
+      );
       programRef.current.uniforms.uUseCustomColor.value = 1.0;
     }
   }, [color]);
@@ -207,8 +216,8 @@ export const Plasma: React.FC<PlasmaProps> = ({
     const currentContainer = containerRef.current;
     if (!currentContainer) return;
 
-    let renderer: import('ogl').Renderer | null = null;
-    let mesh: import('ogl').Mesh | null = null;
+    let renderer: import("ogl").Renderer | null = null;
+    let mesh: import("ogl").Mesh | null = null;
     let lastTime = 0;
     const performanceTracker = { frames: 0, lastPerfTime: 0 };
     const frameInterval = 1000 / qualitySettings.targetFps;
@@ -217,7 +226,12 @@ export const Plasma: React.FC<PlasmaProps> = ({
       try {
         await new Promise((resolve) => setTimeout(resolve, 16));
 
-        const { Renderer, Program, Mesh: OGLMesh, Triangle } = await import("ogl");
+        const {
+          Renderer,
+          Program,
+          Mesh: OGLMesh,
+          Triangle,
+        } = await import("ogl");
 
         const useCustomColor = color ? 1.0 : 0.0;
         const customColorRgb = color ? hexToRgb(color) : [1, 1, 1];
@@ -334,11 +348,18 @@ export const Plasma: React.FC<PlasmaProps> = ({
               program.uniforms.uDirection.value = cycle;
             }
 
+            // Always update the custom color uniform from the latest colorRef so theme changes are applied immediately
+            // We set the uniform value here rather than overwriting the uniform object to keep the expected Float32Array shape.
+            if (program.uniforms && colorRef?.current) {
+              program.uniforms.uCustomColor.value = new Float32Array(
+                colorRef.current,
+              );
+              program.uniforms.uUseCustomColor.value = colorRef.current
+                ? 1.0
+                : 0.0;
+            }
+
             if (mouseInteractive) {
-              // Set up uniforms
-              program.uniforms.uCustomColor = {
-                value: rgbColor,
-              };
               const mouseUniform = program.uniforms.uMouse
                 .value as Float32Array;
               mouseUniform[0] =
@@ -351,7 +372,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
 
             try {
               if (renderer && mesh) {
-                renderer.render({ scene: mesh as import('ogl').Mesh });
+                renderer.render({ scene: mesh as import("ogl").Mesh });
               }
             } catch (e) {
               console.warn("WebGL render error, skipping frame:", e);
