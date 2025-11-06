@@ -89,25 +89,25 @@ export default function Header() {
     : "sticky top-0 z-40 w-full transition-all duration-700 ease-out";
 
   const headerClasses = detached
-    ? `pointer-events-auto w-[calc(100%-2rem)] max-w-6xl rounded-xl bg-background/90 backdrop-blur-md border border-border/10 shadow-xl 
+    ? `pointer-events-auto w-[calc(100%-2rem)] max-w-6xl rounded-xl bg-background/90 backdrop-blur-md border border-border/10 shadow-xl
        transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu ${
-         detached ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-100'
+         detached ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-100"
        }`
-    : `w-full bg-background/95 backdrop-blur-md border-b border-border/20 
+    : `w-full bg-background/95 backdrop-blur-md border-b border-border/20
        transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-         detached ? 'opacity-100' : 'opacity-100'
+         detached ? "opacity-100" : "opacity-100"
        }`;
 
-  const innerPadding = detached 
-    ? "px-4 py-2" 
-    : "max-w-[100vw] w-full px-4";
+  const innerPadding = detached ? "px-4 py-2" : "max-w-[100vw] w-full px-4";
 
   return (
-    <div 
-      className={`${wrapperClasses} ${detached ? 'opacity-100' : 'opacity-100'}`}
-      style={{
-        '--tw-translate-y': detached ? '-1rem' : '0',
-      } as React.CSSProperties}
+    <div
+      className={`${wrapperClasses} ${detached ? "opacity-100" : "opacity-100"}`}
+      style={
+        {
+          "--tw-translate-y": detached ? "-1rem" : "0",
+        } as React.CSSProperties
+      }
       aria-hidden={detached ? "false" : "true"}
     >
       <div className={detached ? "h-16" : "h-0"} />
@@ -135,10 +135,10 @@ export default function Header() {
             <NavLink href="/docs">Docs</NavLink>
           </nav>
 
-          <div className="flex items-center justify-end min-w-[120px] pr-1">
-            <div className="hidden md:flex items-center gap-1">
+          <div className="flex items-center justify-end gap-3 min-w-[150px]">
+            <div className="hidden md:flex items-center gap-2">
               <BackgroundToggle />
-              <div className="w-[92px] flex items-center">
+              <div className="w-[92px] flex items-center justify-end">
                 <ThemeDropdown {...({ fixedLabelWidth: true } as any)} />
               </div>
             </div>
