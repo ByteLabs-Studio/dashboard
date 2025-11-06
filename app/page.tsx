@@ -86,25 +86,27 @@ export default function HomePage() {
       {/* Background */}
       <div className="fixed inset-0 -z-10">
         {mounted && contentLoaded && (
-          <div 
+          <div
             className={`absolute inset-0 w-full h-full transition-opacity duration-500 ease-out ${
               backgroundEnabled && animationReady ? "opacity-60" : "opacity-0"
             }`}
           >
-            <Plasma
-              color={
-                theme === "dark"
-                  ? "#5C6BC0"      // bluish for dark
-                  : theme === "rose-pine"
-                  ? "#D375DF"      // purple-pink for rose-pine
-                  : "#7E57C2"      // soft violet for light
-              }
-              speed={1.0}
-              opacity={1.0}
-              mouseInteractive={false}
-              quality={deviceQuality}
-            />
-    
+            <div className="absolute inset-0 w-full h-full">
+              <Plasma
+                key={theme} // Key on theme to force reinitialization when theme changes
+                color={
+                  theme === "dark"
+                    ? "#5C6BC0" // bluish for dark
+                    : theme === "rose-pine"
+                    ? "#D375DF" // purple-pink for rose-pine
+                    : "#7E57C2" // soft violet for light
+                }
+                speed={1.0}
+                opacity={1.0}
+                mouseInteractive={false}
+                quality={deviceQuality}
+              />
+            </div>
           </div>
         )}
       </div>
