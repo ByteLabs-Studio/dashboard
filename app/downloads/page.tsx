@@ -28,7 +28,6 @@ export default function DownloadsPage() {
     }, 1500);
   };
 
-  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (copyTimeout.current) {
@@ -65,14 +64,14 @@ export default function DownloadsPage() {
                         <p className="select-none">Running the flake is as simple as</p>
                         <div className="relative mt-2">
                           <div className="bg-accent/10 rounded-md pr-9 font-mono text-sm overflow-x-auto text-foreground/90 border border-border">
-                            <div className="absolute top-2 right-2 select-none">
+                            <div className="absolute top-3.5 right-2 select-none">
                               <button
                                 onClick={handleCopy}
                                 disabled={isCopied}
                                 className={`transition-colors cursor-pointer select-none ${isCopied ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
                                 title={isCopied ? 'Copied!' : 'Copy to clipboard'}
                               >
-                                {isCopied ? 'Copied!' : <ClipboardIcon className="w-4.5 h-4.5" />}
+                                {isCopied ? 'Copied!' : <ClipboardIcon className="w-5 h-5" />}
                               </button>
                             </div>
                             <pre className="text-[15px] p-3 font-medium text-foreground select-text overflow-x-auto"><code>nix run gitlab:bytelab-studio/ByteLab/reimpl</code></pre>
