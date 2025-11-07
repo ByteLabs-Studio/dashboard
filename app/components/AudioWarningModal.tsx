@@ -78,7 +78,7 @@ export default function AudioWarningModal() {
                 className="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
               />
               <label htmlFor="dont-show-again" className="ml-2 block text-sm text-red-100">
-                Don't show this warning again
+                Don&apos;t show this warning again
               </label>
             </div>
 
@@ -88,7 +88,7 @@ export default function AudioWarningModal() {
                 className="px-8 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2 group w-full sm:w-auto"
                 autoFocus
               >
-                <span>I understand - enable audio{dontShowAgain ? ' & don\'t show again' : ''}</span>
+                <span>I understand - enable audio{dontShowAgain ? ' & do not show again' : ''}</span>
                 <svg 
                   className="w-4 h-4 group-hover:translate-x-1 transition-transform" 
                   fill="none" 

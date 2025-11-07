@@ -96,26 +96,28 @@ export default function FunctionsPage() {
   const [samples, setSamples] = useState<Sample[]>(SAMPLES);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
-  const sourceRef = useRef<any>(null);
+  type AudioNodeType = AudioBufferSourceNode | AudioWorkletNode;
+  const sourceRef = useRef<AudioNodeType | null>(null);
 
   useEffect(() => {
     return () => {
       try {
         if (sourceRef.current) {
+          const node = sourceRef.current;
           try {
-            if (typeof sourceRef.current.stop === "function")
-              sourceRef.current.stop();
+            if ('stop' in node && typeof node.stop === 'function') {
+              node.stop();
+            }
           } catch {}
           try {
-            if (typeof sourceRef.current.disconnect === "function")
-              sourceRef.current.disconnect();
+            if (typeof node.disconnect === 'function') {
+              node.disconnect();
+            }
           } catch {}
           try {
-            if (
-              sourceRef.current.port &&
-              typeof sourceRef.current.port.postMessage === "function"
-            )
-              sourceRef.current.port.postMessage({ command: "stop" });
+            if ('port' in node && node.port && typeof node.port.postMessage === 'function') {
+              node.port.postMessage({ command: "stop" });
+            }
           } catch {}
           sourceRef.current = null;
         }
@@ -144,24 +146,26 @@ export default function FunctionsPage() {
   async function stopPlayback() {
     try {
       if (sourceRef.current) {
+        const node = sourceRef.current;
         try {
-          if (typeof sourceRef.current.stop === "function")
-            sourceRef.current.stop();
+          if ('stop' in node && typeof node.stop === 'function') {
+            node.stop();
+          }
         } catch {}
         try {
-          if (typeof sourceRef.current.disconnect === "function")
-            sourceRef.current.disconnect();
+          if (typeof node.disconnect === 'function') {
+            node.disconnect();
+          }
         } catch {}
         try {
-          if (
-            sourceRef.current.port &&
-            typeof sourceRef.current.port.postMessage === "function"
-          )
-            sourceRef.current.port.postMessage({ command: "stop" });
+          if ('port' in node && node.port && typeof node.port.postMessage === 'function') {
+            node.port.postMessage({ command: "stop" });
+          }
         } catch {}
         sourceRef.current = null;
       }
-    } catch {
+    } catch (error) {
+      console.error('Error stopping playback:', error);
     } finally {
       setPlayingId(null);
     }
@@ -176,18 +180,15 @@ export default function FunctionsPage() {
         AudioContext?: AudioCtorType;
         webkitAudioContext?: AudioCtorType;
       };
-      const AudioCtor =
-        audioWindow.AudioContext ?? audioWindow.webkitAudioContext;
+      const AudioCtor = audioWindow.AudioContext ?? audioWindow.webkitAudioContext;
 
       if (!AudioCtor) {
         alert("Web Audio API is not available in this browser.");
         return;
       }
 
-      if (!audioCtxRef.current) {
-        audioCtxRef.current = new AudioCtor();
-      }
-      const ctx = audioCtxRef.current;
+      const ctx = audioCtxRef.current || new AudioCtor();
+      audioCtxRef.current = ctx;
 
       let fn: (t: number) => number;
       try {
@@ -195,17 +196,18 @@ export default function FunctionsPage() {
         fn = new Function("t", `${mathFuncs} return (${sample.formula});`) as (
           t: number,
         ) => number;
-      } catch (err) {
+      } catch (error: unknown) {
+        console.error("Error parsing formula:", error);
         alert(
           "Invalid formula: " +
-            (err instanceof Error ? err.message : String(err)),
+            (error instanceof Error ? error.message : String(error)),
         );
         return;
       }
 
       if (
         ctx.audioWorklet &&
-        typeof (window as any).AudioWorkletNode !== "undefined"
+        typeof (window as { AudioWorkletNode?: unknown }).AudioWorkletNode !== "undefined"
       ) {
         const processorName = "bytebeat-processor";
         const moduleCode = `
@@ -266,7 +268,8 @@ export default function FunctionsPage() {
         const url = URL.createObjectURL(blob);
         try {
           await ctx.audioWorklet.addModule(url);
-        } catch (err) {
+        } catch (error: unknown) {
+          console.error("Error adding audio worklet module:", error);
           URL.revokeObjectURL(url);
         } finally {
           try {
@@ -275,11 +278,11 @@ export default function FunctionsPage() {
         }
 
         try {
-          const node = new (window as any).AudioWorkletNode(
+          const AudioWorkletNode = globalThis.AudioWorkletNode;
+          const node = new AudioWorkletNode(
             ctx,
             processorName,
             {
-              numberOfOutputs: 1,
               outputChannelCount: [1],
             },
           );
@@ -290,7 +293,8 @@ export default function FunctionsPage() {
           sourceRef.current = node;
           setPlayingId(sample.id);
           return;
-        } catch (err) {
+        } catch (error: unknown) {
+          console.error("Error creating audio worklet node:", error);
         }
       }
 
@@ -316,9 +320,7 @@ export default function FunctionsPage() {
               value = clamp(Number(raw));
             }
           }
-        } catch {
-          value = 0;
-        }
+        } catch {}
         data[i] = clamp(value);
       }
 
@@ -329,8 +331,8 @@ export default function FunctionsPage() {
       src.start(0);
       sourceRef.current = src;
       setPlayingId(sample.id);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
       alert("Playback failed: " + msg);
     }
   }
