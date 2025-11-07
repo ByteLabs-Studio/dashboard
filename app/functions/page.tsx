@@ -17,60 +17,60 @@ type Sample = {
 const SAMPLES: Sample[] = [
   {
     id: "classic-1",
-    name: "Classic Bytebeat (8kHz)",
+    name: "Classic Bytebeat",
     formula: "t&t>>8",
     description:
-      "A compact classic using shifts and OR for melodic motion. Playing at 8000 Hz for a lo-fi effect.",
+      "A compact classic using shifts and OR for melodic motion.",
     category: "Classic Bytebeats",
     tempo: 1.0,
     duration: 4
   },
   {
     id: "bitwise-1",
-    name: "Crackle Bass (8kHz)",
+    name: "Crackle Bass",
     formula:
       "(t*((t&4096?(t%65536<59392?7:(t&7)):16)^(1&(t>>14)))>>(3&-t>>((t&2048)?2:10)))|((t&16384)?((t&4096)?10:3):2)",
     description:
-      "Layered bitwise operations for a crunchy bass texture. Playing at 8000 Hz for a lo-fi effect.",
+      "Layered bitwise operations for a crunchy bass texture.",
     category: "Bitwise Patterns",
     tempo: 1.0,
     duration: 4
   },
   {
     id: "float-1",
-    name: "Floatbeat (32kHz)",
+    name: "Floatbeat",
     formula:
       "Math.sin(100*Math.pow(2,(-t/2048%8)))/2+Math.tan(Math.cbrt(Math.sin(t*[1,0,2,4,0,2,3,2,1.5,2,1,0,2,3,2,1.5][t>>13&15]/41)))/[2,3,4,6,8,12,16,24][t/[1,1.5][t>>12&1]>>10&7]/4+Math.cbrt(Math.asin(Math.sin(t/[2,3,2.5,4][t>>16&3]/41)))/6",
     description:
-      "Complex floatbeat with evolving harmonics and modulation. Playing at 32,000 Hz for higher fidelity.",
+      "Complex floatbeat with evolving harmonics and modulation.",
     category: "Floatbeat",
     tempo: 1.0,
     duration: 8
   },
   {
     id: "float-2",
-    name: "Techno Floatbeat (48kHz)",
+    name: "Techno Floatbeat",
     formula:
       "(t=>{let d=0;const b=Math.floor(t*1.5/16384),M=[0,0,0,0,-2,-2,-2,-2,-5,-7,-5,-3,-2,-2,-2,-2][b&15],c=(n,x,y)=>{const m=440*Math.pow(2,1/12)**n/48e3;return(x(y(t*4*m%4))+x(y(t*4*1.49*m%4)))/Math.max(2,t*1.5%((b&7)>5?32768:16384)/499)},lp=(inp,w)=>{if(w==0)return inp;const out=inp+d;d=out/(1+1/w);return d/w},cb=c(M,Math.asin,Math.sin)*1.2,k=Math.min(1,Math.max(-1,Math.tan(Math.sin(Math.sqrt(t*1.5%32768)/2))*(1-t*1.5%32768/32768)*2))/1.3,h=Math.sin(t**7)/Math.max(1,(t+32768)*1.5%32768/500)*(t*1.5&16384?1:0),s=lp(Math.sin((t>>2)**7),3)*(t*1.5&32768?.4:0)/Math.max(.5,(t+65536)*1.5%65536/3000),bass=Math.min(1,Math.max(-1,Math.asin(Math.sin(t*Math.PI*110*Math.pow(2,1/12)**(t*1.5&131072?5:0)/48e3))*4))/2.5;return((cb+bass)*(t*1.5&16384?1:(t*1.5%32768/16384))+k+h+s)/1.1})(t)",
     description:
-      "Techno-style floatbeat with drums and bass. Playing at 48,000 Hz for studio quality.",
+      "Techno-style floatbeat with drums and bass.",
     category: "Floatbeat",
     tempo: 1.5,
     duration: 8
   },
   {
     id: "perc-1",
-    name: "Percussion-ish (8kHz)",
+    name: "Percussion-ish",
     formula: "((t*(t>>5|t>>8))>>(t>>16))&255",
     description:
-      "Short transient hits derived from bit tricks. Playing at 8000 Hz for a lo-fi effect.",
+      "Short transient hits derived from bit tricks.",
     category: "Percussion",
     tempo: 1.0,
     duration: 2
   },
   {
     id: "exp-1",
-    name: "Experimental Noise (8kHz)",
+    name: "Experimental Noise",
     formula: "((t*5) ^ (t>>7)) & 255",
     description: "Noisy XOR patterns masked to the low byte.",
     category: "Experimental",
