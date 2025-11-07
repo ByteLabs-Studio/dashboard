@@ -14,6 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="h-full">
       <head>
+        <link rel="icon" href="/bl.png" type="image/png" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
