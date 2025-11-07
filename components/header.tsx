@@ -87,29 +87,33 @@ export default function Header() {
   const wrapperClasses = "fixed top-0 left-0 right-0 z-40 flex justify-center";
 
   const headerClasses = `w-full max-w-6xl transition-all duration-300 ease-out transform-gpu ${
-    detached 
-      ? 'mt-4 mx-4 rounded-xl bg-background/95 backdrop-blur-md border border-border/10 shadow-xl pointer-events-auto' 
-      : 'bg-background/95 backdrop-blur-md border-b border-border/20 pointer-events-auto'
+    detached
+      ? "mt-4 mx-4 rounded-xl bg-background/95 backdrop-blur-md border border-border/10 shadow-xl pointer-events-auto"
+      : "bg-background/95 backdrop-blur-md border-b border-border/20 pointer-events-auto"
   }`;
 
   const innerPadding = detached ? "px-4 py-2" : "max-w-[100vw] w-full px-6";
 
   return (
-    <div 
+    <div
       className={wrapperClasses}
-      style={{
-        '--tw-translate-y': detached ? '0' : '0',
-      } as React.CSSProperties}
+      style={
+        {
+          "--tw-translate-y": detached ? "0" : "0",
+        } as React.CSSProperties
+      }
       aria-hidden={detached ? "false" : "true"}
     >
       <div className={detached ? "h-24" : "h-16"} />
 
-      <header 
+      <header
         className={`${headerClasses} ${innerPadding}`}
         style={{
-          transition: 'all 300ms ease-out',
-          transform: detached ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
-          opacity: 1
+          transition: "all 300ms ease-out",
+          transform: detached
+            ? "translateY(8px) scale(0.98)"
+            : "translateY(0) scale(1)",
+          opacity: 1,
         }}
       >
         <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-2 w-full mx-auto">
@@ -131,6 +135,7 @@ export default function Header() {
             <NavLink href="/">Home</NavLink>
             <NavLink href="/downloads">Downloads</NavLink>
             <NavLink href="/git">Git</NavLink>
+            <NavLink href="/functions">Functions</NavLink>
             <NavLink href="/docs">Docs</NavLink>
           </nav>
 
@@ -178,6 +183,9 @@ export default function Header() {
               </MobileNavLink>
               <MobileNavLink href="/git" onClick={() => setOpen(false)}>
                 Git
+              </MobileNavLink>
+              <MobileNavLink href="/functions" onClick={() => setOpen(false)}>
+                Functions
               </MobileNavLink>
               <MobileNavLink href="/docs" onClick={() => setOpen(false)}>
                 Docs
