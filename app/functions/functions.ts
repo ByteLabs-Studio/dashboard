@@ -23,10 +23,10 @@ export const SAMPLES: Sample[] = [
     duration: 4
   },
   {
-    id: "bass-1",
-    name: "Crackle Bass",
+    id: "bitwise-1",
+    name: "Nibbles",
     formula: "(t*((t&4096?(t%65536<59392?7:(t&7)):16)^(1&(t>>14)))>>(3&-t>>((t&2048)?2:10)))|((t&16384)?((t&4096)?10:3):2)",
-    description: "Layered bitwise operations for a crunchy bass texture.",
+    description: "Famous bytebeat from the Windows XP Salinwine virus. Known for its distinctive pattern.",
     category: "Bitwise Patterns",
     tempo: 1.0,
     duration: 4
@@ -46,15 +46,6 @@ export const SAMPLES: Sample[] = [
     formula: "Math.sin(100*Math.pow(2,(-t/2048%8)))/2+Math.tan(Math.cbrt(Math.sin(t*[1,0,2,4,0,2,3,2,1.5,2,1,0,2,3,2,1.5][t>>13&15]/41)))/[2,3,4,6,8,12,16,24][t/[1,1.5][t>>12&1]>>10&7]/4+Math.cbrt(Math.asin(Math.sin(t/[2,3,2.5,4][t>>16&3]/41)))/6",
     description: "Complex floatbeat with evolving harmonics and modulation.",
     category: "Floatbeat",
-    tempo: 1.0,
-    duration: 8
-  },
-  {
-    id: "salinwine",
-    name: "Nibbles",
-    formula: "t*(t>>5|t>>8)>>(t>>16)",
-    description: "Famous bytebeat from the Windows XP Salinwine virus. Known for its distinctive pattern.",
-    category: "Bitwise Patterns",
     tempo: 1.0,
     duration: 8
   },
