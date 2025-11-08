@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 // Dynamically import the background components
 const Galaxy = dynamic(() => import("./react/Galaxy"), { ssr: false });
 const Plasma = dynamic(() => import("./react/Plasma"), { ssr: false });
+const Prism = dynamic(() => import("./react/Prism"), { ssr: false });
 
 function Container({ children }: { children: React.ReactNode }) {
   return (
@@ -141,6 +142,22 @@ export default function HomePage() {
                   opacity={1.0}
                   mouseInteractive={false}
                   quality={deviceQuality}
+                />
+              )}
+              {background === "prism" && (
+                <Prism
+                  key={`prism-${theme}-${remountKey}`}
+                  height={3.5}
+                  baseWidth={5.5}
+                  animationType="3drotate"
+                  glow={1}
+                  noise={0.5}
+                  scale={3.6}
+                  hueShift={theme === "dark" ? 0.5 : 0}
+                  colorFrequency={1}
+                  timeScale={0.5}
+                  transparent={true}
+                  suspendWhenOffscreen={true}
                 />
               )}
             </div>

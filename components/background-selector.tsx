@@ -5,20 +5,26 @@ import { Monitor, Sparkles, Stars, ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { createPortal } from "react-dom";
 
-type BackgroundType = "galaxy" | "plasma" | "none";
+type BackgroundType = "galaxy" | "plasma" | "prism" | "none";
 
 const backgrounds = [
+  {
+    value: "prism",
+    label: "Prism",
+    icon: Sparkles,
+    description: "A spectrum of colors that spark creativity",
+  },
   {
     value: "galaxy",
     label: "Galaxy",
     icon: Stars,
-    description: "Interactive star field",
+    description: "Components you shall have, young padawan",
   },
   {
     value: "plasma",
     label: "Plasma",
     icon: Sparkles,
-    description: "Colorful plasma effect",
+    description: "Minimal plasma waves that soothe the eyes",
   },
   {
     value: "none",
