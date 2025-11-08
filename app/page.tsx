@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useTheme } from "next-themes";
 import DashboardActions from "@components/dashboard-actions";
-import Plasma from "./Plasma";
+import Galaxy from "./react/Galaxy";
 
 function Container({ children }: { children: React.ReactNode }) {
   return (
@@ -91,19 +91,15 @@ export default function HomePage() {
             }`}
           >
             <div className="absolute inset-0 w-full h-full">
-              <Plasma
-                key={`plasma-${theme}-${remountKey}`}
-                color={
-                  theme === "dark"
-                    ? "#333333" // Dark mode :p
-                    : theme === "rose-pine"
-                      ? "#D375DF" // Rose-Pine (Prob dont need to define this since the color is default)
-                      : "#FFFFFF" // Light :3
-                }
+              <Galaxy
+                key={`galaxy-${theme}-${remountKey}`}
+                hueShift={theme === "dark" ? 240 : 140}
                 speed={1.0}
-                opacity={1.0}
-                mouseInteractive={false}
-                quality={deviceQuality}
+                density={deviceQuality === "high" ? 1.5 : 1.0}
+                glowIntensity={theme === "dark" ? 0.5 : 0.3}
+                saturation={theme === "dark" ? 0.8 : 0.5}
+                mouseInteraction={false}
+                transparent={true}
               />
             </div>
           </div>
