@@ -12,6 +12,7 @@ interface ElasticSliderProps {
   stepSize?: number;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  onChange?: (value: number) => void;
 }
 
 const ElasticSlider: React.FC<ElasticSliderProps> = ({
@@ -22,11 +23,12 @@ const ElasticSlider: React.FC<ElasticSliderProps> = ({
   isStepped = false,
   stepSize = 1,
   leftIcon = <>-</>,
-  rightIcon = <>+</>
+  rightIcon = <>+</>,
+  onChange
 }) => {
   return (
     <div className={`flex flex-col items-center justify-center gap-4 w-48 ${className}`}>
-      <Slider
+<Slider
         defaultValue={defaultValue}
         startingValue={startingValue}
         maxValue={maxValue}
@@ -34,6 +36,7 @@ const ElasticSlider: React.FC<ElasticSliderProps> = ({
         stepSize={stepSize}
         leftIcon={leftIcon}
         rightIcon={rightIcon}
+        onChange={onChange}
       />
     </div>
   );
@@ -47,6 +50,7 @@ interface SliderProps {
   stepSize: number;
   leftIcon: React.ReactNode;
   rightIcon: React.ReactNode;
+  onChange?: (value: number) => void;
 }
 
 const Slider: React.FC<SliderProps> = ({
@@ -56,7 +60,8 @@ const Slider: React.FC<SliderProps> = ({
   isStepped,
   stepSize,
   leftIcon,
-  rightIcon
+  rightIcon,
+  onChange
 }) => {
   const [value, setValue] = useState<number>(defaultValue);
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -97,6 +102,9 @@ const Slider: React.FC<SliderProps> = ({
       newValue = Math.min(Math.max(newValue, startingValue), maxValue);
       setValue(newValue);
       clientX.jump(e.clientX);
+      if (onChange) {
+        onChange(newValue);
+      }
     }
   };
 
