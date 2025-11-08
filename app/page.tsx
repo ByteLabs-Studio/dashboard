@@ -5,7 +5,6 @@ import { useTheme } from "next-themes";
 import DashboardActions from "@components/dashboard-actions";
 import dynamic from "next/dynamic";
 
-// Dynamically import the background components
 const Galaxy = dynamic(() => import("./react/Galaxy"), { ssr: false });
 const Plasma = dynamic(() => import("./react/Plasma"), { ssr: false });
 const Prism = dynamic(() => import("./react/Prism"), { ssr: false });
@@ -30,19 +29,16 @@ export default function HomePage() {
     setRemountKey((prev) => prev + 1);
   }, [theme]);
 
-  // Listen for background changes
   useEffect(() => {
     const handleBackgroundChange = (e: CustomEvent) => {
       setBackground(e.detail.background || "galaxy");
     };
 
-    // Initial load from localStorage
     const savedBackground = localStorage.getItem("background") as string;
     if (savedBackground) {
       setBackground(savedBackground);
     }
 
-    // Listen for background changes
     window.addEventListener("background-change", handleBackgroundChange as EventListener);
     return () => {
       window.removeEventListener("background-change", handleBackgroundChange as EventListener);
