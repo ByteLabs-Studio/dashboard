@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeDropdown from "./theme-dropdown";
-import BackgroundToggle from "./background-toggle";
+import { BackgroundSelector } from "./background-selector";
 
 function NavLink({
   href,
@@ -141,7 +141,9 @@ export default function Header() {
 
           <div className="flex items-center justify-end gap-3 min-w-[140px] pr-1">
             <div className="hidden md:flex items-center gap-3">
-              <BackgroundToggle className="relative z-50 mr-15" />
+              <div className="flex items-center gap-2 border-r border-border/20 pr-8 mr-4">
+                <BackgroundSelector />
+              </div>
               <div className="w-[80px] flex items-center justify-end relative z-10">
                 <ThemeDropdown fixedLabelWidth={true} />
               </div>
@@ -191,9 +193,19 @@ export default function Header() {
                 Docs
               </MobileNavLink>
 
-              <div className="pt-2 flex gap-3 items-center">
-                <BackgroundToggle className="relative z-50 mr-6" />
-                <ThemeDropdown />
+              <div className="pt-4 flex flex-col gap-8">
+                <div className="flex items-center justify-between gap-6">
+                  <span className="text-sm text-muted-foreground">Background</span>
+                  <div className="min-w-[140px]">
+                    <BackgroundSelector />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-6">
+                  <span className="text-sm text-muted-foreground">Theme</span>
+                  <div className="min-w-[140px]">
+                    <ThemeDropdown />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

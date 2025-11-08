@@ -3,7 +3,11 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useTheme } from "next-themes";
 import DashboardActions from "@components/dashboard-actions";
-import Galaxy from "./react/Galaxy";
+import dynamic from "next/dynamic";
+
+// Dynamically import the background components
+const Galaxy = dynamic(() => import("./react/Galaxy"), { ssr: false });
+const Plasma = dynamic(() => import("./react/Plasma"), { ssr: false });
 
 function Container({ children }: { children: React.ReactNode }) {
   return (
@@ -19,10 +23,30 @@ export default function HomePage() {
   const [animationReady, setAnimationReady] = useState(false);
   const theme = resolvedTheme || ntTheme || "light";
   const [remountKey, setRemountKey] = useState(0);
+  const [background, setBackground] = useState<string>("galaxy");
 
   useEffect(() => {
     setRemountKey((prev) => prev + 1);
   }, [theme]);
+
+  // Listen for background changes
+  useEffect(() => {
+    const handleBackgroundChange = (e: CustomEvent) => {
+      setBackground(e.detail.background || "galaxy");
+    };
+
+    // Initial load from localStorage
+    const savedBackground = localStorage.getItem("background") as string;
+    if (savedBackground) {
+      setBackground(savedBackground);
+    }
+
+    // Listen for background changes
+    window.addEventListener("background-change", handleBackgroundChange as EventListener);
+    return () => {
+      window.removeEventListener("background-change", handleBackgroundChange as EventListener);
+    };
+  }, []);
 
   const deviceQuality = useMemo(() => {
     if (typeof window === "undefined") return "high";
@@ -91,16 +115,34 @@ export default function HomePage() {
             }`}
           >
             <div className="absolute inset-0 w-full h-full">
-              <Galaxy
-                key={`galaxy-${theme}-${remountKey}`}
-                hueShift={theme === "dark" ? 240 : 140}
-                speed={1.0}
-                density={deviceQuality === "high" ? 1.5 : 1.0}
-                glowIntensity={theme === "dark" ? 0.5 : 0.3}
-                saturation={theme === "dark" ? 0.8 : 0.5}
-                mouseInteraction={false}
-                transparent={true}
-              />
+              {background === "galaxy" && (
+                <Galaxy
+                  key={`galaxy-${theme}-${remountKey}`}
+                  hueShift={theme === "dark" ? 240 : 140}
+                  speed={1.0}
+                  density={deviceQuality === "high" ? 1.5 : 1.0}
+                  glowIntensity={theme === "dark" ? 0.5 : 0.3}
+                  saturation={theme === "dark" ? 0.8 : 0.5}
+                  mouseInteraction={false}
+                  transparent={true}
+                />
+              )}
+              {background === "plasma" && (
+                <Plasma
+                  key={`plasma-${theme}-${remountKey}`}
+                  color={
+                    theme === "dark"
+                      ? "#333333"
+                      : theme === "rose-pine"
+                      ? "#D375DF"
+                      : "#FFFFFF"
+                  }
+                  speed={1.0}
+                  opacity={1.0}
+                  mouseInteractive={false}
+                  quality={deviceQuality}
+                />
+              )}
             </div>
           </div>
         )}
