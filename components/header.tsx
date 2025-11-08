@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeDropdown from "./theme-dropdown";
-import BackgroundToggle from "./background-toggle";
+import { BackgroundSelector } from "./background-selector";
 
 function NavLink({
   href,
@@ -116,8 +116,8 @@ export default function Header() {
           opacity: 1,
         }}
       >
-        <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-2 w-full mx-auto">
-          <div className="flex items-center gap-4">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center h-16 w-full mx-auto">
+          <div className="flex items-center">
             <Link href="/" className="inline-flex items-center gap-3">
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-primary to-secondary text-background shadow">
                 BL
@@ -131,7 +131,7 @@ export default function Header() {
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center gap-6 justify-center">
+          <nav className="hidden md:flex items-center gap-6 justify-self-center">
             <NavLink href="/">Home</NavLink>
             <NavLink href="/downloads">Downloads</NavLink>
             <NavLink href="/git">Git</NavLink>
@@ -139,9 +139,11 @@ export default function Header() {
             <NavLink href="/docs">Docs</NavLink>
           </nav>
 
-          <div className="flex items-center justify-end gap-3 min-w-[140px] pr-1">
+          <div className="flex items-center justify-end gap-3 pr-1 justify-self-end">
             <div className="hidden md:flex items-center gap-3">
-              <BackgroundToggle className="relative z-50 mr-15" />
+              <div className="flex items-center gap-2 border-r border-border/20 pr-8 mr-4">
+                <BackgroundSelector />
+              </div>
               <div className="w-[80px] flex items-center justify-end relative z-10">
                 <ThemeDropdown fixedLabelWidth={true} />
               </div>
@@ -191,9 +193,19 @@ export default function Header() {
                 Docs
               </MobileNavLink>
 
-              <div className="pt-2 flex gap-3 items-center">
-                <BackgroundToggle className="relative z-50 mr-6" />
-                <ThemeDropdown />
+              <div className="pt-4 flex flex-col gap-8">
+                <div className="flex items-center justify-between gap-6">
+                  <span className="text-sm text-muted-foreground">Background</span>
+                  <div className="min-w-[140px]">
+                    <BackgroundSelector />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-6">
+                  <span className="text-sm text-muted-foreground">Theme</span>
+                  <div className="min-w-[140px]">
+                    <ThemeDropdown />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
