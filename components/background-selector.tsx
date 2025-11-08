@@ -72,7 +72,6 @@ export function BackgroundSelector() {
     };
   }, [isOpen, updatePos]);
 
-  // Load saved background preference
   useEffect(() => {
     const savedBackground = localStorage.getItem("background") as BackgroundType | null;
     if (savedBackground) {
@@ -81,14 +80,12 @@ export function BackgroundSelector() {
     setMounted(true);
   }, []);
 
-  // Save background preference and notify other components
   useEffect(() => {
     if (!mounted) return;
     localStorage.setItem("background", background);
     window.dispatchEvent(new CustomEvent("background-change", { detail: { background } }));
   }, [background, mounted]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;

@@ -116,8 +116,8 @@ export default function Header() {
           opacity: 1,
         }}
       >
-        <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-2 w-full mx-auto">
-          <div className="flex items-center gap-4">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center h-16 w-full mx-auto">
+          <div className="flex items-center">
             <Link href="/" className="inline-flex items-center gap-3">
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-primary to-secondary text-background shadow">
                 BL
@@ -131,7 +131,7 @@ export default function Header() {
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center gap-6 justify-center">
+          <nav className="hidden md:flex items-center gap-6 justify-self-center">
             <NavLink href="/">Home</NavLink>
             <NavLink href="/downloads">Downloads</NavLink>
             <NavLink href="/git">Git</NavLink>
@@ -139,7 +139,7 @@ export default function Header() {
             <NavLink href="/docs">Docs</NavLink>
           </nav>
 
-          <div className="flex items-center justify-end gap-3 min-w-[140px] pr-1">
+          <div className="flex items-center justify-end gap-3 pr-1 justify-self-end">
             <div className="hidden md:flex items-center gap-3">
               <div className="flex items-center gap-2 border-r border-border/20 pr-8 mr-4">
                 <BackgroundSelector />
