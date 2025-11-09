@@ -35,12 +35,16 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? 'span' : 'button';
+    
     return (
-      <button
+      <Comp
         className={buttonVariants({ variant, size, className })}
-        ref={ref}
-        {...props}
-      />
+        ref={ref as React.Ref<HTMLButtonElement>}
+        {...(asChild ? {} : props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+      >
+        {props.children}
+      </Comp>
     )
   }
 )
