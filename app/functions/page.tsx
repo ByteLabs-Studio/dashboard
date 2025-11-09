@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Copy, Play, Pause, Code, Check, Search } from 'lucide-react';
+import { Copy, Play, Pause, Code, Check, Search, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AudioWarningModal from '../components/AudioWarningModal';
@@ -37,6 +37,10 @@ export default function FunctionsPage() {
   const [isClient, setIsClient] = useState(false);
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const [pendingSample, setPendingSample] = useState<Sample | null>(null);
+  const [volume, setVolume] = useState(0.5);
+  const [isMuted, setIsMuted] = useState(false);
+  const previousVolume = useRef(0.5);
+  const gainNodeRef = useRef<GainNode | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -47,6 +51,22 @@ export default function FunctionsPage() {
       setShowAudioWarning(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (audioCtxRef.current) {
+      const gainNode = audioCtxRef.current.createGain();
+      gainNode.gain.value = isMuted ? 0 : volume;
+      gainNode.connect(audioCtxRef.current.destination);
+      gainNodeRef.current = gainNode;
+      
+      return () => {
+        if (gainNode) {
+          gainNode.disconnect();
+        }
+      };
+    }
+  }, [volume, isMuted]);
+
   const audioContextRef = useRef<AudioContext | null>(null);
   const audioNodeRef = useRef<AudioWorkletNode | AudioBufferSourceNode | null>(null);
 
@@ -104,6 +124,7 @@ export default function FunctionsPage() {
       }
     }
   };
+
   const copyAllFormulas = async () => {
     try {
       const allFormulas = samples.map((s) => s.formula).join('\n\n');
@@ -141,6 +162,17 @@ export default function FunctionsPage() {
         }
       } catch {}
     };
+  }, []);
+
+  useEffect(() => {
+    if (audioCtxRef.current && sourceRef.current) {
+      const source = sourceRef.current;
+      return () => {
+        if ('disconnect' in source && typeof source.disconnect === 'function') {
+          source.disconnect();
+        }
+      };
+    }
   }, []);
 
   const filtered = useMemo(() => {
@@ -182,6 +214,10 @@ export default function FunctionsPage() {
         } catch {}
         sourceRef.current = null;
       }
+      
+      if (gainNodeRef.current) {
+        gainNodeRef.current.gain.value = 0;
+      }
     } catch (error) {
       console.error('Error stopping playback:', error);
     } finally {
@@ -208,6 +244,13 @@ export default function FunctionsPage() {
     if (!audioCtxRef.current) {
       const AudioCtx = (window.AudioContext || (window as Window & typeof globalThis & { webkitAudioContext: typeof AudioContext }).webkitAudioContext);
       audioCtxRef.current = new AudioCtx();
+    }
+    
+    if (!gainNodeRef.current && audioCtxRef.current) {
+      const gainNode = audioCtxRef.current.createGain();
+      gainNode.gain.value = isMuted ? 0 : volume;
+      gainNode.connect(audioCtxRef.current.destination);
+      gainNodeRef.current = gainNode;
     }
     
     const currentSample = samples.find(s => s.id === sample.id) || sample;
@@ -407,7 +450,11 @@ export default function FunctionsPage() {
           });
 
           console.log('Connecting audio worklet node...');
-          node.connect(ctx.destination);
+          if (gainNodeRef.current) {
+            node.connect(gainNodeRef.current);
+          } else {
+            node.connect(ctx.destination);
+          }
           sourceRef.current = node;
           setPlayingId(sample.id);
           console.log('Audio worklet node connected and playing');
@@ -453,7 +500,11 @@ export default function FunctionsPage() {
       src.buffer = buffer;
       src.loop = true;
       try {
-        src.connect(ctx.destination);
+        if (gainNodeRef.current) {
+          src.connect(gainNodeRef.current);
+        } else {
+          src.connect(ctx.destination);
+        }
         src.start(0);
         sourceRef.current = src;
         setPlayingId(sample.id);
@@ -599,7 +650,43 @@ export default function FunctionsPage() {
                   }}
                 />
               </div>
-              <div className="flex gap-2 ml-auto">
+              <div className="flex items-center gap-2 ml-auto">
+                <button 
+                  onClick={() => {
+                    if (isMuted) {
+                      setVolume(previousVolume.current > 0 ? previousVolume.current : 0.5);
+                    } else {
+                      previousVolume.current = volume > 0 ? volume : 0.5;
+                      setVolume(0);
+                    }
+                    setIsMuted(!isMuted);
+                  }}
+                  className="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-md hover:bg-muted/50"
+                  aria-label={isMuted ? 'Unmute' : 'Mute'}
+                >
+                  {isMuted || volume === 0 ? (
+                    <VolumeX className="h-4 w-4" />
+                  ) : (
+                    <Volume2 className="h-4 w-4" />
+                  )}
+                </button>
+                <div className="relative w-56 bg-background rounded-lg border border-border/50 flex items-center px-3 h-10">
+                  <ElasticSlider
+                    defaultValue={Math.round(volume * 100)}
+                    startingValue={0}
+                    maxValue={100}
+                    stepSize={1}
+                    isStepped={false}
+                    onChange={(value) => {
+                      const newVolume = value / 100;
+                      setVolume(newVolume);
+                      if (newVolume > 0 && isMuted) {
+                        setIsMuted(false);
+                      }
+                    }}
+                    className="w-full"
+                  />
+                </div>
                 <Button
                   variant="outline"
                   size="sm"
@@ -732,19 +819,22 @@ export default function FunctionsPage() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          playSample(s);
+                          if (playingId === s.id) {
+                            stopPlayback();
+                          } else {
+                            playSample(s);
+                          }
                         }}
-                        disabled={playingId === s.id}
                         className={`inline-flex items-center justify-center px-3 py-1.5 text-sm rounded-md border transition-all duration-150 cursor-pointer ${
                           playingId === s.id
-                            ? 'bg-green-500/10 border-green-500/30 text-green-600 cursor-not-allowed'
+                            ? 'bg-red-500/10 border-red-500/30 text-red-600 hover:bg-red-500/20 hover:border-red-500/40'
                             : 'bg-primary/5 border-border/50 text-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary'
                         }`}
                       >
                         {playingId === s.id ? (
                           <>
-                            <span className="w-2 h-2 mr-2 rounded-full bg-green-500 animate-pulse"></span>
-                            Playing...
+                            <Pause className="w-3.5 h-3.5 mr-1.5" />
+                            Stop
                           </>
                         ) : (
                           <>
@@ -752,17 +842,6 @@ export default function FunctionsPage() {
                             Play
                           </>
                         )}
-                      </button>
-                      
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          stopPlayback();
-                        }}
-                        className="inline-flex items-center justify-center px-3 py-1.5 text-sm rounded-md border border-border/50 bg-background/80 hover:bg-muted/30 text-foreground/80 hover:text-foreground transition-colors cursor-pointer"
-                      >
-                        <Pause className="w-3.5 h-3.5 mr-1.5" />
-                        Stop
                       </button>
                       <div className="flex gap-2 ml-auto">
                         <button
