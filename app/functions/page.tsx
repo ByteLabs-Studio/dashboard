@@ -201,22 +201,45 @@ export default function FunctionsPage() {
           if ('stop' in node && typeof node.stop === 'function') {
             node.stop();
           }
-        } catch {}
+        } catch (e) {
+          console.warn('Error stopping source node:', e);
+        }
         try {
           if (typeof node.disconnect === 'function') {
             node.disconnect();
           }
-        } catch {}
+        } catch (e) {
+          console.warn('Error disconnecting source node:', e);
+        }
         try {
           if ('port' in node && node.port && typeof node.port.postMessage === 'function') {
             node.port.postMessage({ command: "stop" });
           }
-        } catch {}
+        } catch (e) {
+          console.warn('Error sending stop message to worklet:', e);
+        }
         sourceRef.current = null;
       }
       
       if (gainNodeRef.current) {
-        gainNodeRef.current.gain.value = 0;
+        try {
+          gainNodeRef.current.disconnect();
+          gainNodeRef.current = null;
+        } catch (e) {
+          console.warn('Error cleaning up gain node:', e);
+        }
+      }
+      
+      if (audioCtxRef.current) {
+        try {
+          if (audioCtxRef.current.state !== 'closed') {
+            await audioCtxRef.current.close();
+          }
+        } catch (e) {
+          console.warn('Error closing audio context:', e);
+        } finally {
+          audioCtxRef.current = null;
+        }
       }
     } catch (error) {
       console.error('Error stopping playback:', error);
