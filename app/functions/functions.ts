@@ -20,6 +20,7 @@ export const SAMPLES: Sample[] = [
     description: "A compact classic using shifts and OR for melodic motion.",
     category: "Classic Bytebeats",
     tempo: 1.0,
+    hz: 8000,
     duration: 4
   },
   {
@@ -29,15 +30,17 @@ export const SAMPLES: Sample[] = [
     description: "Famous bytebeat from the Windows XP Salinwine virus. Known for its distinctive pattern.",
     category: "Bitwise Patterns",
     tempo: 1.0,
+    hz: 8000,
     duration: 4
   },
   {
     id: "exp-1",
     name: "Experimental Noise",
-    formula: "((t*5) ^ (t>>7)) & 255",
+    formula: "t*5",
     description: "Noisy XOR patterns masked to the low byte.",
     category: "Experimental",
     tempo: 1.0,
+    hz: 8000,
     duration: 4
   },
   {
@@ -47,15 +50,17 @@ export const SAMPLES: Sample[] = [
     description: "Complex floatbeat with evolving harmonics and modulation.",
     category: "Floatbeat",
     tempo: 1.0,
+    hz: 44100,
     duration: 8
   },
   {
     id: "float-2",
     name: "Techno Floatbeat",
-    formula: "t*Math.sin(t/1e3)**2/1e3%128+Math.sin(t/100)*Math.sin(t/200)*32+Math.sin(t/50)*Math.sin(t/100)*16",
-    description: "Techno-style floatbeat with drums and bass.",
+    formula: "(t*Math.sin(t/1000)**2/500%128*0.6 + Math.sin(t/100)*Math.sin(t/200)*24 + Math.sin(t/50)*Math.sin(t/100)*10) * 0.4",
+    description: "Smoother techno-style floatbeat with balanced drums and bass.",
     category: "Floatbeat",
     tempo: 1.5,
+    hz: 48000,
     duration: 8
   },
   {
@@ -65,6 +70,7 @@ export const SAMPLES: Sample[] = [
     description: "Short transient hits derived from bit tricks.",
     category: "Percussion",
     tempo: 1.0,
+    hz: 44100,
     duration: 2
   }
 ].sort((a, b) => a.name.localeCompare(b.name));
@@ -76,8 +82,8 @@ const STORAGE_KEYS = {
 
 export const storage = {
   getAudioMode: (): 'tempo' | 'hz' => {
-    if (typeof window === 'undefined') return 'tempo';
-    return (localStorage.getItem(STORAGE_KEYS.AUDIO_MODE) as 'tempo' | 'hz') || 'tempo';
+    if (typeof window === 'undefined') return 'hz';
+    return (localStorage.getItem(STORAGE_KEYS.AUDIO_MODE) as 'tempo' | 'hz') || 'hz';
   },
   setAudioMode: (mode: 'tempo' | 'hz') => {
     if (typeof window !== 'undefined') {

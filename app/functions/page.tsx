@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Copy, Search, Play, Pause, Code } from 'lucide-react';
+import { Copy, Play, Pause, Code, Check, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import FunctionStyles from '../components/FunctionStyles';
 import AudioWarningModal from '../components/AudioWarningModal';
 import ElasticSlider from '../../components/ElasticSlider';
 import { Sample, SAMPLES, FREQUENCY_OPTIONS, storage } from './functions';
@@ -22,22 +21,46 @@ export default function FunctionsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [showFormula, setShowFormula] = useState<{open: boolean, formula: string, name: string}>({open: false, formula: '', name: ''});
   const [useHz, setUseHz] = useState<boolean>(storage.getAudioMode() === 'hz');
-  const [query, setQuery] = useState<string>("");
+  const [query] = useState("");
   const [playingId, setPlayingId] = useState<string | null>(null);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId] = useState<string | null>(null);
   const [expandedDescriptions, setExpandedDescriptions] = useState<{[key: string]: boolean}>({});
   const [samples, setSamples] = useState<Sample[]>(() => {
-    const lastHz = storage.getLastHz();
     return SAMPLES.map(sample => ({
       ...sample,
-      hz: sample.hz || lastHz,
       tempo: sample.tempo || 1.0
     }));
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [showAudioWarning, setShowAudioWarning] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
+  const [showWarning, setShowWarning] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    setShowWarning(localStorage.getItem('hideAudioWarning') !== 'true');
+    
+    const hasDismissed = localStorage.getItem('audioWarningDismissed') === 'true';
+    if (!hasDismissed) {
+      setShowAudioWarning(true);
+    }
+  }, []);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const audioNodeRef = useRef<AudioBufferSourceNode | null>(null);
+  const audioNodeRef = useRef<AudioWorkletNode | AudioBufferSourceNode | null>(null);
+
+  const dismissWarning = () => {
+    setShowWarning(false);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('hideAudioWarning', 'true');
+    }
+  };
+
+  const handleCopy = (text: string, id: string) => {
+    safeWriteClipboard(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   const filteredSamples = useMemo(() => {
     return samples.filter((sample) => {
@@ -59,25 +82,24 @@ export default function FunctionsPage() {
     });
   }, [samples, searchTerm, selectedCategory]);
 
-  const toggleHzMode = () => {
+  const toggleHzMode = async () => {
     const newUseHz = !useHz;
     setUseHz(newUseHz);
     storage.setAudioMode(newUseHz ? 'hz' : 'tempo');
     
-    if (audioContextRef.current) {
-      audioContextRef.current.close();
-      audioContextRef.current = null;
-    }
+    await stopPlayback();
     
     if (playingId) {
       const sample = samples.find(s => s.id === playingId);
       if (sample) {
-        stopPlayback().then(() => {
-          setTimeout(() => {
-            audioContextRef.current = null;
-            playSample(sample);
-          }, 100);
-        });
+        if (audioContextRef.current) {
+          audioContextRef.current.close();
+          audioContextRef.current = null;
+        }
+        
+        setTimeout(() => {
+          playSample(sample);
+        }, 100);
       }
     }
   };
@@ -169,16 +191,33 @@ export default function FunctionsPage() {
   async function playSample(sample: Sample) {
     await stopPlayback();
     
+    const hasDismissed = localStorage.getItem('audioWarningDismissed') === 'true';
+    if (!hasDismissed) {
+      setShowAudioWarning(true);
+      return;
+    }
+    
     const currentSample = samples.find(s => s.id === sample.id) || sample;
     
-    if (useHz && !currentSample.hz) {
-      const updatedSamples = samples.map(s => 
-        s.id === currentSample.id 
-          ? { ...s, hz: storage.getLastHz() } 
-          : s
+    const sampleWithDefaults = {
+      ...currentSample,
+      tempo: currentSample.tempo ?? 1.0,
+      hz: currentSample.hz ?? 44100,
+      duration: currentSample.duration ?? 4
+    };
+    
+    setSamples(prevSamples => 
+      prevSamples.map(s => 
+        s.id === sample.id ? sampleWithDefaults : s
+      )
+    );
+    
+    if (currentSample.tempo === undefined || currentSample.hz === undefined) {
+      setSamples(prevSamples => 
+        prevSamples.map(s => 
+          s.id === sample.id ? sampleWithDefaults : s
+        )
       );
-      setSamples(updatedSamples);
-      return;
     }
     
     try {
@@ -200,9 +239,7 @@ export default function FunctionsPage() {
       let fn: (t: number) => number;
       try {
         const mathFuncs = `const { sin, cos, tan, asin, atan, cbrt, pow, sqrt, PI } = Math;`;
-        fn = new Function("t", `${mathFuncs} return (${sample.formula});`) as (
-          t: number,
-        ) => number;
+        fn = new Function("t", `${mathFuncs} return (${sampleWithDefaults.formula});`) as (t: number) => number;
       } catch (error: unknown) {
         console.error("Error parsing formula:", error);
         alert(
@@ -223,17 +260,37 @@ export default function FunctionsPage() {
               super();
               this.t = 0;
               this.tempo = 1.0;
+              this.useHz = false;
+              this.sampleRate = 44100;
               this.fn = null;
+              
               this.port.onmessage = (e) => {
-                if (e.data && e.data.expr) {
+                const data = e.data || {};
+                
+                if (data.expr) {
                   try {
-                    this.fn = new Function('t','Math','return (' + e.data.expr + ');');
+                    this.fn = new Function('t','Math','return (' + data.expr + ')');
                   } catch (err) {
+                    console.error('Error parsing formula:', err);
                     this.fn = null;
                   }
                 }
-                if (e.data && typeof e.data.tempo === 'number') {
-                  this.tempo = e.data.tempo;
+                
+                if (typeof data.tempo === 'number') {
+                  this.tempo = data.tempo;
+                }
+                
+                if ('useHz' in data) {
+                  this.useHz = data.useHz;
+                }
+                
+                if ('sampleRate' in data) {
+                  this.sampleRate = data.sampleRate;
+                }
+                
+                // Handle updateSampleRate command
+                if (data.command === 'updateSampleRate' && typeof data.sampleRate === 'number') {
+                  this.sampleRate = data.sampleRate;
                 }
               };
             }
@@ -242,14 +299,25 @@ export default function FunctionsPage() {
               const out = outputs[0];
               if (!out || !out[0]) return true;
               const channel = out[0];
+              
+              // Check if this is a floatbeat by looking at the sample ID
+              const isFloatbeat = this.sampleId && this.sampleId.startsWith('float-');
+              
               for (let i = 0; i < channel.length; i++) {
                 let v = 0;
                 try {
                   if (this.fn) {
-                    const tv = Math.floor(this.t * this.tempo);
-                    const raw = this.fn(tv, Math);
+                    // Calculate time value based on mode
+                    const t = this.useHz 
+                      ? Math.floor(this.t * (this.sampleRate / 44100))
+                      : Math.floor(this.t * this.tempo);
+                    
+                    const raw = this.fn(t, Math);
+                    
                     if (!isFinite(raw) || Number.isNaN(raw)) {
                       v = 0;
+                    } else if (isFloatbeat) {
+                      v = Math.max(-0.8, Math.min(0.8, Number(raw) * 0.2));
                     } else {
                       if (Math.abs(raw) > 3 || Math.floor(raw) === raw) {
                         const asInt = raw | 0;
@@ -278,6 +346,7 @@ export default function FunctionsPage() {
         } catch (error: unknown) {
           console.error("Error adding audio worklet module:", error);
           URL.revokeObjectURL(url);
+          throw error;
         } finally {
           try {
             URL.revokeObjectURL(url);
@@ -289,12 +358,16 @@ export default function FunctionsPage() {
           const node = new AudioWorkletNode(
             ctx,
             processorName,
-            {
-              outputChannelCount: [1],
-            },
+            { outputChannelCount: [1] }
           );
 
-          node.port.postMessage({ expr: sample.formula, tempo: sample.tempo || 1.0 });
+          node.port.postMessage({ 
+            expr: sampleWithDefaults.formula, 
+            tempo: sampleWithDefaults.tempo,
+            useHz: useHz,
+            sampleRate: sampleWithDefaults.hz,
+            sampleId: sampleWithDefaults.id
+          });
 
           node.connect(ctx.destination);
           sourceRef.current = node;
@@ -305,22 +378,16 @@ export default function FunctionsPage() {
         }
       }
 
-      const sampleRate = useHz ? currentSample.hz! : 44100;
-      const effectiveTempo = useHz ? 1.0 : (currentSample.tempo || 1.0);
-      
-      if (useHz) {
-        storage.setLastHz(currentSample.hz!);
-      }
-      const duration = sample.duration || 4;
-      const sampleTempo = effectiveTempo;
+      const sampleRate = 44100;
+      const duration = sampleWithDefaults.duration;
       const length = Math.max(1, Math.floor(duration * sampleRate));
       const buffer = ctx.createBuffer(1, length, sampleRate);
       const data = buffer.getChannelData(0);
 
       for (let i = 0; i < length; i++) {
         const t = useHz 
-          ? Math.floor(i * (currentSample.hz! / 44100))
-          : Math.floor(i * sampleTempo);
+          ? Math.floor(i * (sampleWithDefaults.hz / sampleRate))
+          : Math.floor(i * sampleWithDefaults.tempo);
         
         let value = 0;
         try {
@@ -335,8 +402,11 @@ export default function FunctionsPage() {
               value = clamp(Number(raw));
             }
           }
-        } catch {}
-        data[i] = clamp(value);
+        } catch (e) {
+          console.error('Error in audio generation:', e);
+          value = 0;
+        }
+        data[i] = value;
       }
 
       const src = ctx.createBufferSource();
@@ -353,9 +423,73 @@ export default function FunctionsPage() {
   }
 
   return (
-    <div className="bg-background text-foreground antialiased min-h-[calc(100vh-4rem)]">
-      <AudioWarningModal />
-      <FunctionStyles />
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      <AudioWarningModal open={showAudioWarning} onOpenChange={setShowAudioWarning} />
+      
+      {isClient && showWarning && (
+        <div className="w-full">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="dark:hidden bg-amber-100 border-l-4 border-amber-500 p-4 mb-6 rounded-md shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center justify-center flex-1">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-amber-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3 text-center">
+                    <div className="text-sm text-amber-800">
+                      <p className="font-medium">Audio Processing Notice</p>
+                      <p className="mt-1">This section is currently being improved. Some functions may not sound as expected. We&apos;re working hard to enhance your audio experience.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="ml-4 flex-shrink-0">
+                  <button
+                    onClick={dismissWarning}
+                    className="inline-flex text-amber-500 hover:text-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 rounded-md"
+                    aria-label="Dismiss"
+                  >
+                    <span className="sr-only">Dismiss</span>
+                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="hidden dark:block bg-amber-900/30 border-l-4 border-amber-400 p-4 mb-6 rounded-md shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center justify-center flex-1">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3 text-center">
+                    <div className="text-sm text-amber-300">
+                      <p className="font-medium">Audio Processing Notice</p>
+                      <p className="mt-1">This section is currently being improved. Some functions may not sound as expected. We&apos;re working hard to enhance your audio experience.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="ml-4 flex-shrink-0">
+                  <button
+                    onClick={dismissWarning}
+                    className="inline-flex text-amber-400 hover:text-amber-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 rounded-md"
+                    aria-label="Dismiss"
+                  >
+                    <span className="sr-only">Dismiss</span>
+                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <main className="py-16">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-10">
@@ -374,7 +508,7 @@ export default function FunctionsPage() {
                         isSelected
                           ? "bg-primary/10 border border-primary text-primary"
                           : "hover:bg-muted/5 text-muted-foreground"
-                      }`}
+                      } dark:!text-white dark:hover:!text-white`}
                     >
                       {cat}
                     </button>
@@ -482,7 +616,7 @@ export default function FunctionsPage() {
                     {useHz ? (
                       <select
                         value={s.hz || storage.getLastHz()}
-                        onChange={(e) => {
+                        onChange={async (e) => {
                           const newHz = Number(e.target.value);
                           storage.setLastHz(newHz);
                           
@@ -492,15 +626,25 @@ export default function FunctionsPage() {
                             )
                           );
                           
-                          if (playingId === s.id) {
-                            stopPlayback().then(() => {
-                              setTimeout(() => {
-                                const updatedSample = samples.find(samp => samp.id === s.id);
-                                if (updatedSample) {
-                                  playSample({ ...updatedSample, hz: newHz });
+                          if (playingId === s.id && audioContextRef.current && audioNodeRef.current) {
+                            try {
+                              if ('port' in audioNodeRef.current && audioNodeRef.current.port) {
+                                audioNodeRef.current.port.postMessage({
+                                  command: 'updateSampleRate',
+                                  sampleRate: newHz
+                                });
+                              } else {
+                                const currentSample = samples.find(samp => samp.id === s.id);
+                                if (currentSample) {
+                                  await stopPlayback();
+                                  setTimeout(() => {
+                                    playSample({ ...currentSample, hz: newHz });
+                                  }, 50);
                                 }
-                              }, 50);
-                            });
+                              }
+                            } catch (error) {
+                              console.error('Error updating sample rate:', error);
+                            }
                           }
                         }}
                         className="w-full p-2 text-sm rounded-md border border-border bg-background focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-colors"
@@ -545,7 +689,7 @@ export default function FunctionsPage() {
                           playSample(s);
                         }}
                         disabled={playingId === s.id}
-                        className={`inline-flex items-center justify-center px-3 py-1.5 text-sm rounded-md border transition-all duration-150 ${
+                        className={`inline-flex items-center justify-center px-3 py-1.5 text-sm rounded-md border transition-all duration-150 cursor-pointer ${
                           playingId === s.id
                             ? 'bg-green-500/10 border-green-500/30 text-green-600 cursor-not-allowed'
                             : 'bg-primary/5 border-border/50 text-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary'
@@ -569,7 +713,7 @@ export default function FunctionsPage() {
                           e.stopPropagation();
                           stopPlayback();
                         }}
-                        className="inline-flex items-center justify-center px-3 py-1.5 text-sm rounded-md border border-border/50 bg-background/80 hover:bg-muted/30 text-foreground/80 hover:text-foreground transition-colors"
+                        className="inline-flex items-center justify-center px-3 py-1.5 text-sm rounded-md border border-border/50 bg-background/80 hover:bg-muted/30 text-foreground/80 hover:text-foreground transition-colors cursor-pointer"
                       >
                         <Pause className="w-3.5 h-3.5 mr-1.5" />
                         Stop
@@ -584,7 +728,7 @@ export default function FunctionsPage() {
                               name: s.name
                             });
                           }}
-                          className="inline-flex items-center justify-center px-3 py-1.5 text-sm rounded-md border border-border/50 bg-background/80 hover:bg-muted/30 text-foreground/80 hover:text-foreground transition-colors"
+                          className="inline-flex items-center justify-center px-3 py-1.5 text-sm rounded-md border border-border/50 bg-background/80 hover:bg-muted/30 text-foreground/80 hover:text-foreground transition-colors cursor-pointer"
                         >
                           <Code className="w-3.5 h-3.5 mr-1.5" />
                           Show
@@ -592,12 +736,21 @@ export default function FunctionsPage() {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            safeWriteClipboard(`// ${s.name}\n${s.formula}`);
+                            handleCopy(`// ${s.name}\n${s.formula}`, `card-${s.id}`);
                           }}
-                          className="inline-flex items-center justify-center px-3 py-1.5 text-sm rounded-md border border-border/50 bg-background/80 hover:bg-muted/30 text-foreground/80 hover:text-foreground transition-colors"
+                          className="inline-flex items-center justify-center px-3 py-1.5 text-sm rounded-md border border-border/50 bg-background/80 hover:bg-muted/30 text-foreground/80 hover:text-foreground transition-colors cursor-pointer min-w-[80px]"
                         >
-                          <Copy className="w-3.5 h-3.5 mr-1.5" />
-                          Copy
+                          {copiedId === `card-${s.id}` ? (
+                            <>
+                              <Check className="w-3.5 h-3.5 mr-1.5" />
+                              Copied!
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3.5 h-3.5 mr-1.5" />
+                              Copy
+                            </>
+                          )}
                         </button>
                       </div>
                     </div>
@@ -621,7 +774,7 @@ export default function FunctionsPage() {
             <h3 className="text-lg font-semibold">{showFormula.name}</h3>
             <button 
               onClick={() => setShowFormula({open: false, formula: '', name: ''})}
-              className="text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground cursor-pointer"
             >
               ✕
             </button>
@@ -630,14 +783,24 @@ export default function FunctionsPage() {
             <code>{showFormula.formula}</code>
           </pre>
           <div className="mt-4 flex justify-end">
-            <button
-              onClick={() => {
-                safeWriteClipboard(showFormula.formula);
-              }}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-            >
-              Copy to Clipboard
-            </button>
+              <button
+                onClick={() => {
+                  handleCopy(showFormula.formula, 'modal-copy');
+                }}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors cursor-pointer min-w-[150px] flex items-center justify-center gap-2"
+              >
+                {copiedId === 'modal-copy' ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" />
+                    Copy to Clipboard
+                  </>
+                )}
+              </button>
           </div>
         </div>
       </div>
