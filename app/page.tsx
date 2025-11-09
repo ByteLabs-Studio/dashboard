@@ -117,9 +117,9 @@ export default function HomePage() {
                   key={`galaxy-${theme}-${remountKey}`}
                   hueShift={theme === "dark" ? 240 : 140}
                   speed={1.0}
-                  density={deviceQuality === "high" ? 1.5 : 1.0}
-                  glowIntensity={theme === "dark" ? 0.5 : 0.3}
-                  saturation={theme === "dark" ? 0.8 : 0.5}
+                  density={deviceQuality === "high" ? 7.5 : 1.0}
+                  glowIntensity={theme === "dark" ? 1.0 : 0.3}
+                  saturation={theme === "dark" ? 0.5 : 0.5}
                   mouseInteraction={false}
                   transparent={true}
                 />
@@ -141,20 +141,23 @@ export default function HomePage() {
                 />
               )}
               {background === "prism" && (
-                <Prism
-                  key={`prism-${theme}-${remountKey}`}
-                  height={3.5}
-                  baseWidth={5.5}
-                  animationType="3drotate"
-                  glow={1}
-                  noise={0.5}
-                  scale={3.6}
-                  hueShift={theme === "dark" ? 0.5 : 0}
-                  colorFrequency={1}
-                  timeScale={0.5}
-                  transparent={true}
-                  suspendWhenOffscreen={true}
-                />
+                <div className="fixed inset-0 -z-10 w-screen h-screen overflow-hidden">
+                  <Prism
+                    key={`prism-${theme}-${remountKey}`}
+                    animationType="rotate"
+                    timeScale={0.5}
+                    height={4}
+                    baseWidth={6}
+                    scale={2.7}
+                    hueShift={theme === "dark" ? 0.3 : 0.1}
+                    colorFrequency={0.7}
+                    noise={0}
+                    glow={1}
+                    transparent={false}
+                    suspendWhenOffscreen={false}
+                    offset={{ x: 0, y: 0 }}
+                  />
+                </div>
               )}
             </div>
           </div>

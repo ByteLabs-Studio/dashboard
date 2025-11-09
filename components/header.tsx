@@ -148,7 +148,6 @@ export default function Header() {
               <NavLink href="/downloads">Downloads</NavLink>
               <NavLink href="/git">Git</NavLink>
               <NavLink href="/functions">Functions</NavLink>
-              <NavLink href="/docs">Docs</NavLink>
             </nav>
 
             <div className="flex items-center justify-end gap-3 pr-1 justify-self-end">
