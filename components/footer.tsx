@@ -61,6 +61,9 @@ export default function Footer() {
               <div className="flex items-center justify-between py-4 text-sm text-muted-foreground w-full px-4">
                 <span>&copy; {new Date().getFullYear()} ByteLabs Studio</span>
                 <div className="flex items-center gap-4">
+                  <Link href="/docs" className="hover:underline">
+                    Docs
+                  </Link>
                   <Link href="/terms" className="hover:underline">
                     Terms of Service
                   </Link>
