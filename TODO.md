@@ -1,13 +1,28 @@
 # Todo List
 
-## I'll use this for now since I have alot I wanna do, and making a TODO file will make this pretty easy to remember.
+## I’ll use this file for now since I have a lot I want to do, and keeping a TODO file will make it easier to remember everything.
 
-### - Sign-In System
+---
 
-### - User Uploaded Functions
+### Sign-In System
 
-I didn't make any reason for why I needed the sign-in system, because this is the actual reason, I wanna make a system where users can upload their own bytebeat functions and them show up in the functions tab, and replace the default functions that are hardcoded, the issue with this is i need to make a server sided system which connects to a database (probably PostgreSQL since I'm familiar with it), but I need to also figure out how to make it so only users can upload their functions, along with an approve or deny system, mainly to make sure only bytebeats which are actually bytebeats and work, can be sent through
+I didn’t originally specify why I needed a sign-in system, but here’s the main reason:  
+I want to create a setup where users can **upload their own bytebeat functions**, which would then appear in the **Functions** tab and replace the default hardcoded ones.
 
-### - Flairs / Tagging
+To make this possible, I’ll need a **server-side system** connected to a **database** (most likely PostgreSQL, since I’m already familiar with it).  
 
-The functions tab has a navigation bar on the left which is used for filtering the results by a function type, if i take this into consideration and make a system where whenever a user adds a new functioon, they have to tag it by a specific type, which I will probably hardcode types in order to make it easier and not so random, right now the tab only shows results for whatever is existing, meaning if i make a new bytebeat without changing any of the code for the bar, it will add a new entry without needing changes, so that being dynamic would technically work the same way as it does right now, i just need to find a way to allow users to tag functions.
+Additionally, I need to design a way to ensure that **only registered users** can upload functions.  
+This system should also include an **approval process**—allowing me to review and approve or deny submissions—to make sure only valid, working bytebeat functions get accepted.
+
+---
+
+### Flairs / Tagging System
+
+The **Functions** tab currently has a navigation bar on the left, which filters results by function type.  
+I plan to extend this by implementing a **tagging system** so that when users upload new functions, they’re required to tag them by a specific type.
+
+To keep things consistent and prevent randomness, I’ll likely **hardcode a list of valid tags**.  
+
+Right now, the tab automatically shows results for all existing functions.  
+That means if I add a new bytebeat without modifying any of the bar’s code, it dynamically adds a new entry automatically.  
+So the tagging system would naturally fit into this setup without needing major changes — I just need to handle user-defined tags properly.

@@ -36,6 +36,7 @@ export default function FunctionsPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [showWarning, setShowWarning] = useState<boolean>(false);
+  const [pendingSample, setPendingSample] = useState<Sample | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -192,14 +193,18 @@ export default function FunctionsPage() {
     console.log('playSample called for:', sample.id);
     await stopPlayback();
     
-    const hasDismissed = localStorage.getItem('audioWarningDismissed') === 'true';
-    if (!hasDismissed) {
+    const warningStatus = localStorage.getItem('audioWarningDismissed');
+    const hasInteracted = warningStatus !== null;
+    
+    if (!hasInteracted) {
       console.log('Showing audio warning');
       setShowAudioWarning(true);
+      setPendingSample(sample);
       return;
     }
     
-    // Create audio context on first interaction
+    console.log('User has seen the warning before, proceeding with playback');
+    
     if (!audioCtxRef.current) {
       const AudioCtx = (window.AudioContext || (window as Window & typeof globalThis & { webkitAudioContext: typeof AudioContext }).webkitAudioContext);
       audioCtxRef.current = new AudioCtx();
@@ -247,8 +252,6 @@ export default function FunctionsPage() {
         audioCtxRef.current = ctx;
       }
       
-      // Resume audio context if it's in a suspended state
-      // Ensure audio context is running
       console.log('Audio context state:', ctx.state);
       if (ctx.state !== 'running') {
         try {
