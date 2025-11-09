@@ -65,9 +65,9 @@ export const SAMPLES: Sample[] = [
   },
   {
     id: "perc-1",
-    name: "Percussion-ish",
+    name: "Some random alien noises",
     formula: "((t*(t>>5|t>>8))>>(t>>16))&255",
-    description: "Short transient hits derived from bit tricks.",
+    description: "I'm trying to contact the mothership.",
     category: "Percussion",
     tempo: 1.0,
     hz: 44100,
