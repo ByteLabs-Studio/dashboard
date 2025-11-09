@@ -2,36 +2,32 @@
 
 import { useEffect, useState } from "react";
 
-export default function AudioWarningModal() {
-  const [isVisible, setIsVisible] = useState(false);
+interface AudioWarningModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export default function AudioWarningModal({ open, onOpenChange }: AudioWarningModalProps) {
   const [isClient, setIsClient] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    
-    try {
-      const dismissed = localStorage.getItem("functions_warning_dismissed") !== "true";
-      setIsVisible(dismissed);
-    } catch (error) {
-      console.error("Error accessing localStorage:", error);
-      setIsVisible(true);
-    }
   }, []);
 
   const handleDismiss = () => {
     try {
       if (dontShowAgain) {
-        localStorage.setItem("functions_warning_dismissed", "true");
+        localStorage.setItem("audioWarningDismissed", "true");
       }
-      console.log("Warning dismissed", { dontShowAgain });
+      onOpenChange(false);
     } catch (error) {
       console.error("Error setting localStorage:", error);
+      onOpenChange(false);
     }
-    setIsVisible(false);
   };
-
-  if (!isClient || !isVisible) return null;
+  
+  if (!isClient || !open) return null;
 
   return (
     <div className="fixed inset-0 bg-red-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
