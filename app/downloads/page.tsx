@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { SiNixos } from "react-icons/si";
 import DownloadOption from "@/components/DownloadOption";
-import { ClipboardIcon } from "lucide-react";
+import { Copy } from "lucide-react";
 
 export default function DownloadsPage() {
   const [isCopied, setIsCopied] = useState(false);
@@ -71,7 +71,7 @@ export default function DownloadsPage() {
                                 className={`transition-colors cursor-pointer select-none ${isCopied ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
                                 title={isCopied ? 'Copied!' : 'Copy to clipboard'}
                               >
-                                {isCopied ? 'Copied!' : <ClipboardIcon className="w-5 h-5" />}
+                                {isCopied ? 'Copied!' : <Copy className="w-5 h-5" />}
                               </button>
                             </div>
                             <pre className="text-[15px] p-3 font-medium text-foreground select-text overflow-x-auto"><code>nix run gitlab:bytelab-studio/ByteLab/reimpl</code></pre>

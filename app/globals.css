@@ -166,6 +166,10 @@
     .rose-pine button[class*="bg-muted"] {
         background-color: #907aa9 !important;
     }
+    
+    .rose-pine .functions-sidebar button:not(.selected) {
+        color: #e0def4 !important;
+    }
 
     html {
         scroll-behavior: smooth;
