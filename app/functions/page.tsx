@@ -189,12 +189,20 @@ export default function FunctionsPage() {
   }
 
   async function playSample(sample: Sample) {
+    console.log('playSample called for:', sample.id);
     await stopPlayback();
     
     const hasDismissed = localStorage.getItem('audioWarningDismissed') === 'true';
     if (!hasDismissed) {
+      console.log('Showing audio warning');
       setShowAudioWarning(true);
       return;
+    }
+    
+    // Create audio context on first interaction
+    if (!audioCtxRef.current) {
+      const AudioCtx = (window.AudioContext || (window as Window & typeof globalThis & { webkitAudioContext: typeof AudioContext }).webkitAudioContext);
+      audioCtxRef.current = new AudioCtx();
     }
     
     const currentSample = samples.find(s => s.id === sample.id) || sample;
@@ -233,12 +241,38 @@ export default function FunctionsPage() {
         return;
       }
 
-      const ctx = audioCtxRef.current || new AudioCtor();
-      audioCtxRef.current = ctx;
+      let ctx = audioCtxRef.current;
+      if (!ctx) {
+        ctx = new AudioCtor();
+        audioCtxRef.current = ctx;
+      }
+      
+      // Resume audio context if it's in a suspended state
+      // Ensure audio context is running
+      console.log('Audio context state:', ctx.state);
+      if (ctx.state !== 'running') {
+        try {
+          console.log('Resuming audio context...');
+          await ctx.resume();
+          console.log('Audio context resumed successfully');
+        } catch (e) {
+          console.error('Failed to resume audio context:', e);
+          alert('Could not start audio. Please interact with the page first.');
+          return;
+        }
+      }
 
       let fn: (t: number) => number;
       try {
-        const mathFuncs = `const { sin, cos, tan, asin, atan, cbrt, pow, sqrt, PI } = Math;`;
+        const mathFuncs = `
+          const { 
+            sin, cos, tan, asin, atan, atan2, acos, cbrt, pow, sqrt, PI, 
+            min, max, abs, floor, ceil, round, sign, log, log2, log10, exp, expm1, 
+            sinh, asinh, cosh, acosh, tanh, atanh, trunc, hypot, E, LN2, LN10, 
+            LOG2E, LOG10E, SQRT1_2, SQRT2 
+          } = Math;
+          const int = Math.floor;
+        `;
         fn = new Function("t", `${mathFuncs} return (${sampleWithDefaults.formula});`) as (t: number) => number;
       } catch (error: unknown) {
         console.error("Error parsing formula:", error);
@@ -369,9 +403,12 @@ export default function FunctionsPage() {
             sampleId: sampleWithDefaults.id
           });
 
+          console.log('Connecting audio worklet node...');
           node.connect(ctx.destination);
           sourceRef.current = node;
           setPlayingId(sample.id);
+          console.log('Audio worklet node connected and playing');
+          console.log('Audio context state after connection:', ctx.state);
           return;
         } catch (error: unknown) {
           console.error("Error creating audio worklet node:", error);
@@ -412,10 +449,16 @@ export default function FunctionsPage() {
       const src = ctx.createBufferSource();
       src.buffer = buffer;
       src.loop = true;
-      src.connect(ctx.destination);
-      src.start(0);
-      sourceRef.current = src;
-      setPlayingId(sample.id);
+      try {
+        src.connect(ctx.destination);
+        src.start(0);
+        sourceRef.current = src;
+        setPlayingId(sample.id);
+        console.log('Audio buffer source playing');
+      } catch (e) {
+        console.error('Error starting audio:', e);
+        alert('Error playing audio: ' + (e instanceof Error ? e.message : String(e)));
+      }
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : String(error);
       alert("Playback failed: " + msg);

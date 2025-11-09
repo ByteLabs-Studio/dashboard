@@ -56,11 +56,11 @@ export const SAMPLES: Sample[] = [
   {
     id: "float-2",
     name: "Techno Floatbeat",
-    formula: "(t*Math.sin(t/1000)**2/500%128*0.6 + Math.sin(t/100)*Math.sin(t/200)*24 + Math.sin(t/50)*Math.sin(t/100)*10) * 0.4",
+    formula: "(t => { let d = 0; const b = Math.floor(t*1.5/16384); const c = (n, x, y) => { const m = 440 * Math.pow(2, n/12) / 48000; return (x(y(t*4*m%4)) + x(y(t*4*1.49*m%4))) / Math.max(2, t*1.5 % ((b&7) > 5 ? 32768 : 16384) / 499); }; const M = [0,0,0,0,-2,-2,-2,-2,-5,-7,-5,-3,-2,-2,-2,-2][b&15]; const lp = (inp, w) => { if (w === 0) return inp; const out = inp + d; d = out / (1 + 1/w); return d / w; }; const cb = c(M, Math.asin, Math.sin) * 1.2; const k = Math.min(1, Math.max(-1, Math.tan(Math.sin(Math.sqrt(t*1.5%32768)/2)) * (1 - t*1.5%32768/32768) * 2)) / 1.3; const h = Math.sin(Math.pow(t,7)) / Math.max(1, (t+32768)*1.5%32768/500) * (t*1.5&16384?1:0); const s = lp(Math.sin(Math.pow(t>>2,7)), 3) * (t*1.5&32768?.4:0) / Math.max(.5, (t+65536)*1.5%65536/3000); const bass = Math.min(1, Math.max(-1, Math.asin(Math.sin(t*Math.PI*110*Math.pow(2, (t*1.5&131072?5:0)/12)/48000)) * 4)) / 2.5; return ((cb + bass) * (t*1.5&16384?1:(t*1.5%32768/16384)) + k + h + s) / 1.1; })(t)",
     description: "Smoother techno-style floatbeat with balanced drums and bass.",
     category: "Floatbeat",
     tempo: 1.5,
-    hz: 48000,
+    hz: 44100,
     duration: 8
   },
   {
