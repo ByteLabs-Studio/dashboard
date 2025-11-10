@@ -37,7 +37,7 @@ const backgrounds = [
 export function BackgroundSelector() {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [background, setBackground] = useState<BackgroundType>("galaxy");
+  const [background, setBackground] = useState<BackgroundType>("prism");
   
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -80,8 +80,11 @@ export function BackgroundSelector() {
 
   useEffect(() => {
     const savedBackground = localStorage.getItem("background") as BackgroundType | null;
-    if (savedBackground) {
+    if (savedBackground && savedBackground !== 'none') {
       setBackground(savedBackground);
+    } else if (savedBackground === null) {
+      localStorage.setItem("background", "prism");
+      setBackground("prism");
     }
     setMounted(true);
   }, []);

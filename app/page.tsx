@@ -117,7 +117,7 @@ export default function HomePage() {
                   key={`galaxy-${theme}-${remountKey}`}
                   hueShift={theme === "dark" ? 240 : 140}
                   speed={1.0}
-                  density={deviceQuality === "high" ? 7.5 : 1.0}
+                  density={deviceQuality === "high" ? 3.5 : 1.0}
                   glowIntensity={theme === "dark" ? 1.0 : 0.3}
                   saturation={theme === "dark" ? 0.5 : 0.5}
                   mouseInteraction={false}

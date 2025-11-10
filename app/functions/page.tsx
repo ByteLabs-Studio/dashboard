@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Copy, Play, Pause, Code, Check, Search } from 'lucide-react';
+import { Copy, Play, Pause, Code, Check, Search, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AudioWarningModal from '../components/AudioWarningModal';
@@ -37,6 +37,12 @@ export default function FunctionsPage() {
   const [isClient, setIsClient] = useState(false);
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const [pendingSample, setPendingSample] = useState<Sample | null>(null);
+  const [volume, setVolume] = useState(0.5);
+  const [isMuted, setIsMuted] = useState(false);
+  const previousVolume = useRef(0.5);
+  const gainNodeRef = useRef<GainNode | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioNodeRef = useRef<AudioWorkletNode | AudioBufferSourceNode | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -47,8 +53,19 @@ export default function FunctionsPage() {
       setShowAudioWarning(true);
     }
   }, []);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const audioNodeRef = useRef<AudioWorkletNode | AudioBufferSourceNode | null>(null);
+
+  useEffect(() => {
+    if (gainNodeRef.current) {
+      const now = audioContextRef.current?.currentTime || 0;
+      gainNodeRef.current.gain.cancelScheduledValues(now);
+      gainNodeRef.current.gain.setValueAtTime(gainNodeRef.current.gain.value, now);
+      gainNodeRef.current.gain.exponentialRampToValueAtTime(
+        isMuted ? 0.0001 : Math.max(0.0001, volume), 
+        now + 0.1
+      );
+    }
+  }, [volume, isMuted]);
+
 
   const dismissWarning = () => {
     setShowWarning(false);
@@ -104,12 +121,12 @@ export default function FunctionsPage() {
       }
     }
   };
+
   const copyAllFormulas = async () => {
     try {
       const allFormulas = samples.map((s) => s.formula).join('\n\n');
       await navigator.clipboard.writeText(allFormulas);
     } catch (err) {
-      console.error('Failed to copy formulas:', err);
     }
   };
 
@@ -143,6 +160,17 @@ export default function FunctionsPage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (audioCtxRef.current && sourceRef.current) {
+      const source = sourceRef.current;
+      return () => {
+        if ('disconnect' in source && typeof source.disconnect === 'function') {
+          source.disconnect();
+        }
+      };
+    }
+  }, []);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return samples.filter((s) => {
@@ -169,18 +197,40 @@ export default function FunctionsPage() {
           if ('stop' in node && typeof node.stop === 'function') {
             node.stop();
           }
-        } catch {}
+        } catch (e) {
+        }
         try {
           if (typeof node.disconnect === 'function') {
             node.disconnect();
           }
-        } catch {}
+        } catch (e) {
+        }
         try {
           if ('port' in node && node.port && typeof node.port.postMessage === 'function') {
             node.port.postMessage({ command: "stop" });
           }
-        } catch {}
+        } catch (e) {
+        }
         sourceRef.current = null;
+      }
+      
+      if (gainNodeRef.current) {
+        try {
+          gainNodeRef.current.disconnect();
+          gainNodeRef.current = null;
+        } catch (e) {
+        }
+      }
+      
+      if (audioCtxRef.current) {
+        try {
+          if (audioCtxRef.current.state !== 'closed') {
+            await audioCtxRef.current.close();
+          }
+        } catch (e) {
+        } finally {
+          audioCtxRef.current = null;
+        }
       }
     } catch (error) {
       console.error('Error stopping playback:', error);
@@ -190,24 +240,27 @@ export default function FunctionsPage() {
   }
 
   async function playSample(sample: Sample) {
-    console.log('playSample called for:', sample.id);
     await stopPlayback();
     
     const warningStatus = localStorage.getItem('audioWarningDismissed');
     const hasInteracted = warningStatus !== null;
     
     if (!hasInteracted) {
-      console.log('Showing audio warning');
       setShowAudioWarning(true);
       setPendingSample(sample);
       return;
     }
     
-    console.log('User has seen the warning before, proceeding with playback');
-    
     if (!audioCtxRef.current) {
       const AudioCtx = (window.AudioContext || (window as Window & typeof globalThis & { webkitAudioContext: typeof AudioContext }).webkitAudioContext);
       audioCtxRef.current = new AudioCtx();
+    }
+    
+    if (!gainNodeRef.current && audioCtxRef.current) {
+      const gainNode = audioCtxRef.current.createGain();
+      gainNode.gain.value = isMuted ? 0.0001 : Math.max(0.0001, volume);
+      gainNode.connect(audioCtxRef.current.destination);
+      gainNodeRef.current = gainNode;
     }
     
     const currentSample = samples.find(s => s.id === sample.id) || sample;
@@ -252,14 +305,10 @@ export default function FunctionsPage() {
         audioCtxRef.current = ctx;
       }
       
-      console.log('Audio context state:', ctx.state);
       if (ctx.state !== 'running') {
         try {
-          console.log('Resuming audio context...');
           await ctx.resume();
-          console.log('Audio context resumed successfully');
         } catch (e) {
-          console.error('Failed to resume audio context:', e);
           alert('Could not start audio. Please interact with the page first.');
           return;
         }
@@ -278,7 +327,6 @@ export default function FunctionsPage() {
         `;
         fn = new Function("t", `${mathFuncs} return (${sampleWithDefaults.formula});`) as (t: number) => number;
       } catch (error: unknown) {
-        console.error("Error parsing formula:", error);
         alert(
           "Invalid formula: " +
             (error instanceof Error ? error.message : String(error)),
@@ -308,7 +356,6 @@ export default function FunctionsPage() {
                   try {
                     this.fn = new Function('t','Math','return (' + data.expr + ')');
                   } catch (err) {
-                    console.error('Error parsing formula:', err);
                     this.fn = null;
                   }
                 }
@@ -325,7 +372,6 @@ export default function FunctionsPage() {
                   this.sampleRate = data.sampleRate;
                 }
                 
-                // Handle updateSampleRate command
                 if (data.command === 'updateSampleRate' && typeof data.sampleRate === 'number') {
                   this.sampleRate = data.sampleRate;
                 }
@@ -337,14 +383,12 @@ export default function FunctionsPage() {
               if (!out || !out[0]) return true;
               const channel = out[0];
               
-              // Check if this is a floatbeat by looking at the sample ID
               const isFloatbeat = this.sampleId && this.sampleId.startsWith('float-');
               
               for (let i = 0; i < channel.length; i++) {
                 let v = 0;
                 try {
                   if (this.fn) {
-                    // Calculate time value based on mode
                     const t = this.useHz 
                       ? Math.floor(this.t * (this.sampleRate / 44100))
                       : Math.floor(this.t * this.tempo);
@@ -406,15 +450,15 @@ export default function FunctionsPage() {
             sampleId: sampleWithDefaults.id
           });
 
-          console.log('Connecting audio worklet node...');
-          node.connect(ctx.destination);
+          if (gainNodeRef.current) {
+            node.connect(gainNodeRef.current);
+          } else {
+            node.connect(ctx.destination);
+          }
           sourceRef.current = node;
           setPlayingId(sample.id);
-          console.log('Audio worklet node connected and playing');
-          console.log('Audio context state after connection:', ctx.state);
           return;
         } catch (error: unknown) {
-          console.error("Error creating audio worklet node:", error);
         }
       }
 
@@ -443,7 +487,6 @@ export default function FunctionsPage() {
             }
           }
         } catch (e) {
-          console.error('Error in audio generation:', e);
           value = 0;
         }
         data[i] = value;
@@ -452,14 +495,20 @@ export default function FunctionsPage() {
       const src = ctx.createBufferSource();
       src.buffer = buffer;
       src.loop = true;
+      
+      if (!gainNodeRef.current) {
+        const gainNode = ctx.createGain();
+        gainNode.gain.value = isMuted ? 0.0001 : Math.max(0.0001, volume);
+        gainNode.connect(ctx.destination);
+        gainNodeRef.current = gainNode;
+      }
+      
       try {
-        src.connect(ctx.destination);
+        src.connect(gainNodeRef.current);
         src.start(0);
         sourceRef.current = src;
         setPlayingId(sample.id);
-        console.log('Audio buffer source playing');
       } catch (e) {
-        console.error('Error starting audio:', e);
         alert('Error playing audio: ' + (e instanceof Error ? e.message : String(e)));
       }
     } catch (error: unknown) {
@@ -599,7 +648,45 @@ export default function FunctionsPage() {
                   }}
                 />
               </div>
-              <div className="flex gap-2 ml-auto">
+              <div className="flex items-center gap-2 ml-auto">
+                <button 
+                  onClick={() => {
+                    if (isMuted) {
+                      setVolume(previousVolume.current > 0 ? previousVolume.current : 0.5);
+                    } else {
+                      previousVolume.current = volume > 0 ? volume : 0.5;
+                      setVolume(0);
+                    }
+                    setIsMuted(!isMuted);
+                  }}
+                  className="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-md hover:bg-muted/50"
+                  aria-label={isMuted ? 'Unmute' : 'Mute'}
+                >
+                  {isMuted || volume === 0 ? (
+                    <VolumeX className="h-4 w-4" />
+                  ) : (
+                    <Volume2 className="h-4 w-4" />
+                  )}
+                </button>
+                <div className="relative w-56 bg-background rounded-lg border border-border/50 flex items-center px-3 h-10">
+                  <ElasticSlider
+                    defaultValue={Math.round(volume * 100)}
+                    startingValue={0}
+                    maxValue={100}
+                    stepSize={1}
+                    isStepped={false}
+                    onChange={(value) => {
+                      const newVolume = value / 100;
+                      setVolume(newVolume);
+                      if (newVolume > 0 && isMuted) {
+                        setIsMuted(false);
+                      } else if (newVolume === 0 && !isMuted) {
+                        setIsMuted(true);
+                      }
+                    }}
+                    className="w-full"
+                  />
+                </div>
                 <Button
                   variant="outline"
                   size="sm"
@@ -732,19 +819,22 @@ export default function FunctionsPage() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          playSample(s);
+                          if (playingId === s.id) {
+                            stopPlayback();
+                          } else {
+                            playSample(s);
+                          }
                         }}
-                        disabled={playingId === s.id}
                         className={`inline-flex items-center justify-center px-3 py-1.5 text-sm rounded-md border transition-all duration-150 cursor-pointer ${
                           playingId === s.id
-                            ? 'bg-green-500/10 border-green-500/30 text-green-600 cursor-not-allowed'
+                            ? 'bg-red-500/10 border-red-500/30 text-red-600 hover:bg-red-500/20 hover:border-red-500/40'
                             : 'bg-primary/5 border-border/50 text-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary'
                         }`}
                       >
                         {playingId === s.id ? (
                           <>
-                            <span className="w-2 h-2 mr-2 rounded-full bg-green-500 animate-pulse"></span>
-                            Playing...
+                            <Pause className="w-3.5 h-3.5 mr-1.5" />
+                            Stop
                           </>
                         ) : (
                           <>
@@ -752,17 +842,6 @@ export default function FunctionsPage() {
                             Play
                           </>
                         )}
-                      </button>
-                      
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          stopPlayback();
-                        }}
-                        className="inline-flex items-center justify-center px-3 py-1.5 text-sm rounded-md border border-border/50 bg-background/80 hover:bg-muted/30 text-foreground/80 hover:text-foreground transition-colors cursor-pointer"
-                      >
-                        <Pause className="w-3.5 h-3.5 mr-1.5" />
-                        Stop
                       </button>
                       <div className="flex gap-2 ml-auto">
                         <button
