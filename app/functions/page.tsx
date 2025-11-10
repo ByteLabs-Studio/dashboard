@@ -41,6 +41,8 @@ export default function FunctionsPage() {
   const [isMuted, setIsMuted] = useState(false);
   const previousVolume = useRef(0.5);
   const gainNodeRef = useRef<GainNode | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioNodeRef = useRef<AudioWorkletNode | AudioBufferSourceNode | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -53,22 +55,17 @@ export default function FunctionsPage() {
   }, []);
 
   useEffect(() => {
-    if (audioCtxRef.current) {
-      const gainNode = audioCtxRef.current.createGain();
-      gainNode.gain.value = isMuted ? 0 : volume;
-      gainNode.connect(audioCtxRef.current.destination);
-      gainNodeRef.current = gainNode;
-      
-      return () => {
-        if (gainNode) {
-          gainNode.disconnect();
-        }
-      };
+    if (gainNodeRef.current) {
+      const now = audioContextRef.current?.currentTime || 0;
+      gainNodeRef.current.gain.cancelScheduledValues(now);
+      gainNodeRef.current.gain.setValueAtTime(gainNodeRef.current.gain.value, now);
+      gainNodeRef.current.gain.exponentialRampToValueAtTime(
+        isMuted ? 0.0001 : Math.max(0.0001, volume), 
+        now + 0.1
+      );
     }
   }, [volume, isMuted]);
 
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const audioNodeRef = useRef<AudioWorkletNode | AudioBufferSourceNode | null>(null);
 
   const dismissWarning = () => {
     setShowWarning(false);
@@ -130,7 +127,6 @@ export default function FunctionsPage() {
       const allFormulas = samples.map((s) => s.formula).join('\n\n');
       await navigator.clipboard.writeText(allFormulas);
     } catch (err) {
-      console.error('Failed to copy formulas:', err);
     }
   };
 
@@ -202,21 +198,18 @@ export default function FunctionsPage() {
             node.stop();
           }
         } catch (e) {
-          console.warn('Error stopping source node:', e);
         }
         try {
           if (typeof node.disconnect === 'function') {
             node.disconnect();
           }
         } catch (e) {
-          console.warn('Error disconnecting source node:', e);
         }
         try {
           if ('port' in node && node.port && typeof node.port.postMessage === 'function') {
             node.port.postMessage({ command: "stop" });
           }
         } catch (e) {
-          console.warn('Error sending stop message to worklet:', e);
         }
         sourceRef.current = null;
       }
@@ -226,7 +219,6 @@ export default function FunctionsPage() {
           gainNodeRef.current.disconnect();
           gainNodeRef.current = null;
         } catch (e) {
-          console.warn('Error cleaning up gain node:', e);
         }
       }
       
@@ -236,7 +228,6 @@ export default function FunctionsPage() {
             await audioCtxRef.current.close();
           }
         } catch (e) {
-          console.warn('Error closing audio context:', e);
         } finally {
           audioCtxRef.current = null;
         }
@@ -249,20 +240,16 @@ export default function FunctionsPage() {
   }
 
   async function playSample(sample: Sample) {
-    console.log('playSample called for:', sample.id);
     await stopPlayback();
     
     const warningStatus = localStorage.getItem('audioWarningDismissed');
     const hasInteracted = warningStatus !== null;
     
     if (!hasInteracted) {
-      console.log('Showing audio warning');
       setShowAudioWarning(true);
       setPendingSample(sample);
       return;
     }
-    
-    console.log('User has seen the warning before, proceeding with playback');
     
     if (!audioCtxRef.current) {
       const AudioCtx = (window.AudioContext || (window as Window & typeof globalThis & { webkitAudioContext: typeof AudioContext }).webkitAudioContext);
@@ -271,7 +258,7 @@ export default function FunctionsPage() {
     
     if (!gainNodeRef.current && audioCtxRef.current) {
       const gainNode = audioCtxRef.current.createGain();
-      gainNode.gain.value = isMuted ? 0 : volume;
+      gainNode.gain.value = isMuted ? 0.0001 : Math.max(0.0001, volume);
       gainNode.connect(audioCtxRef.current.destination);
       gainNodeRef.current = gainNode;
     }
@@ -318,14 +305,10 @@ export default function FunctionsPage() {
         audioCtxRef.current = ctx;
       }
       
-      console.log('Audio context state:', ctx.state);
       if (ctx.state !== 'running') {
         try {
-          console.log('Resuming audio context...');
           await ctx.resume();
-          console.log('Audio context resumed successfully');
         } catch (e) {
-          console.error('Failed to resume audio context:', e);
           alert('Could not start audio. Please interact with the page first.');
           return;
         }
@@ -344,7 +327,6 @@ export default function FunctionsPage() {
         `;
         fn = new Function("t", `${mathFuncs} return (${sampleWithDefaults.formula});`) as (t: number) => number;
       } catch (error: unknown) {
-        console.error("Error parsing formula:", error);
         alert(
           "Invalid formula: " +
             (error instanceof Error ? error.message : String(error)),
@@ -374,7 +356,6 @@ export default function FunctionsPage() {
                   try {
                     this.fn = new Function('t','Math','return (' + data.expr + ')');
                   } catch (err) {
-                    console.error('Error parsing formula:', err);
                     this.fn = null;
                   }
                 }
@@ -391,7 +372,6 @@ export default function FunctionsPage() {
                   this.sampleRate = data.sampleRate;
                 }
                 
-                // Handle updateSampleRate command
                 if (data.command === 'updateSampleRate' && typeof data.sampleRate === 'number') {
                   this.sampleRate = data.sampleRate;
                 }
@@ -403,14 +383,12 @@ export default function FunctionsPage() {
               if (!out || !out[0]) return true;
               const channel = out[0];
               
-              // Check if this is a floatbeat by looking at the sample ID
               const isFloatbeat = this.sampleId && this.sampleId.startsWith('float-');
               
               for (let i = 0; i < channel.length; i++) {
                 let v = 0;
                 try {
                   if (this.fn) {
-                    // Calculate time value based on mode
                     const t = this.useHz 
                       ? Math.floor(this.t * (this.sampleRate / 44100))
                       : Math.floor(this.t * this.tempo);
@@ -472,7 +450,6 @@ export default function FunctionsPage() {
             sampleId: sampleWithDefaults.id
           });
 
-          console.log('Connecting audio worklet node...');
           if (gainNodeRef.current) {
             node.connect(gainNodeRef.current);
           } else {
@@ -480,11 +457,8 @@ export default function FunctionsPage() {
           }
           sourceRef.current = node;
           setPlayingId(sample.id);
-          console.log('Audio worklet node connected and playing');
-          console.log('Audio context state after connection:', ctx.state);
           return;
         } catch (error: unknown) {
-          console.error("Error creating audio worklet node:", error);
         }
       }
 
@@ -513,7 +487,6 @@ export default function FunctionsPage() {
             }
           }
         } catch (e) {
-          console.error('Error in audio generation:', e);
           value = 0;
         }
         data[i] = value;
@@ -522,18 +495,20 @@ export default function FunctionsPage() {
       const src = ctx.createBufferSource();
       src.buffer = buffer;
       src.loop = true;
+      
+      if (!gainNodeRef.current) {
+        const gainNode = ctx.createGain();
+        gainNode.gain.value = isMuted ? 0.0001 : Math.max(0.0001, volume);
+        gainNode.connect(ctx.destination);
+        gainNodeRef.current = gainNode;
+      }
+      
       try {
-        if (gainNodeRef.current) {
-          src.connect(gainNodeRef.current);
-        } else {
-          src.connect(ctx.destination);
-        }
+        src.connect(gainNodeRef.current);
         src.start(0);
         sourceRef.current = src;
         setPlayingId(sample.id);
-        console.log('Audio buffer source playing');
       } catch (e) {
-        console.error('Error starting audio:', e);
         alert('Error playing audio: ' + (e instanceof Error ? e.message : String(e)));
       }
     } catch (error: unknown) {
@@ -705,6 +680,8 @@ export default function FunctionsPage() {
                       setVolume(newVolume);
                       if (newVolume > 0 && isMuted) {
                         setIsMuted(false);
+                      } else if (newVolume === 0 && !isMuted) {
+                        setIsMuted(true);
                       }
                     }}
                     className="w-full"
