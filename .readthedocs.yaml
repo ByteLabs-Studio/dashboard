@@ -25,5 +25,6 @@ build:
     #  - Install the dependencies of your project
     #  - Build the documentation
     #  - Save the generated files in $READTHEDOCS_OUTPUT/html
+    - nix develop
     - bun run build
     - bun run dev
