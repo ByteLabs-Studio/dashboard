@@ -25,5 +25,5 @@ build:
     #  - Install the dependencies of your project
     #  - Build the documentation
     #  - Save the generated files in $READTHEDOCS_OUTPUT/html
-    bun run build
-    bun run dev
+    - bun run build
+    - bun run dev
