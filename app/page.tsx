@@ -213,9 +213,11 @@ export default function HomePage() {
                       </div>
                     </li>
                     <li className="text-sm text-muted-foreground mb-4 text-center px-4">
-                      This website is being constantly updated. The ByteLabs app
-                      will not have any active releases until the Rust rewrite
-                      is complete. Please be patient.
+                      The app is currently being actively rewritten in rust,
+                      and is expected to be done within a month, hopefully.
+                      This website will be updated more whenever the app
+                      is in its first release, if you have any questions
+                      create an issue.                    
                     </li>
                   </ul>
                 </div>
