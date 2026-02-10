@@ -22,6 +22,16 @@ export default function DashboardActions() {
         className="relative inline-flex items-center rounded-md border border-border bg-card overflow-hidden transition-all duration-300 ease-out hover:shadow-sm hover:scale-[1.02] active:scale-[0.98] transform-gpu"
         onMouseLeave={() => setHoveredSide(null)}
       >
+        <div 
+          className="absolute inset-0 z-30"
+          onMouseEnter={() => setHoveredSide('github')}
+          style={{
+            left: '0%',
+            right: hoveredSide === 'gitlab' ? '50%' : '50%',
+            cursor: 'pointer'
+          }}
+        />
+        
         <Link
           href="https://github.com/ByteLabs-Studio/ByteLab"
           target="_blank"
@@ -46,7 +56,7 @@ export default function DashboardActions() {
         </Link>
 
         <div 
-          className="relative z-20 flex items-center justify-center text-muted-foreground font-mono text-lg transition-all duration-300 ease-out"
+          className="relative z-20 flex items-center justify-center text-muted-foreground font-mono text-lg transition-all duration-300 ease-out pointer-events-none"
           style={{
             width: hoveredSide ? '0px' : '20px',
             opacity: hoveredSide ? 0 : 1,
@@ -55,6 +65,16 @@ export default function DashboardActions() {
         >
           /
         </div>
+
+        <div 
+          className="absolute inset-0 z-30"
+          onMouseEnter={() => setHoveredSide('gitlab')}
+          style={{
+            left: hoveredSide === 'github' ? '50%' : '50%',
+            right: '0%',
+            cursor: 'pointer'
+          }}
+        />
 
         <Link
           href="https://gitlab.com/bytelab-studio/ByteLab"
@@ -80,7 +100,7 @@ export default function DashboardActions() {
         </Link>
 
         <div 
-          className="absolute top-0 bottom-0 bg-accent/20 transition-all duration-300 ease-out"
+          className="absolute top-0 bottom-0 bg-accent/20 transition-all duration-300 ease-out pointer-events-none"
           style={{
             left: hoveredSide === 'github' ? '0%' : hoveredSide === 'gitlab' ? '50%' : '50%',
             right: hoveredSide === 'github' ? '50%' : hoveredSide === 'gitlab' ? '0%' : '50%',
