@@ -19,8 +19,14 @@ export default function DashboardActions() {
       </Link>
 
       <div 
-        className="relative inline-flex items-center rounded-md border border-border bg-card overflow-hidden transition-all duration-300 ease-out hover:shadow-sm hover:scale-[1.02] active:scale-[0.98] transform-gpu"
+        className="relative inline-flex items-center rounded-md border border-border bg-card overflow-hidden transition-all duration-300 ease-out hover:shadow-sm hover:scale-[1.02] active:scale-[0.98] transform-gpu cursor-pointer"
         onMouseLeave={() => setHoveredSide(null)}
+        onClick={() => {
+          const url = hoveredSide === 'github' 
+            ? 'https://github.com/ByteLabs-Studio/ByteLab'
+            : 'https://gitlab.com/bytelab-studio/ByteLab';
+          window.open(url, '_blank', 'noopener,noreferrer');
+        }}
       >
         <div 
           className="absolute inset-0 z-30"
@@ -32,10 +38,7 @@ export default function DashboardActions() {
           }}
         />
         
-        <Link
-          href="https://github.com/ByteLabs-Studio/ByteLab"
-          target="_blank"
-          rel="noopener noreferrer"
+        <div
           className="relative z-10 flex items-center px-4 py-2 text-sm font-medium transition-all duration-300 ease-out"
           onMouseEnter={() => setHoveredSide('github')}
           style={{
@@ -53,7 +56,7 @@ export default function DashboardActions() {
           >
             GitHub
           </span>
-        </Link>
+        </div>
 
         <div 
           className="relative z-20 flex items-center justify-center text-muted-foreground font-mono text-lg transition-all duration-300 ease-out pointer-events-none"
@@ -76,10 +79,7 @@ export default function DashboardActions() {
           }}
         />
 
-        <Link
-          href="https://gitlab.com/bytelab-studio/ByteLab"
-          target="_blank"
-          rel="noopener noreferrer"
+        <div
           className="relative z-10 flex items-center px-4 py-2 text-sm font-medium transition-all duration-300 ease-out"
           onMouseEnter={() => setHoveredSide('gitlab')}
           style={{
@@ -97,7 +97,7 @@ export default function DashboardActions() {
             GitLab
           </span>
           <FiGitlab className="h-4 w-4 flex-shrink-0" />
-        </Link>
+        </div>
 
         <div 
           className="absolute top-0 bottom-0 bg-accent/20 transition-all duration-300 ease-out pointer-events-none"
