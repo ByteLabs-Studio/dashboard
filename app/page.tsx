@@ -87,7 +87,7 @@ export default function HomePage() {
             <Container>
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.85fr] gap-10 lg:gap-14 items-center w-full">
                 <div className="space-y-8">
-                  <div className="surface-lift inline-flex items-center gap-2 rounded-lg border border-primary/15 bg-primary/10 px-3.5 py-2 text-sm font-medium text-primary shadow-sm shadow-primary/5">
+                  <div className="surface-lift inline-flex items-center gap-2 rounded-md border border-primary/15 bg-primary/10 px-3.5 py-2 text-sm font-medium text-primary shadow-sm shadow-primary/5">
                     <span className={`h-2 w-2 rounded-full ${releaseDotClass}`}></span>
                     <span className="font-accent">{releaseLabel}</span>
                   </div>
@@ -116,7 +116,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="relative">
-                  <div className="mx-auto flex aspect-square max-w-[430px] flex-col justify-center space-y-6 rounded-xl border border-border/60 bg-gradient-to-br from-primary/15 via-card/70 to-muted/30 p-9 shadow-lg shadow-primary/5 backdrop-blur-sm transition-[border-color,box-shadow] duration-200 hover:border-primary/25 hover:shadow-primary/10 md:p-10">
+                  <div className="mx-auto flex aspect-square max-w-[430px] flex-col justify-center space-y-6 rounded-md border border-border/60 bg-gradient-to-br from-primary/15 via-card/70 to-muted/30 p-9 shadow-lg shadow-primary/5 backdrop-blur-sm transition-[border-color,box-shadow] duration-200 hover:border-primary/25 hover:shadow-primary/10 md:p-10">
                     <div className="text-center space-y-2">
                       <div className="font-accent text-5xl font-bold text-primary/80">01</div>
                       <div className="text-lg font-medium">Math</div>
@@ -158,21 +158,21 @@ export default function HomePage() {
                 </div>
 
                 <div className="grid gap-3 md:grid-cols-3">
-                  <div className="surface-lift rounded-xl border border-border/60 bg-card/55 p-5 shadow-sm">
+                  <div className="surface-lift rounded-md border border-border/60 bg-card/55 p-5 shadow-sm">
                     <div className="font-accent text-xs font-semibold uppercase text-primary">What it is</div>
                     <p className="mt-3 text-sm leading-6 text-muted-foreground">
                       A place to type formulas, hear them immediately, and shape noisy, melodic, glitchy, or rhythmic audio from code.
                     </p>
                   </div>
 
-                  <div className="surface-lift rounded-xl border border-border/60 bg-card/55 p-5 shadow-sm">
+                  <div className="surface-lift rounded-md border border-border/60 bg-card/55 p-5 shadow-sm">
                     <div className="font-accent text-xs font-semibold uppercase text-primary">What it counts as</div>
                     <p className="mt-3 text-sm leading-6 text-muted-foreground">
                       ByteLabs counts as algorithmic music software: the instrument is math, and the output is generated sample by sample.
                     </p>
                   </div>
 
-                  <div className="surface-lift rounded-xl border border-border/60 bg-card/55 p-5 shadow-sm">
+                  <div className="surface-lift rounded-md border border-border/60 bg-card/55 p-5 shadow-sm">
                     <div className="font-accent text-xs font-semibold uppercase text-primary">How bytebeats work</div>
                     <p className="mt-3 text-sm leading-6 text-muted-foreground">
                       A counter called time increases constantly. A formula transforms that counter into values, and those values become audio samples.
@@ -181,7 +181,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-3 rounded-xl border border-border/60 bg-muted/20 p-4 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:items-center">
+              <div className="mt-5 grid gap-3 rounded-md border border-border/60 bg-muted/20 p-4 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:items-center">
                 <div>
                   <div className="font-accent text-xs uppercase text-primary">time counter</div>
                   <p className="mt-1 text-sm text-muted-foreground">t climbs through integers very quickly.</p>
@@ -189,7 +189,7 @@ export default function HomePage() {
                 <div className="hidden font-accent text-muted-foreground md:block">/</div>
                 <div>
                   <div className="font-accent text-xs uppercase text-primary">formula</div>
-                  <code className="mt-1 block rounded-lg bg-background/70 px-3 py-2 font-accent text-sm">
+                  <code className="mt-1 block rounded-sm bg-background/70 px-3 py-2 font-accent text-sm">
                     {"t * ((t >> 5) | (t >> 8))"}
                   </code>
                 </div>

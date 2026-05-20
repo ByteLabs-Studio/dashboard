@@ -8,7 +8,7 @@ export default function GitPage() {
         <div className="px-6">
           <div className="mx-auto max-w-6xl">
             <div className="mx-auto mb-10 max-w-3xl text-center">
-              <div className="surface-lift mb-4 inline-flex rounded-lg border border-primary/15 bg-primary/10 px-3 py-1.5 font-accent text-xs font-semibold uppercase text-primary">
+              <div className="surface-lift mb-4 inline-flex rounded-md border border-primary/15 bg-primary/10 px-3 py-1.5 font-accent text-xs font-semibold uppercase text-primary">
                 repositories
               </div>
               <h1 className="text-4xl md:text-6xl font-bold tracking-normal mb-4">
@@ -24,7 +24,7 @@ export default function GitPage() {
                 href="https://github.com/ByteLabs-Studio/ByteLab"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="surface-lift group relative rounded-lg border border-border/60 bg-gradient-to-br from-[#24292f]/10 to-card/70 p-6 shadow-sm"
+                className="surface-lift group relative rounded-md border border-border/60 bg-gradient-to-br from-[#24292f]/10 to-card/70 p-6 shadow-sm"
               >
                 <div className="flex flex-col items-center text-center gap-4">
                   <FaGithub className="w-10 h-10 text-[#24292f] group-hover:scale-110 transition-transform duration-300" />
@@ -46,7 +46,7 @@ export default function GitPage() {
                 href="https://gitlab.com/bytelab-studio/ByteLab"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="surface-lift group relative rounded-lg border border-border/60 bg-gradient-to-br from-[#FC6D26]/10 to-card/70 p-6 shadow-sm"
+                className="surface-lift group relative rounded-md border border-border/60 bg-gradient-to-br from-[#FC6D26]/10 to-card/70 p-6 shadow-sm"
               >
                 <div className="flex flex-col items-center text-center gap-4">
                   <FaGitlab
@@ -68,15 +68,15 @@ export default function GitPage() {
             </div>
 
             <div className="mt-4 grid gap-4 md:grid-cols-3">
-              <div className="surface-lift rounded-lg border border-border/50 bg-card/45 p-4 shadow-sm">
+              <div className="surface-lift rounded-md border border-border/50 bg-card/45 p-4 shadow-sm">
                 <div className="font-accent text-xs font-semibold uppercase text-primary">origin</div>
                 <p className="mt-2 text-sm text-muted-foreground">GitLab stays closest to day-to-day development.</p>
               </div>
-              <div className="surface-lift rounded-lg border border-border/50 bg-card/45 p-4 shadow-sm">
+              <div className="surface-lift rounded-md border border-border/50 bg-card/45 p-4 shadow-sm">
                 <div className="font-accent text-xs font-semibold uppercase text-primary">mirror</div>
                 <p className="mt-2 text-sm text-muted-foreground">GitHub is available for browsing, stars, and discovery.</p>
               </div>
-              <div className="surface-lift rounded-lg border border-border/50 bg-card/45 p-4 shadow-sm">
+              <div className="surface-lift rounded-md border border-border/50 bg-card/45 p-4 shadow-sm">
                 <div className="font-accent text-xs font-semibold uppercase text-primary">issues</div>
                 <p className="mt-2 text-sm text-muted-foreground">Use whichever host fits your workflow best.</p>
               </div>

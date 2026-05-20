@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import FluidGlass from "./FluidGlass";
 import { Maximize2, Minimize2 } from "lucide-react";
 
 function Container({ children }: { children: React.ReactNode }) {
-  return <div className="max-w-6xl mx-auto w-full px-1">{children}</div>;
+  return <div className="mx-auto w-full max-w-6xl px-6">{children}</div>;
 }
 
 export default function Footer() {
@@ -25,66 +24,55 @@ export default function Footer() {
     localStorage.setItem('footerFloating', String(newState));
   };
 
-  const placeholderHeight = 60;
+  const placeholderHeight = 58;
   
   return (
     <>
       <div style={{ height: `${placeholderHeight}px` }} aria-hidden="true" />
       <footer 
-        className={`fixed left-0 right-0 z-30 transition-all duration-500 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
-          isFloating ? 'bottom-4' : 'bottom-0'
+        className={`fixed left-0 right-0 z-30 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          isFloating ? 'bottom-3 px-4' : 'bottom-0 px-0'
         }`}
       >
         <div 
-          className={`transition-all duration-500 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
+          className={`mx-auto overflow-hidden border bg-background/94 shadow-lg backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             isFloating 
-              ? 'mx-4 rounded-[1rem]' 
-              : 'inset-x-0'
-          } border border-border/10 shadow-xl overflow-hidden`}
-          style={{
-            width: isFloating ? 'calc(100% - 2rem)' : '100%',
-            margin: '0 auto',
-            maxWidth: isFloating ? 'calc(100% - 2rem)' : '100%'
-          }}
+              ? 'max-w-6xl rounded-md border-border/70 shadow-primary/5' 
+              : 'w-full max-w-none rounded-none border-border/50'
+          }`}
         >
-          <div className="relative">
-            <div className="absolute inset-0 -z-10">
-              <FluidGlass 
-                opacity={0.15}
-                blur={12}
-                className={`transition-all duration-500 ease-[cubic-bezier(0.4, 0, 0.2, 1)] ${
-                  isFloating ? 'rounded-[1rem]' : 'rounded-none'
-                }`}
-              />
-            </div>
-            <Container>
-              <div className="flex items-center justify-between py-4 text-sm text-muted-foreground w-full px-4">
-                <span>&copy; {new Date().getFullYear()} ByteLabs Studio</span>
-                <div className="flex items-center gap-4">
-                  <Link href="/docs" className="hover:underline">
-                    Docs
-                  </Link>
-                  <Link href="/terms" className="hover:underline">
-                    Terms of Service
-                  </Link>
-                  <Link href="/privacy" className="hover:underline">
-                    Privacy Policy
-                  </Link>
-                  <button 
-                    onClick={toggleFloating}
-                    className="p-1.5 rounded-full hover:bg-foreground/10 transition-colors flex-shrink-0"
-                    aria-label={isFloating ? 'Attach footer' : 'Detach footer'}
-                    title={isFloating ? 'Attach to bottom' : 'Float above content'}
-                  >
-                    {isFloating ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-                  </button>
+          <Container>
+            <div className="flex min-h-14 flex-col gap-3 py-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <div className="font-accent text-xs uppercase text-foreground">
+                  ByteLabs Studio
                 </div>
+                <div className="text-xs">&copy; {new Date().getFullYear()} All rights reserved.</div>
               </div>
-            </Container>
-          </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <Link href="/docs" className="rounded-sm px-2 py-1 transition-colors hover:bg-muted hover:text-foreground">
+                  Docs
+                </Link>
+                <Link href="/terms" className="rounded-sm px-2 py-1 transition-colors hover:bg-muted hover:text-foreground">
+                  Terms
+                </Link>
+                <Link href="/privacy" className="rounded-sm px-2 py-1 transition-colors hover:bg-muted hover:text-foreground">
+                  Privacy
+                </Link>
+                <button 
+                  onClick={toggleFloating}
+                  className="ml-1 inline-flex h-8 w-8 items-center justify-center rounded-sm border border-border/60 bg-card/70 text-foreground transition-colors hover:bg-accent"
+                  aria-label={isFloating ? 'Attach footer' : 'Detach footer'}
+                  title={isFloating ? 'Attach to bottom' : 'Float above content'}
+                >
+                  {isFloating ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
+                </button>
+              </div>
+            </div>
+          </Container>
         </div>
       </footer>
     </>
   )
 };
-

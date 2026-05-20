@@ -39,6 +39,31 @@ export default function RootLayout({
 
                   root.setAttribute('data-theme', theme);
                   root.style.colorScheme = (theme === 'light') ? 'light' : 'dark';
+
+                  function applyLightStrength() {
+                    const keys = ['--background', '--card', '--popover', '--muted', '--secondary', '--accent', '--border', '--input'];
+                    if (theme !== 'light') {
+                      keys.forEach(function(key) { root.style.removeProperty(key); });
+                      return;
+                    }
+
+                    const stored = Number(localStorage.getItem('lightStrength') || '88');
+                    const strength = Math.min(100, Math.max(0, Number.isFinite(stored) ? stored : 88));
+                    const mix = strength / 100;
+                    const lerp = function(start, end) { return start + (end - start) * mix; };
+
+                    root.style.setProperty('--background', 'oklch(' + lerp(0.86, 1).toFixed(3) + ' 0.003 286.32)');
+                    root.style.setProperty('--card', 'oklch(' + lerp(0.895, 1).toFixed(3) + ' 0.003 286.32)');
+                    root.style.setProperty('--popover', 'oklch(' + lerp(0.895, 1).toFixed(3) + ' 0.003 286.32)');
+                    root.style.setProperty('--muted', 'oklch(' + lerp(0.82, 0.967).toFixed(3) + ' 0.004 286.375)');
+                    root.style.setProperty('--secondary', 'oklch(' + lerp(0.82, 0.967).toFixed(3) + ' 0.004 286.375)');
+                    root.style.setProperty('--accent', 'oklch(' + lerp(0.82, 0.967).toFixed(3) + ' 0.004 286.375)');
+                    root.style.setProperty('--border', 'oklch(' + lerp(0.70, 0.92).toFixed(3) + ' 0.006 286.32)');
+                    root.style.setProperty('--input', 'oklch(' + lerp(0.70, 0.92).toFixed(3) + ' 0.006 286.32)');
+                    root.setAttribute('data-light-strength', String(strength));
+                  }
+
+                  applyLightStrength();
                 } catch (e) {
                 }
               })();
