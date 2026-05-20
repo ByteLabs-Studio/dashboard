@@ -21,7 +21,7 @@ export default function GitPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <a
-                href="https://github.com/ByteLabs-Studio/ByteLab"
+                href="https://github.com/ByteLabs-Studio/ByteLabs"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="surface-lift group relative rounded-md border border-border/60 bg-gradient-to-br from-[#24292f]/10 to-card/70 p-6 shadow-sm"

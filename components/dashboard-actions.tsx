@@ -15,7 +15,7 @@ export default function DashboardActions() {
       </Link>
 
       <Link
-        href="https://github.com/ByteLabs-Studio/ByteLab"
+        href="https://github.com/ByteLabs-Studio/ByteLabs"
         target="_blank"
         rel="noopener noreferrer"
         className="group inline-flex h-11 items-center rounded-md border border-border/70 bg-card/80 px-4 text-sm font-medium shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/20 hover:bg-accent hover:shadow-md active:translate-y-0"
