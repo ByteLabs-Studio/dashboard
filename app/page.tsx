@@ -23,7 +23,7 @@ export default function HomePage() {
   useEffect(() => {
     setMounted(true);
 
-    fetch('https://api.github.com/repos/ByteLabs-Studio/ByteLab/releases/latest')
+    fetch('https://api.github.com/repos/ByteLabs-Studio/ByteLabs/releases/latest')
       .then(res => {
         if (res.status === 404) {
           setReleaseState("empty");
