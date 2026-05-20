@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeDropdown from "./theme-dropdown";
-import { BackgroundSelector } from "./background-selector";
-import FluidGlass from "./FluidGlass";
 
 function NavLink({
   href,
@@ -20,15 +18,13 @@ function NavLink({
   return (
     <Link
       href={href}
-      className="relative text-sm font-medium text-foreground/90 hover:text-foreground transition-colors duration-200 py-2 group"
+      className={`inline-flex h-9 items-center rounded-full border px-4 font-accent text-xs font-semibold uppercase transition-all duration-200 ${
+        isActive
+          ? "border-primary/30 bg-primary/10 text-foreground shadow-sm"
+          : "border-border/70 bg-background/40 text-foreground/80 hover:border-primary/25 hover:bg-primary/5 hover:text-foreground"
+      }`}
     >
       {children}
-
-      <span
-        className={`absolute bottom-0 left-0 right-0 h-[2.45px] bg-primary transform origin-center transition-transform duration-300 ease-out ${
-          isActive ? "scale-x-92" : "scale-x-0 group-hover:scale-x-65"
-        }`}
-      />
     </Link>
   );
 }
@@ -65,7 +61,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [detached, setDetached] = useState(false);
 
-  const THRESHOLD = 40;
+  const THRESHOLD = 24;
 
   useEffect(() => {
     let raf = 0;
@@ -85,53 +81,27 @@ export default function Header() {
     };
   }, []);
 
-  const wrapperClasses = "fixed top-0 left-0 right-0 z-40 flex justify-center";
-
-  const headerClasses = `w-full max-w-6xl transition-all duration-300 ease-out transform-gpu ${
-    detached
-      ? "mt-4 mx-4 rounded-[2rem] bg-background/95 backdrop-blur-md border border-border/10 shadow-xl pointer-events-auto overflow-hidden"
-      : "bg-background/95 backdrop-blur-md border-b border-border/20 pointer-events-auto"
+  const wrapperClasses = `fixed left-0 right-0 top-0 z-40 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+    detached ? "px-4 pt-2" : "px-0 pt-0"
   }`;
 
-  const innerPadding = detached ? "px-4 py-2" : "max-w-[100vw] w-full px-6";
+  const headerClasses = `mx-auto w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+    detached
+      ? "max-w-6xl rounded-[1.4rem] border border-border/80 bg-background/95 shadow-xl shadow-primary/5 backdrop-blur-md"
+      : "max-w-[100vw] rounded-none border-b border-border bg-background"
+  }`;
+
+  const innerPadding = detached ? "px-5" : "px-6";
 
   return (
-    <div
-      className={wrapperClasses}
-      style={
-        {
-          "--tw-translate-y": detached ? "0" : "0",
-        } as React.CSSProperties
-      }
-      aria-hidden={detached ? "false" : "true"}
-    >
-      <div className={detached ? "h-24" : "h-16"} />
-
+    <div className={wrapperClasses}>
       <header
         className={`${headerClasses} ${innerPadding}`}
-        style={{
-          position: 'relative',
-          transition: "all 300ms ease-out",
-          transform: detached
-            ? "translateY(8px) scale(0.98)"
-            : "translateY(0) scale(1)",
-          opacity: 1,
-          background: 'transparent',
-          backdropFilter: 'none',
-          WebkitBackdropFilter: 'none'
-        }}
       >
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <FluidGlass 
-            opacity={0.15}
-            blur={12}
-            className={detached ? 'rounded-[2rem]' : ''}
-          />
-        </div>
           <div className="grid grid-cols-[1fr_auto_1fr] items-center h-16 w-full mx-auto">
             <div className="flex items-center">
               <Link href="/" className="inline-flex items-center gap-3">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-primary to-secondary text-background shadow">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary text-background shadow-sm">
                   BL
                 </span>
                 <div className="flex flex-col leading-tight">
@@ -143,18 +113,15 @@ export default function Header() {
               </Link>
             </div>
 
-            <nav className="hidden md:flex items-center gap-6 justify-self-center">
+            <nav className="hidden md:flex items-center gap-2 justify-self-center">
               <NavLink href="/">Home</NavLink>
               <NavLink href="/downloads">Downloads</NavLink>
               <NavLink href="/git">Git</NavLink>
-              <NavLink href="/functions">Functions</NavLink>
+              <NavLink href="/docs">Docs</NavLink>
             </nav>
 
             <div className="flex items-center justify-end gap-3 pr-1 justify-self-end">
               <div className="hidden md:flex items-center gap-3">
-                <div className="flex items-center gap-2 border-r border-border/20 pr-8 mr-4">
-                  <BackgroundSelector />
-                </div>
                 <div className="w-[80px] flex items-center justify-end relative z-10">
                   <ThemeDropdown fixedLabelWidth={true} />
                 </div>
@@ -197,20 +164,11 @@ export default function Header() {
                 <MobileNavLink href="/git" onClick={() => setOpen(false)}>
                   Git
                 </MobileNavLink>
-                <MobileNavLink href="/functions" onClick={() => setOpen(false)}>
-                  Functions
-                </MobileNavLink>
                 <MobileNavLink href="/docs" onClick={() => setOpen(false)}>
                   Docs
                 </MobileNavLink>
 
                 <div className="pt-4 flex flex-col gap-8">
-                  <div className="flex items-center justify-between gap-6">
-                    <span className="text-sm text-muted-foreground">Background</span>
-                    <div className="min-w-[140px]">
-                      <BackgroundSelector />
-                    </div>
-                  </div>
                   <div className="flex items-center justify-between gap-6">
                     <span className="text-sm text-muted-foreground">Theme</span>
                     <div className="min-w-[140px]">
