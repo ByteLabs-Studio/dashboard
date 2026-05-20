@@ -150,7 +150,7 @@ export default function HomePage() {
                 <div>
                   <div className="font-accent text-sm text-primary">about / bytebeat</div>
                   <h2 className="mt-3 text-3xl font-bold tracking-normal">
-                    Tiny formulas, actual sound.
+                    Turn small, or large formuale into actual sound.
                   </h2>
                   <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground">
                     ByteLabs is a creative audio tool for writing small expressions that turn numbers into raw sound. It sits somewhere between a bytebeat composer, an algorithmic music sketchbook, and a compact sound design lab.
