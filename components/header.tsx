@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeDropdown from "./theme-dropdown";
-import { BackgroundSelector } from "./background-selector";
-import FluidGlass from "./FluidGlass";
 
 function NavLink({
   href,
@@ -87,10 +85,10 @@ export default function Header() {
 
   const wrapperClasses = "fixed top-0 left-0 right-0 z-40 flex justify-center";
 
-  const headerClasses = `w-full max-w-6xl transition-all duration-300 ease-out transform-gpu ${
+  const headerClasses = `w-full max-w-6xl transition-all duration-300 ease-out ${
     detached
-      ? "mt-4 mx-4 rounded-[2rem] bg-background/95 backdrop-blur-md border border-border/10 shadow-xl pointer-events-auto overflow-hidden"
-      : "bg-background/95 backdrop-blur-md border-b border-border/20 pointer-events-auto"
+      ? "mt-4 mx-4 rounded-xl bg-background border border-border shadow-lg pointer-events-auto"
+      : "bg-background border-b border-border pointer-events-auto"
   }`;
 
   const innerPadding = detached ? "px-4 py-2" : "max-w-[100vw] w-full px-6";
@@ -113,21 +111,10 @@ export default function Header() {
           position: 'relative',
           transition: "all 300ms ease-out",
           transform: detached
-            ? "translateY(8px) scale(0.98)"
-            : "translateY(0) scale(1)",
-          opacity: 1,
-          background: 'transparent',
-          backdropFilter: 'none',
-          WebkitBackdropFilter: 'none'
+            ? "translateY(4px)"
+            : "translateY(0)",
         }}
       >
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <FluidGlass 
-            opacity={0.15}
-            blur={12}
-            className={detached ? 'rounded-[2rem]' : ''}
-          />
-        </div>
           <div className="grid grid-cols-[1fr_auto_1fr] items-center h-16 w-full mx-auto">
             <div className="flex items-center">
               <Link href="/" className="inline-flex items-center gap-3">
@@ -147,14 +134,11 @@ export default function Header() {
               <NavLink href="/">Home</NavLink>
               <NavLink href="/downloads">Downloads</NavLink>
               <NavLink href="/git">Git</NavLink>
-              <NavLink href="/functions">Functions</NavLink>
+              <NavLink href="/docs">Docs</NavLink>
             </nav>
 
             <div className="flex items-center justify-end gap-3 pr-1 justify-self-end">
               <div className="hidden md:flex items-center gap-3">
-                <div className="flex items-center gap-2 border-r border-border/20 pr-8 mr-4">
-                  <BackgroundSelector />
-                </div>
                 <div className="w-[80px] flex items-center justify-end relative z-10">
                   <ThemeDropdown fixedLabelWidth={true} />
                 </div>
@@ -197,20 +181,11 @@ export default function Header() {
                 <MobileNavLink href="/git" onClick={() => setOpen(false)}>
                   Git
                 </MobileNavLink>
-                <MobileNavLink href="/functions" onClick={() => setOpen(false)}>
-                  Functions
-                </MobileNavLink>
                 <MobileNavLink href="/docs" onClick={() => setOpen(false)}>
                   Docs
                 </MobileNavLink>
 
                 <div className="pt-4 flex flex-col gap-8">
-                  <div className="flex items-center justify-between gap-6">
-                    <span className="text-sm text-muted-foreground">Background</span>
-                    <div className="min-w-[140px]">
-                      <BackgroundSelector />
-                    </div>
-                  </div>
                   <div className="flex items-center justify-between gap-6">
                     <span className="text-sm text-muted-foreground">Theme</span>
                     <div className="min-w-[140px]">

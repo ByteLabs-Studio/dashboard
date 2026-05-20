@@ -39,21 +39,6 @@ export default function RootLayout({
 
                   root.setAttribute('data-theme', theme);
                   root.style.colorScheme = (theme === 'light') ? 'light' : 'dark';
-
-                  function getBackgroundPreference() {
-                    if (typeof localStorage !== 'undefined' && localStorage.getItem('background-animation') !== null) {
-                      return localStorage.getItem('background-animation') === 'true';
-                    }
-                    return true;
-                  }
-                  const backgroundEnabled = getBackgroundPreference();
-                  root.setAttribute('data-background-enabled', backgroundEnabled.toString());
-
-                  if (backgroundEnabled) {
-                    root.style.setProperty('--initial-background-opacity', '0.6');
-                  } else {
-                    root.style.setProperty('--initial-background-opacity', '0');
-                  }
                 } catch (e) {
                 }
               })();
