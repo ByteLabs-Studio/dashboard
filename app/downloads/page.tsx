@@ -47,7 +47,7 @@ export default function DownloadsPage() {
                 Get <span className="font-accent text-primary">ByteLabs</span>
               </h1>
               <p className="text-base text-muted-foreground max-w-2xl mx-auto">
-                Choose your platform, grab the flake command, or jump straight into the source.
+                Choose your platform, grab the flake command, or compile it from source.
               </p>
             </header>
 
