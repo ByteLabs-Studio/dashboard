@@ -35,39 +35,42 @@ export default function DownloadsPage() {
 
 
   return (
-    <div className="bg-background text-foreground antialiased min-h-screen">
-      <main className="py-20">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="space-y-16">
-            <header className="text-center space-y-6">
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                Get <span className="text-primary">ByteLabs</span>
+    <div className="bg-background text-foreground antialiased">
+      <main className="py-4 md:py-6">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="space-y-8">
+            <header className="mx-auto max-w-3xl text-center space-y-4">
+              <div className="surface-lift inline-flex rounded-lg border border-primary/15 bg-primary/10 px-3 py-1.5 font-accent text-xs font-semibold uppercase text-primary">
+                downloads
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-normal">
+                Get <span className="font-accent text-primary">ByteLabs</span>
               </h1>
               <p className="text-base text-muted-foreground max-w-2xl mx-auto">
-                Choose your platform to download the latest version
+                Choose your platform, grab the flake command, or jump straight into the source.
               </p>
             </header>
 
-            <section className="space-y-6">
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-muted/10 border border-border/50">
+            <section className="grid gap-4 lg:grid-cols-[1.25fr_0.75fr]">
+              <div className="surface-lift rounded-lg border border-border/50 bg-gradient-to-br from-primary/10 via-card/70 to-muted/20 p-6 shadow-sm">
                 <div className="flex items-start gap-6 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-primary/20 ring-1 ring-primary/15">
                     <SiNixos className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold mb-1">Nix</h2>
+                    <h2 className="font-accent text-xl font-bold mb-1">Nix</h2>
                     <p className="text-muted-foreground">A Nix flake output and overlay</p>
                   </div>
                 </div>
-                <div className="bg-background/50 rounded-xl p-4 border border-border/30">
+                <div className="rounded-lg border border-border/40 bg-background/60 p-4">
                   <p className="text-sm font-medium mb-2">Install via Flake:</p>
                   <div className="relative">
-                    <div className="bg-muted/30 rounded-lg pr-10 font-mono text-sm overflow-x-auto border border-border/30">
+                    <div className="rounded-lg border border-border/30 bg-muted/30 pr-10 font-accent text-sm overflow-x-auto">
                       <div className="absolute top-1/2 right-3 -translate-y-1/2">
                         <button
                           onClick={handleCopy}
                           disabled={isCopied}
-                          className={`transition-colors ${isCopied ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                          className={`rounded-md p-1.5 transition-all duration-200 ${isCopied ? 'text-primary' : 'text-muted-foreground hover:bg-background hover:text-foreground hover:scale-110'}`}
                           title={isCopied ? 'Copied!' : 'Copy to clipboard'}
                         >
                           {isCopied ? '✓' : <Copy className="w-4 h-4" />}
@@ -79,55 +82,58 @@ export default function DownloadsPage() {
                 </div>
               </div>
 
-              <div className="p-6 rounded-2xl bg-muted/30 border border-border/50 opacity-60">
-                <div className="flex items-start gap-6">
-                  <div className="w-12 h-12 rounded-xl bg-muted/50 flex items-center justify-center flex-shrink-0">
-                    <FaLinux className="w-6 h-6 text-muted-foreground" />
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="text-xl font-bold mb-1">Linux</h2>
-                    <p className="text-muted-foreground">FUSE2 (AppImage) — Coming Soon</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6 rounded-2xl bg-muted/30 border border-border/50 opacity-60">
-                <div className="flex items-start gap-6">
-                  <div className="w-12 h-12 rounded-xl bg-muted/50 flex items-center justify-center flex-shrink-0">
-                    <FaApple className="w-6 h-6 text-muted-foreground" />
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="text-xl font-bold mb-1">macOS</h2>
-                    <p className="text-muted-foreground">Universal DMG — Coming Soon</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6 rounded-2xl bg-muted/30 border border-border/50 opacity-60">
-                <div className="flex items-start gap-6">
-                  <div className="w-12 h-12 rounded-xl bg-muted/50 flex items-center justify-center flex-shrink-0">
-                    <FaWindows className="w-6 h-6 text-muted-foreground" />
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="text-xl font-bold mb-1">Windows</h2>
-                    <p className="text-muted-foreground">Windows executable — Coming Soon</p>
-                  </div>
-                </div>
+              <div className="surface-lift rounded-lg border border-border/50 bg-card/50 p-6 shadow-sm">
+                <h2 className="font-accent text-xl font-bold mb-2">Source Code</h2>
+                <p className="text-muted-foreground mb-6">
+                  Get the source directly from GitLab while packaged builds are being prepared.
+                </p>
+                <a
+                  className="inline-flex h-11 items-center rounded-lg bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/20 active:translate-y-0"
+                  href="https://gitlab.com/ByteLabs-studio/ByteLabs/-/archive/main/ByteLabs-main.tar.gz?ref_type=heads"
+                >
+                  Download .tar.gz
+                </a>
               </div>
             </section>
 
-            <section className="pt-6 border-t border-border/50">
-              <div className="p-6 rounded-2xl bg-card border border-border">
-                <h2 className="text-xl font-bold mb-4">Source Code</h2>
-                <p className="text-muted-foreground mb-6">
-                  Get the source code directly from GitLab
-                </p>
-                <a
-                  className="inline-flex items-center gap-2 bg-foreground text-background font-semibold px-6 py-3 rounded-xl hover:brightness-110 transition-colors"
-                  href="https://gitlab.com/ByteLabs-studio/ByteLabs/-/archive/main/ByteLabs-main.tar.gz?ref_type=heads"
-                >
-                  Download .tar.gz (main)
-                </a>
+            <section className="grid gap-4 md:grid-cols-3">
+              <div className="surface-lift rounded-lg border border-border/50 bg-muted/25 p-5 opacity-75 shadow-sm">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-muted/60">
+                    <FaLinux className="w-6 h-6 text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="font-accent text-lg font-bold mb-1">Linux</h2>
+                    <p className="text-sm text-muted-foreground">FUSE2 AppImage</p>
+                    <span className="mt-3 inline-flex rounded-md bg-muted px-2 py-1 font-accent text-xs text-muted-foreground">coming soon</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="surface-lift rounded-lg border border-border/50 bg-muted/25 p-5 opacity-75 shadow-sm">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-muted/60">
+                    <FaApple className="w-6 h-6 text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="font-accent text-lg font-bold mb-1">macOS</h2>
+                    <p className="text-sm text-muted-foreground">Universal DMG</p>
+                    <span className="mt-3 inline-flex rounded-md bg-muted px-2 py-1 font-accent text-xs text-muted-foreground">coming soon</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="surface-lift rounded-lg border border-border/50 bg-muted/25 p-5 opacity-75 shadow-sm">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-muted/60">
+                    <FaWindows className="w-6 h-6 text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="font-accent text-lg font-bold mb-1">Windows</h2>
+                    <p className="text-sm text-muted-foreground">Windows executable</p>
+                    <span className="mt-3 inline-flex rounded-md bg-muted px-2 py-1 font-accent text-xs text-muted-foreground">coming soon</span>
+                  </div>
+                </div>
               </div>
             </section>
           </div>

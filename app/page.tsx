@@ -74,7 +74,7 @@ export default function HomePage() {
           : "bg-primary animate-pulse";
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative">
       <div className="fixed inset-0 -z-10 bg-gradient-to-br from-background via-background to-muted/20" />
 
       <div
@@ -82,18 +82,18 @@ export default function HomePage() {
           mounted ? "opacity-100" : "opacity-0"
         }`}
       >
-        <div className="min-h-screen flex flex-col">
-          <div className="flex-1 flex items-center">
+        <div className="flex flex-col">
+          <div className="py-3 md:py-4">
             <Container>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.85fr] gap-10 lg:gap-14 items-center w-full">
                 <div className="space-y-8">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
-                    <span className={`w-2 h-2 rounded-full ${releaseDotClass}`}></span>
-                    <span>{releaseLabel}</span>
+                  <div className="surface-lift inline-flex items-center gap-2 rounded-lg border border-primary/15 bg-primary/10 px-3.5 py-2 text-sm font-medium text-primary shadow-sm shadow-primary/5">
+                    <span className={`h-2 w-2 rounded-full ${releaseDotClass}`}></span>
+                    <span className="font-accent">{releaseLabel}</span>
                   </div>
                   
-                  <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-none">
-                    <span className="text-primary">Byte</span>
+                  <h1 className="text-4xl md:text-6xl font-bold tracking-normal leading-none">
+                    <span className="font-accent text-primary">Byte</span>
                     <span className="text-foreground">Labs</span>
                   </h1>
                   
@@ -103,33 +103,22 @@ export default function HomePage() {
                   
                   <DashboardActions />
                   
-                  <div className="pt-8 space-y-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="text-xl font-bold text-primary">3</span>
-                      </div>
-                      <div>
-                        <div className="font-semibold">Active Developers</div>
-                        <div className="text-sm text-muted-foreground">Building the future of audio</div>
-                      </div>
+                  <div className="flex flex-wrap gap-x-8 gap-y-3 pt-1 text-sm">
+                    <div>
+                      <div className="font-accent text-primary">3 developers</div>
+                      <div className="text-muted-foreground">Building the future of audio</div>
                     </div>
-                    
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="text-xl font-bold text-primary">R</span>
-                      </div>
-                      <div>
-                        <div className="font-semibold">Rust Rewrite</div>
-                        <div className="text-sm text-muted-foreground">Performance & reliability</div>
-                      </div>
+                    <div>
+                      <div className="font-accent text-primary">Rust rewrite</div>
+                      <div className="text-muted-foreground">Performance and reliability</div>
                     </div>
                   </div>
                 </div>
 
                 <div className="relative">
-                  <div className="aspect-square rounded-3xl bg-gradient-to-br from-primary/20 via-primary/5 to-muted/20 border border-border/50 backdrop-blur-sm p-8 flex flex-col justify-center space-y-6">
+                  <div className="mx-auto flex aspect-square max-w-[430px] flex-col justify-center space-y-6 rounded-xl border border-border/60 bg-gradient-to-br from-primary/15 via-card/70 to-muted/30 p-9 shadow-lg shadow-primary/5 backdrop-blur-sm transition-[border-color,box-shadow] duration-200 hover:border-primary/25 hover:shadow-primary/10 md:p-10">
                     <div className="text-center space-y-2">
-                      <div className="text-5xl font-bold text-primary/80">01</div>
+                      <div className="font-accent text-5xl font-bold text-primary/80">01</div>
                       <div className="text-lg font-medium">Math</div>
                       <div className="text-sm text-muted-foreground">Generate audio as a function of time</div>
                     </div>
@@ -137,7 +126,7 @@ export default function HomePage() {
                     <div className="h-px bg-border/50"></div>
                     
                     <div className="text-center space-y-2">
-                      <div className="text-5xl font-bold text-primary/80">02</div>
+                      <div className="font-accent text-5xl font-bold text-primary/80">02</div>
                       <div className="text-lg font-medium">Bitwise</div>
                       <div className="text-sm text-muted-foreground">Transform counters into patterns</div>
                     </div>
@@ -145,7 +134,7 @@ export default function HomePage() {
                     <div className="h-px bg-border/50"></div>
                     
                     <div className="text-center space-y-2">
-                      <div className="text-5xl font-bold text-primary/80">03</div>
+                      <div className="font-accent text-5xl font-bold text-primary/80">03</div>
                       <div className="text-lg font-medium">Create</div>
                       <div className="text-sm text-muted-foreground">Craft evolving soundscapes</div>
                     </div>
@@ -155,16 +144,63 @@ export default function HomePage() {
             </Container>
           </div>
 
-          <div className="py-16 border-t border-border/50">
+          <section className="border-t border-border/50 py-10 md:py-12">
             <Container>
-              <div className="text-center space-y-4">
-                <h2 className="text-2xl font-bold">Ready to explore?</h2>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  Check out our downloads, documentation, or source code to get started with ByteLabs.
-                </p>
+              <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+                <div>
+                  <div className="font-accent text-sm text-primary">about / bytebeat</div>
+                  <h2 className="mt-3 text-3xl font-bold tracking-normal">
+                    Tiny formulas, actual sound.
+                  </h2>
+                  <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground">
+                    ByteLabs is a creative audio tool for writing small expressions that turn numbers into raw sound. It sits somewhere between a bytebeat composer, an algorithmic music sketchbook, and a compact sound design lab.
+                  </p>
+                </div>
+
+                <div className="grid gap-3 md:grid-cols-3">
+                  <div className="surface-lift rounded-xl border border-border/60 bg-card/55 p-5 shadow-sm">
+                    <div className="font-accent text-xs font-semibold uppercase text-primary">What it is</div>
+                    <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                      A place to type formulas, hear them immediately, and shape noisy, melodic, glitchy, or rhythmic audio from code.
+                    </p>
+                  </div>
+
+                  <div className="surface-lift rounded-xl border border-border/60 bg-card/55 p-5 shadow-sm">
+                    <div className="font-accent text-xs font-semibold uppercase text-primary">What it counts as</div>
+                    <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                      ByteLabs counts as algorithmic music software: the instrument is math, and the output is generated sample by sample.
+                    </p>
+                  </div>
+
+                  <div className="surface-lift rounded-xl border border-border/60 bg-card/55 p-5 shadow-sm">
+                    <div className="font-accent text-xs font-semibold uppercase text-primary">How bytebeats work</div>
+                    <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                      A counter called time increases constantly. A formula transforms that counter into values, and those values become audio samples.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5 grid gap-3 rounded-xl border border-border/60 bg-muted/20 p-4 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:items-center">
+                <div>
+                  <div className="font-accent text-xs uppercase text-primary">time counter</div>
+                  <p className="mt-1 text-sm text-muted-foreground">t climbs through integers very quickly.</p>
+                </div>
+                <div className="hidden font-accent text-muted-foreground md:block">/</div>
+                <div>
+                  <div className="font-accent text-xs uppercase text-primary">formula</div>
+                  <code className="mt-1 block rounded-lg bg-background/70 px-3 py-2 font-accent text-sm">
+                    {"t * ((t >> 5) | (t >> 8))"}
+                  </code>
+                </div>
+                <div className="hidden font-accent text-muted-foreground md:block">/</div>
+                <div>
+                  <div className="font-accent text-xs uppercase text-primary">audio output</div>
+                  <p className="mt-1 text-sm text-muted-foreground">Patterns emerge as pitch, rhythm, texture, and distortion.</p>
+                </div>
               </div>
             </Container>
-          </div>
+          </section>
         </div>
       </div>
     </div>

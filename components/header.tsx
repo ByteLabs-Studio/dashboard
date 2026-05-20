@@ -18,15 +18,13 @@ function NavLink({
   return (
     <Link
       href={href}
-      className="relative text-sm font-medium text-foreground/90 hover:text-foreground transition-colors duration-200 py-2 group"
+      className={`inline-flex h-9 items-center rounded-full border px-4 font-accent text-xs font-semibold uppercase transition-all duration-200 ${
+        isActive
+          ? "border-primary/30 bg-primary/10 text-foreground shadow-sm"
+          : "border-border/70 bg-background/40 text-foreground/80 hover:border-primary/25 hover:bg-primary/5 hover:text-foreground"
+      }`}
     >
       {children}
-
-      <span
-        className={`absolute bottom-0 left-0 right-0 h-[2.45px] bg-primary transform origin-center transition-transform duration-300 ease-out ${
-          isActive ? "scale-x-92" : "scale-x-0 group-hover:scale-x-65"
-        }`}
-      />
     </Link>
   );
 }
@@ -63,7 +61,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [detached, setDetached] = useState(false);
 
-  const THRESHOLD = 40;
+  const THRESHOLD = 24;
 
   useEffect(() => {
     let raf = 0;
@@ -83,42 +81,27 @@ export default function Header() {
     };
   }, []);
 
-  const wrapperClasses = "fixed top-0 left-0 right-0 z-40 flex justify-center";
-
-  const headerClasses = `w-full max-w-6xl transition-all duration-300 ease-out ${
-    detached
-      ? "mt-4 mx-4 rounded-xl bg-background border border-border shadow-lg pointer-events-auto"
-      : "bg-background border-b border-border pointer-events-auto"
+  const wrapperClasses = `fixed left-0 right-0 top-0 z-40 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+    detached ? "px-4 pt-2" : "px-0 pt-0"
   }`;
 
-  const innerPadding = detached ? "px-4 py-2" : "max-w-[100vw] w-full px-6";
+  const headerClasses = `mx-auto w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+    detached
+      ? "max-w-6xl rounded-[1.4rem] border border-border/80 bg-background/95 shadow-xl shadow-primary/5 backdrop-blur-md"
+      : "max-w-[100vw] rounded-none border-b border-border bg-background"
+  }`;
+
+  const innerPadding = detached ? "px-5" : "px-6";
 
   return (
-    <div
-      className={wrapperClasses}
-      style={
-        {
-          "--tw-translate-y": detached ? "0" : "0",
-        } as React.CSSProperties
-      }
-      aria-hidden={detached ? "false" : "true"}
-    >
-      <div className={detached ? "h-24" : "h-16"} />
-
+    <div className={wrapperClasses}>
       <header
         className={`${headerClasses} ${innerPadding}`}
-        style={{
-          position: 'relative',
-          transition: "all 300ms ease-out",
-          transform: detached
-            ? "translateY(4px)"
-            : "translateY(0)",
-        }}
       >
           <div className="grid grid-cols-[1fr_auto_1fr] items-center h-16 w-full mx-auto">
             <div className="flex items-center">
               <Link href="/" className="inline-flex items-center gap-3">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-primary to-secondary text-background shadow">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary text-background shadow-sm">
                   BL
                 </span>
                 <div className="flex flex-col leading-tight">
@@ -130,7 +113,7 @@ export default function Header() {
               </Link>
             </div>
 
-            <nav className="hidden md:flex items-center gap-6 justify-self-center">
+            <nav className="hidden md:flex items-center gap-2 justify-self-center">
               <NavLink href="/">Home</NavLink>
               <NavLink href="/downloads">Downloads</NavLink>
               <NavLink href="/git">Git</NavLink>
